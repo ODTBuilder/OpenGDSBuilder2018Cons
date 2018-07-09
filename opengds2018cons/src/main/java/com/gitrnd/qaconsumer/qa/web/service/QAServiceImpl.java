@@ -15,7 +15,7 @@
  *    Lesser General Public License for more details.
  */
 
-package com.gitrnd.qaconsumer.service;
+package com.gitrnd.qaconsumer.qa.web.service;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -66,10 +66,15 @@ import com.git.gdsbuilder.type.validate.layer.QALayerTypeList;
 import com.git.gdsbuilder.validator.collection.CollectionValidator;
 import com.git.gdsbuilder.validator.fileReader.DownloadValidateFile;
 import com.git.gdsbuilder.validator.fileReader.UnZipFile;
-import com.gitrnd.qaconsumer.domain.FileStatus;
-import com.gitrnd.qaconsumer.domain.Preset;
-import com.gitrnd.qaconsumer.domain.QAProgress;
-import com.gitrnd.qaconsumer.domain.User;
+import com.gitrnd.qaconsumer.filestatus.domain.FileStatus;
+import com.gitrnd.qaconsumer.filestatus.service.FileStatusService;
+import com.gitrnd.qaconsumer.preset.domain.Preset;
+import com.gitrnd.qaconsumer.preset.service.PresetService;
+import com.gitrnd.qaconsumer.qacategory.service.QACategoryService;
+import com.gitrnd.qaconsumer.qaprogress.domain.QAProgress;
+import com.gitrnd.qaconsumer.qaprogress.service.QAProgressService;
+import com.gitrnd.qaconsumer.user.domain.User;
+import com.gitrnd.qaconsumer.user.service.UserService;
 
 @ComponentScan
 @Service
@@ -677,8 +682,8 @@ public class QAServiceImpl implements QAService {
 		for (int i = 0; i < fileList.length; i++) {
 			if (fileList[i].isDirectory()) {
 				/*
-				 * String message = "[디렉토리] "; message = fileList[ i
-				 * ].getName(); System.out.println( message );
+				 * String message = "[디렉토리] "; message = fileList[ i ].getName();
+				 * System.out.println( message );
 				 * 
 				 * subDirList( fileList[ i ].getPath());//하위 폴더 탐색
 				 */ } else {
@@ -789,8 +794,7 @@ public class QAServiceImpl implements QAService {
 	}
 
 	/*
-	 * private static void moveDirectory(String originalPath, String
-	 * renamePath){
+	 * private static void moveDirectory(String originalPath, String renamePath){
 	 * 
 	 * File oPath = new File(originalPath); File rPath = new File(renamePath);
 	 * 
@@ -808,8 +812,7 @@ public class QAServiceImpl implements QAService {
 	 * 
 	 * File oPath = new File(originalPath); File rPath = new File(renamePath);
 	 * 
-	 * if (!oPath.renameTo(rPath)) { System.err.println("이름 변경 에러 : " + oPath);
-	 * }
+	 * if (!oPath.renameTo(rPath)) { System.err.println("이름 변경 에러 : " + oPath); }
 	 * 
 	 * }
 	 */

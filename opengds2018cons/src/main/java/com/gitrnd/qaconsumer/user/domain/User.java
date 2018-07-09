@@ -1,4 +1,4 @@
-package com.gitrnd.qaconsumer.domain;
+package com.gitrnd.qaconsumer.user.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

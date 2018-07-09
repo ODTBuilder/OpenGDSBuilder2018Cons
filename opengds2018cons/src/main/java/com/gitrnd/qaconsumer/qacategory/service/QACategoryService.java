@@ -1,14 +1,14 @@
 /**
  * 
  */
-package com.gitrnd.qaconsumer.service;
+package com.gitrnd.qaconsumer.qacategory.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.gitrnd.qaconsumer.domain.QACategory;
-import com.gitrnd.qaconsumer.repository.QACategoryRepository;
+import com.gitrnd.qaconsumer.qacategory.domain.QACategory;
+import com.gitrnd.qaconsumer.qacategory.repository.QACategoryRepository;
 
 /**
  * @className QACategoryService.java

@@ -1,4 +1,4 @@
-package com.gitrnd.qaconsumer.service;
+package com.gitrnd.qaconsumer.qa.file.service;
 
 import org.json.simple.JSONObject;
 

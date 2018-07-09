@@ -1,11 +1,11 @@
-package com.gitrnd.qaconsumer.mapper;
+package com.gitrnd.qaconsumer.qaprogress.mapper;
 
 import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.gitrnd.qaconsumer.domain.QAProgress;
+import com.gitrnd.qaconsumer.qaprogress.domain.QAProgress;
 
 @Mapper
 public interface QAProgressMapper {

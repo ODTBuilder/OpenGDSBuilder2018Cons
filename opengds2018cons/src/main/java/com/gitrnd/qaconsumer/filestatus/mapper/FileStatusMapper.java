@@ -1,8 +1,8 @@
-package com.gitrnd.qaconsumer.mapper;
+package com.gitrnd.qaconsumer.filestatus.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.gitrnd.qaconsumer.domain.FileStatus;
+import com.gitrnd.qaconsumer.filestatus.domain.FileStatus;
 
 @Mapper
 public interface FileStatusMapper {

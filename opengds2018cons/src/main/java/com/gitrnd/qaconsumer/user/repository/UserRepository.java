@@ -1,10 +1,10 @@
-package com.gitrnd.qaconsumer.repository;
+package com.gitrnd.qaconsumer.user.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.gitrnd.qaconsumer.domain.User;
-import com.gitrnd.qaconsumer.mapper.UserMapper;
+import com.gitrnd.qaconsumer.user.domain.User;
+import com.gitrnd.qaconsumer.user.mapper.UserMapper;
 
 @Repository
 public class UserRepository {

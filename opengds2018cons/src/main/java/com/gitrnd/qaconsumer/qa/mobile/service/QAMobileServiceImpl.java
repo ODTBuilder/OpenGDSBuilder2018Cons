@@ -1,14 +1,7 @@
 /**
  * 
  */
-package com.gitrnd.qaconsumer.service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+package com.gitrnd.qaconsumer.qa.mobile.service;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -19,7 +12,6 @@ import com.git.gdsbuilder.parser.geoserver.QALayerParser;
 import com.git.gdsbuilder.parser.json.ErrorLayerParser;
 import com.git.gdsbuilder.parser.qa.QATypeParser;
 import com.git.gdsbuilder.type.dt.collection.DTLayerCollection;
-import com.git.gdsbuilder.type.dt.collection.DTLayerCollectionList;
 import com.git.gdsbuilder.type.dt.layer.DTLayer;
 import com.git.gdsbuilder.type.dt.layer.DTLayerList;
 import com.git.gdsbuilder.type.validate.error.ErrorLayer;

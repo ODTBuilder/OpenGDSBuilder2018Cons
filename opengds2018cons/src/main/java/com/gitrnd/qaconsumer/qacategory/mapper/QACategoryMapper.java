@@ -1,8 +1,8 @@
-package com.gitrnd.qaconsumer.mapper;
+package com.gitrnd.qaconsumer.qacategory.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.gitrnd.qaconsumer.domain.QACategory;
+import com.gitrnd.qaconsumer.qacategory.domain.QACategory;
 
 /**
  * @className QACategoryMapper.java

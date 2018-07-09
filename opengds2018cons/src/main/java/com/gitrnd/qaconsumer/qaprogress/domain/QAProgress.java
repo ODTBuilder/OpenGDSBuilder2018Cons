@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.gitrnd.qaconsumer.domain;
+package com.gitrnd.qaconsumer.qaprogress.domain;
 
 import java.sql.Timestamp;
 

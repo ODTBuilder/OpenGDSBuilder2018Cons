@@ -1,4 +1,4 @@
-package com.gitrnd.qaconsumer.service;
+package com.gitrnd.qaconsumer.preset.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.gitrnd.qaconsumer.domain.Preset;
-import com.gitrnd.qaconsumer.repository.PresetRepository;
+import com.gitrnd.qaconsumer.preset.domain.Preset;
+import com.gitrnd.qaconsumer.preset.repository.PresetRepository;
 
 @Service
 @Transactional

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.gitrnd.qaconsumer.service;
+package com.gitrnd.qaconsumer.qa.mobile.service;
 
 import org.json.simple.JSONObject;
 

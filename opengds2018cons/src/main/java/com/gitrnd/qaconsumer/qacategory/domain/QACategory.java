@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.gitrnd.qaconsumer.domain;
+package com.gitrnd.qaconsumer.qacategory.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

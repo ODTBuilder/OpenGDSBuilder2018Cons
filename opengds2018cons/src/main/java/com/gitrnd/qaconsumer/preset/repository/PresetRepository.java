@@ -1,4 +1,4 @@
-package com.gitrnd.qaconsumer.repository;
+package com.gitrnd.qaconsumer.preset.repository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.gitrnd.qaconsumer.domain.Preset;
-import com.gitrnd.qaconsumer.mapper.PresetMapper;
+import com.gitrnd.qaconsumer.preset.domain.Preset;
+import com.gitrnd.qaconsumer.preset.mapper.PresetMapper;
 
 @Repository
 public class PresetRepository {

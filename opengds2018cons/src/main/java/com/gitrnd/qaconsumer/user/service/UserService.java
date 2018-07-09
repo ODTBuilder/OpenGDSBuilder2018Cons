@@ -1,11 +1,11 @@
-package com.gitrnd.qaconsumer.service;
+package com.gitrnd.qaconsumer.user.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.gitrnd.qaconsumer.domain.User;
-import com.gitrnd.qaconsumer.repository.UserRepository;
+import com.gitrnd.qaconsumer.user.domain.User;
+import com.gitrnd.qaconsumer.user.repository.UserRepository;
 
 @Service
 @Transactional

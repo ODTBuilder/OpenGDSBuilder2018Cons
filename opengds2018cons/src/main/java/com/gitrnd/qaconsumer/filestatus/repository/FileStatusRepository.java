@@ -1,10 +1,10 @@
-package com.gitrnd.qaconsumer.repository;
+package com.gitrnd.qaconsumer.filestatus.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.gitrnd.qaconsumer.domain.FileStatus;
-import com.gitrnd.qaconsumer.mapper.FileStatusMapper;
+import com.gitrnd.qaconsumer.filestatus.domain.FileStatus;
+import com.gitrnd.qaconsumer.filestatus.mapper.FileStatusMapper;
 
 @Repository
 public class FileStatusRepository {

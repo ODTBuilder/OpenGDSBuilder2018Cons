@@ -1,4 +1,4 @@
-package com.gitrnd.qaconsumer.domain;
+package com.gitrnd.qaconsumer.preset.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

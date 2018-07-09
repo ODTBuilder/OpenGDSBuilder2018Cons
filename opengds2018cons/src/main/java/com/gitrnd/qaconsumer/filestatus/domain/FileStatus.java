@@ -1,4 +1,4 @@
-package com.gitrnd.qaconsumer.domain;
+package com.gitrnd.qaconsumer.filestatus.domain;
 
 import java.sql.Timestamp;
 

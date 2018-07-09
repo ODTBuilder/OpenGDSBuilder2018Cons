@@ -1,13 +1,13 @@
 /**
  * 
  */
-package com.gitrnd.qaconsumer.repository;
+package com.gitrnd.qaconsumer.qacategory.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.gitrnd.qaconsumer.domain.QACategory;
-import com.gitrnd.qaconsumer.mapper.QACategoryMapper;
+import com.gitrnd.qaconsumer.qacategory.domain.QACategory;
+import com.gitrnd.qaconsumer.qacategory.mapper.QACategoryMapper;
 
 /**
  * @className QACategoryRepository.java

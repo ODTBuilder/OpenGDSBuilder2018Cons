@@ -1,15 +1,13 @@
-package com.gitrnd.qaconsumer.repository;
+package com.gitrnd.qaconsumer.qaprogress.repository;
 
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.gitrnd.qaconsumer.domain.FileStatus;
-import com.gitrnd.qaconsumer.domain.QAProgress;
-import com.gitrnd.qaconsumer.mapper.QAProgressMapper;
+import com.gitrnd.qaconsumer.qaprogress.domain.QAProgress;
+import com.gitrnd.qaconsumer.qaprogress.mapper.QAProgressMapper;
 
 @Repository
 public class QAProgressRepository {

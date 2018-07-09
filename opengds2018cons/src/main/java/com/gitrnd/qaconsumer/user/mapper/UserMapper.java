@@ -1,8 +1,8 @@
-package com.gitrnd.qaconsumer.mapper;
+package com.gitrnd.qaconsumer.user.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.gitrnd.qaconsumer.domain.User;
+import com.gitrnd.qaconsumer.user.domain.User;
 
 @Mapper
 public interface UserMapper {

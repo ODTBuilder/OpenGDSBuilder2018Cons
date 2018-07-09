@@ -15,7 +15,7 @@
  *    Lesser General Public License for more details.
  */
 
-package com.gitrnd.qaconsumer.service;
+package com.gitrnd.qaconsumer.qa.file.service;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -66,10 +66,15 @@ import com.git.gdsbuilder.type.validate.layer.QALayerTypeList;
 import com.git.gdsbuilder.validator.collection.CollectionValidator;
 import com.git.gdsbuilder.validator.fileReader.DownloadValidateFile;
 import com.git.gdsbuilder.validator.fileReader.UnZipFile;
-import com.gitrnd.qaconsumer.domain.FileStatus;
-import com.gitrnd.qaconsumer.domain.Preset;
-import com.gitrnd.qaconsumer.domain.QAProgress;
-import com.gitrnd.qaconsumer.domain.User;
+import com.gitrnd.qaconsumer.filestatus.domain.FileStatus;
+import com.gitrnd.qaconsumer.filestatus.service.FileStatusService;
+import com.gitrnd.qaconsumer.preset.domain.Preset;
+import com.gitrnd.qaconsumer.preset.service.PresetService;
+import com.gitrnd.qaconsumer.qacategory.service.QACategoryService;
+import com.gitrnd.qaconsumer.qaprogress.domain.QAProgress;
+import com.gitrnd.qaconsumer.qaprogress.service.QAProgressService;
+import com.gitrnd.qaconsumer.user.domain.User;
+import com.gitrnd.qaconsumer.user.service.UserService;
 
 @ComponentScan
 @Service

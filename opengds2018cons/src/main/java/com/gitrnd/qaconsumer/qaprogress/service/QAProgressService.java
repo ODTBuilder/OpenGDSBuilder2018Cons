@@ -1,4 +1,4 @@
-package com.gitrnd.qaconsumer.service;
+package com.gitrnd.qaconsumer.qaprogress.service;
 
 import java.util.HashMap;
 import java.util.List;
@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.gitrnd.qaconsumer.domain.QAProgress;
-import com.gitrnd.qaconsumer.repository.QAProgressRepository;
+import com.gitrnd.qaconsumer.qaprogress.domain.QAProgress;
+import com.gitrnd.qaconsumer.qaprogress.repository.QAProgressRepository;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRES_NEW)
