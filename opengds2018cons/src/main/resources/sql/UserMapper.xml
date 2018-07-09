@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitrnd.qaconsumer.mapper.UserMapper">
+
+	<select id="retrieveUserById" parameterType="String"
+		resultType="com.gitrnd.qaconsumer.domain.User">
+		SELECT
+		idx,
+		uid,
+		pw,
+		email,
+		auth,
+		fname,
+		lname,
+		active,
+		tb_user.aid
+		FROM
+		tb_user,
+		tb_auth
+		WHERE tb_user.uid =
+		#{uid}
+		AND
+		tb_user.aid =
+		tb_auth.aid
+	</select>
+
+	<select id="retrieveUserByIdx" parameterType="int"
+		resultType="com.gitrnd.qaconsumer.domain.User">
+		SELECT
+		idx,
+		uid,
+		pw,
+		email,
+		auth,
+		fname,
+		lname,
+		active,
+		tb_user.aid
+		FROM
+		tb_user,
+		tb_auth
+		WHERE tb_user.idx =
+		#{idx}
+		AND
+		tb_user.aid =
+		tb_auth.aid
+	</select>
+
+	<insert id="createUser" parameterType="com.gitrnd.qaconsumer.domain.User">
+		INSERT INTO tb_user (
+		uid,
+		email,
+		pw,
+		fname,
+		lname,
+		aid
+		)
+		VALUES (
+		#{uid},
+		#{email},
+		#{pw},
+		#{fname},
+		#{lname},
+		#{aid}
+		)
+	</insert>
+
+	<select id="checkUserById" parameterType="com.gitrnd.qaconsumer.domain.User"
+		resultType="com.gitrnd.qaconsumer.domain.User">
+		SELECT
+		idx,
+		uid,
+		email,
+		aid,
+		fname,
+		lname,
+		active
+		FROM tb_user,
+		tb_auth
+		WHERE
+		uid =
+		#{uid} AND pw = #{pw} AND tb_user.aid = tb_auth.aid
+	</select>
+
+	<select id="checkUserByEmail" parameterType="com.gitrnd.qaconsumer.domain.User"
+		resultType="com.gitrnd.qaconsumer.domain.User">
+		SELECT
+		idx,
+		uid,
+		email,
+		aid,
+		fname,
+		lname,
+		active
+		FROM tb_user
+		WHERE email =
+		#{email} AND
+		pw = #{pw} AND tb_user.aid = tb_auth.aid
+	</select>
+</mapper>

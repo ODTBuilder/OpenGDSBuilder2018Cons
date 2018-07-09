@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitrnd.qaconsumer.mapper.QACategoryMapper">
+
+	<select id="retrieveQACategoryByIdx" parameterType="int"
+		resultType="com.gitrnd.qaconsumer.domain.QACategory">
+		SELECT
+		cid,
+		title,
+		support
+		FROM tb_qa_category
+		WHERE tb_qa_category.cid =
+		#{idx}
+	</select>
+
+</mapper>
