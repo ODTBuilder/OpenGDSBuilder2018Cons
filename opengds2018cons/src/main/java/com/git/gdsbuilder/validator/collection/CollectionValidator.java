@@ -80,8 +80,6 @@ import com.git.gdsbuilder.validator.layer.LayerValidatorImpl;
  */
 public class CollectionValidator {
 
-	protected static double spatialAccuracyTolorence = 0.01; // 공간분석 정밀도 설정 (m)
-
 	ErrorLayer errLayer;
 	DTLayerCollection collection;
 	DTLayerCollectionList closeCollections;
@@ -102,22 +100,13 @@ public class CollectionValidator {
 	 * @throws IOException
 	 */
 	public CollectionValidator(DTLayerCollection collection, DTLayerCollectionList closeCollections,
-			QALayerTypeList types)
-			throws NoSuchAuthorityCodeException, SchemaException, FactoryException, TransformException, IOException {
+			QALayerTypeList types) {
 		this.collection = collection;
 		this.types = types;
 		this.closeCollections = closeCollections;
 		this.errLayer = new ErrorLayer();
 		this.progress = new HashMap<String, Object>();
 		collectionValidate();
-	}
-
-	public static double getSpatialAccuracyTolorence() {
-		return spatialAccuracyTolorence;
-	}
-
-	public static void setSpatialAccuracyTolorence(double spatialAccuracyTolorence) {
-		CollectionValidator.spatialAccuracyTolorence = spatialAccuracyTolorence;
 	}
 
 	public ErrorLayer getErrLayer() {
