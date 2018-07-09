@@ -6,8 +6,8 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.gitrnd.qaconsumer.service.QAMobileService;
-import com.gitrnd.qaconsumer.service.QAFileService;
+import com.gitrnd.qaconsumer.qa.file.service.QAFileService;
+import com.gitrnd.qaconsumer.qa.mobile.service.QAMobileService;
 
 @Component
 public class Consumer {
