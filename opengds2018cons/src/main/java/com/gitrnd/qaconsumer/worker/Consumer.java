@@ -7,16 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.gitrnd.qaconsumer.qa.file.service.QAFileService;
-import com.gitrnd.qaconsumer.qa.mobile.service.QAMobileService;
 
 @Component
 public class Consumer {
 
-	@Autowired
-	QAFileService webService;
+	// @Autowired
+	// QAService webService;
 
 	@Autowired
-	QAMobileService mobileService;
+	QAFileService fileService;
 
 	@RabbitListener(queues = "${gitrnd.rabbitmq.queue}")
 	public void recievedWebMessage(String msg) throws Throwable {
@@ -27,21 +26,21 @@ public class Consumer {
 		JSONParser jsonP = new JSONParser();
 		JSONObject param = (JSONObject) jsonP.parse(msg);
 
-		boolean qa = webService.validate(param);
+		boolean qa = fileService.validate(param);
 		System.out.println(qa);
 	}
 
 	// @RabbitListener(queues = "${gitrnd.rabbitmq.queue}")
-	public JSONObject recievedMobileMessage(String msg) throws Throwable {
-
-		System.out.println(msg);
-
-		// parse parameter
-		JSONParser jsonP = new JSONParser();
-		JSONObject param = (JSONObject) jsonP.parse(msg);
-
-		JSONObject qa = mobileService.validate(param);
-		System.out.println(qa);
-		return qa;
-	}
+	// public JSONObject recievedMobileMessage(String msg) throws Throwable {
+	//
+	// System.out.println(msg);
+	//
+	// // parse parameter
+	// JSONParser jsonP = new JSONParser();
+	// JSONObject param = (JSONObject) jsonP.parse(msg);
+	//
+	// JSONObject qa = mobileService.validate(param);
+	// System.out.println(qa);
+	// return qa;
+	// }
 }

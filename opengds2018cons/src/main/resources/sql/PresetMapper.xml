@@ -2,10 +2,11 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.gitrnd.qaconsumer.mapper.PresetMapper">
+<mapper
+	namespace="com.gitrnd.qaconsumer.preset.mapper.PresetMapper">
 
 	<select id="retrieveBasePreset" parameterType="int"
-		resultType="com.gitrnd.qaconsumer.domain.Preset">
+		resultType="com.gitrnd.qaconsumer.preset.domain.Preset">
 		SELECT
 		pid,
 		cat,
@@ -21,11 +22,11 @@
 		#{cat}
 		AND bflag=true
 	</select>
-	
-	
+
+
 
 	<select id="retrievePresetById" parameterType="int"
-		resultType="com.gitrnd.qaconsumer.domain.Preset">
+		resultType="com.gitrnd.qaconsumer.preset.domain.Preset">
 		SELECT
 		pid,
 		cat,
@@ -40,8 +41,9 @@
 		#{pid}
 	</select>
 
-	<select id="retrievePresetByIdAndUidx" parameterType="com.gitrnd.qaconsumer.domain.Preset"
-		resultType="com.gitrnd.qaconsumer.domain.Preset">
+	<select id="retrievePresetByIdAndUidx"
+		parameterType="com.gitrnd.qaconsumer.preset.domain.Preset"
+		resultType="com.gitrnd.qaconsumer.preset.domain.Preset">
 		SELECT
 		pid,
 		cat,
@@ -64,7 +66,7 @@
 	</select>
 
 	<select id="retrievePresetByUidx" parameterType="int"
-		resultType="com.gitrnd.qaconsumer.domain.Preset">
+		resultType="com.gitrnd.qaconsumer.preset.domain.Preset">
 		SELECT
 		tp.pid,
 		tp.cat,
@@ -81,7 +83,7 @@
 	</select>
 
 	<select id="retrievePresetNamesByUidx" parameterType="int"
-		resultType="com.gitrnd.qaconsumer.domain.Preset">
+		resultType="com.gitrnd.qaconsumer.preset.domain.Preset">
 		SELECT
 		pid,
 		cat,
@@ -97,7 +99,8 @@
 		tb_qa_category.cid
 	</select>
 
-	<insert id="createPreset" parameterType="com.gitrnd.qaconsumer.domain.Preset"
+	<insert id="createPreset"
+		parameterType="com.gitrnd.qaconsumer.preset.domain.Preset"
 		keyProperty="pid" useGeneratedKeys="true">
 		INSERT INTO tb_preset (
 		cat,
@@ -118,7 +121,8 @@
 	</insert>
 
 
-	<update id="updatePreset" parameterType="com.gitrnd.qaconsumer.domain.Preset">
+	<update id="updatePreset"
+		parameterType="com.gitrnd.qaconsumer.preset.domain.Preset">
 		UPDATE
 		public.tb_preset
 		SET

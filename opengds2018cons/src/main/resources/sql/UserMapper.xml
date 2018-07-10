@@ -2,10 +2,10 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.gitrnd.qaconsumer.mapper.UserMapper">
+<mapper namespace="com.gitrnd.qaconsumer.user.mapper.UserMapper">
 
 	<select id="retrieveUserById" parameterType="String"
-		resultType="com.gitrnd.qaconsumer.domain.User">
+		resultType="com.gitrnd.qaconsumer.user.domain.User">
 		SELECT
 		idx,
 		uid,
@@ -27,7 +27,7 @@
 	</select>
 
 	<select id="retrieveUserByIdx" parameterType="int"
-		resultType="com.gitrnd.qaconsumer.domain.User">
+		resultType="com.gitrnd.qaconsumer.user.domain.User">
 		SELECT
 		idx,
 		uid,
@@ -48,7 +48,8 @@
 		tb_auth.aid
 	</select>
 
-	<insert id="createUser" parameterType="com.gitrnd.qaconsumer.domain.User">
+	<insert id="createUser"
+		parameterType="com.gitrnd.qaconsumer.user.domain.User">
 		INSERT INTO tb_user (
 		uid,
 		email,
@@ -67,8 +68,9 @@
 		)
 	</insert>
 
-	<select id="checkUserById" parameterType="com.gitrnd.qaconsumer.domain.User"
-		resultType="com.gitrnd.qaconsumer.domain.User">
+	<select id="checkUserById"
+		parameterType="com.gitrnd.qaconsumer.user.domain.User"
+		resultType="com.gitrnd.qaconsumer.user.domain.User">
 		SELECT
 		idx,
 		uid,
@@ -84,8 +86,9 @@
 		#{uid} AND pw = #{pw} AND tb_user.aid = tb_auth.aid
 	</select>
 
-	<select id="checkUserByEmail" parameterType="com.gitrnd.qaconsumer.domain.User"
-		resultType="com.gitrnd.qaconsumer.domain.User">
+	<select id="checkUserByEmail"
+		parameterType="com.gitrnd.qaconsumer.user.domain.User"
+		resultType="com.gitrnd.qaconsumer.user.domain.User">
 		SELECT
 		idx,
 		uid,

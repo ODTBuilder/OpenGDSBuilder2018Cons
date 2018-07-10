@@ -23,7 +23,7 @@ server:
   port: 8080
   context-path: /geodt
 gitrnd:
-  serverhost: 175.116.181.34
+  serverhost: 175.116.181.42
   apache:
     basedir: gdofiles
   rabbitmq:

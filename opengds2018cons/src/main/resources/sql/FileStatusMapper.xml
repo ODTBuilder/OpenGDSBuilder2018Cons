@@ -2,10 +2,11 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.gitrnd.qaconsumer.mapper.FileStatusMapper">
+<mapper
+	namespace="com.gitrnd.qaconsumer.filestatus.mapper.FileStatusMapper">
 
 	<select id="retrieveFileStatusById" parameterType="int"
-		resultType="com.gitrnd.qaconsumer.domain.FileStatus">
+		resultType="com.gitrnd.qaconsumer.filestatus.domain.FileStatus">
 		SELECT
 		fid,
 		fname,
@@ -20,7 +21,8 @@
 		#{fid}
 	</select>
 
-	<insert id="createFileStatus" parameterType="com.gitrnd.qaconsumer.domain.FileStatus"
+	<insert id="createFileStatus"
+		parameterType="com.gitrnd.qaconsumer.filestatus.domain.FileStatus"
 		keyProperty="fid" useGeneratedKeys="true">
 		INSERT INTO tb_file (
 		fname,
