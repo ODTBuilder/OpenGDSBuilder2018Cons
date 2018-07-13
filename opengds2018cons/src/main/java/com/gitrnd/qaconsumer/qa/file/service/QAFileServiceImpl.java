@@ -73,11 +73,13 @@ import com.gitrnd.qaconsumer.preset.service.PresetService;
 import com.gitrnd.qaconsumer.qacategory.service.QACategoryService;
 import com.gitrnd.qaconsumer.qaprogress.domain.QAProgress;
 import com.gitrnd.qaconsumer.qaprogress.service.QAProgressService;
+import com.gitrnd.qaconsumer.qareport.domain.QAReport;
+import com.gitrnd.qaconsumer.qareport.service.QAReportService;
 import com.gitrnd.qaconsumer.user.domain.User;
 import com.gitrnd.qaconsumer.user.service.UserService;
 
 @ComponentScan
-@Service
+@Service("fileService")
 public class QAFileServiceImpl implements QAFileService {
 
 	@Value("${gitrnd.apache.basedir}")
@@ -111,6 +113,8 @@ public class QAFileServiceImpl implements QAFileService {
 	QACategoryService qaCatService;
 	@Autowired
 	PresetService presetService;
+	@Autowired
+	QAReportService reportService;
 
 	@Value("${gitrnd.serverhost}")
 	private String producerAddr;
@@ -360,7 +364,7 @@ public class QAFileServiceImpl implements QAFileService {
 			createFileDirectory(ERR_FILE_DIR);
 
 			// excute validation
-			isSuccess = executorValidate(collectionList, validateLayerTypeList, epsg);
+			isSuccess = executorValidate(collectionList, validateLayerTypeList, epsg, pIdx);
 			if (isSuccess) {
 				// insert validate state
 				progress.setQaState(validateSuccess);
@@ -411,10 +415,11 @@ public class QAFileServiceImpl implements QAFileService {
 	 * @param collectionList
 	 * @param validateLayerTypeList
 	 *            void
+	 * @param pIdx
 	 * @decription
 	 */
 	private boolean executorValidate(DTLayerCollectionList collectionList, QALayerTypeList validateLayerTypeList,
-			String epsg) {
+			String epsg, int pIdx) {
 
 		// 도엽별 검수 쓰레드 생성
 		List<Future> futures = new ArrayList<>();
@@ -431,7 +436,14 @@ public class QAFileServiceImpl implements QAFileService {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					writeErrShp(epsg, validator);
+					ErrorLayer errLayer = validator.getErrLayer();
+					int errSize = errLayer.getErrFeatureList().size();
+					if (errSize > 0) {
+						// write shp file
+						writeErrShp(epsg, errLayer);
+					}
+					// insert qa report
+					insertQAReport(errLayer, errSize, pIdx);
 				}
 			};
 			Future future = execService.submit(runnable);
@@ -458,6 +470,29 @@ public class QAFileServiceImpl implements QAFileService {
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * @param errLayer
+	 * @param errCount
+	 * @param pIdx
+	 */
+	protected void insertQAReport(ErrorLayer errLayer, int errCount, int pIdx) {
+
+		String errLayerName = errLayer.getLayerName();
+		int layerCount = errLayer.getLayerCount();
+		int featureCount = errLayer.getFeatureCount();
+		int normalCount = 0;
+		if (errCount > 0) {
+			normalCount = featureCount - errCount;
+		}
+		int exceptCount = errLayer.getExceptCount();
+		String comment = errLayer.getComment();
+
+		QAReport report = new QAReport(errLayerName, layerCount, featureCount, normalCount, errCount, exceptCount,
+				comment, pIdx);
+		Integer rIdx = reportService.insertQAReport(report);
+		System.out.println("");
 	}
 
 	private void zipFileDirectory() {
@@ -511,14 +546,10 @@ public class QAFileServiceImpl implements QAFileService {
 		return fileList;
 	}
 
-	private void writeErrShp(String epsg, CollectionValidator validator) {
+	private void writeErrShp(String epsg, ErrorLayer errLayer) {
 		try {
 			// 오류레이어 발행
-			ErrorLayer errLayer = validator.getErrLayer();
-			int errSize = errLayer.getErrFeatureList().size();
-			if (errSize > 0) {
-				SHPFileWriter.writeSHP(epsg, errLayer, ERR_FILE_DIR + "\\" + errLayer.getCollectionName() + "_err.shp");
-			}
+			SHPFileWriter.writeSHP(epsg, errLayer, ERR_FILE_DIR + "\\" + errLayer.getCollectionName() + "_err.shp");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -778,28 +809,4 @@ public class QAFileServiceImpl implements QAFileService {
 	private static void FileNio2Copy(String source, String dest) throws IOException {
 		Files.copy(new File(source).toPath(), new File(dest).toPath());
 	}
-
-	/*
-	 * private static void moveDirectory(String originalPath, String renamePath){
-	 * 
-	 * File oPath = new File(originalPath); File rPath = new File(renamePath);
-	 * 
-	 * 
-	 * if( oPath.exists() ) oPath.renameTo( rPath );
-	 * 
-	 * try { FileUtils.moveDirectoryToDirectory(oPath, rPath, true);
-	 * 
-	 * } catch (IOException e) { // TODO Auto-generated catch block
-	 * System.err.println("파일 복사 에러 : " + oPath); } }
-	 */
-
-	/*
-	 * private static void renameToFile(String originalPath, String renamePath){
-	 * 
-	 * File oPath = new File(originalPath); File rPath = new File(renamePath);
-	 * 
-	 * if (!oPath.renameTo(rPath)) { System.err.println("이름 변경 에러 : " + oPath); }
-	 * 
-	 * }
-	 */
 }

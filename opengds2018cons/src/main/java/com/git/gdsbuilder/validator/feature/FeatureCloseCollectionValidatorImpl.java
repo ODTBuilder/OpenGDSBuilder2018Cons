@@ -23,7 +23,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 
 public class FeatureCloseCollectionValidatorImpl implements FeatureCloseCollectionValidator {
-	
+
 	@Override
 	public ErrorFeature validateFRefEntityNone(DTFeature feature, DTLayer closeLayer, Geometry closeBoundary,
 			OptionTolerance tolerance) {
@@ -118,7 +118,6 @@ public class FeatureCloseCollectionValidatorImpl implements FeatureCloseCollecti
 			return null;
 		}
 	}
-	
 
 	@Override
 	public ErrorFeature validateDRefEntityNone(DTFeature feature, DTLayer closeLayer, Geometry closeBoundary,
@@ -313,8 +312,11 @@ public class FeatureCloseCollectionValidatorImpl implements FeatureCloseCollecti
 				return null;
 			}
 
-			ErrorFeature errFeature = new ErrorFeature(featureID, NMQAOptions.Type.REFZVALUEMISS.getErrType(),
-					NMQAOptions.Type.REFZVALUEMISS.getErrName(), featureID + "_" + reFeatureID, minDistPt);
+			String reLayerId = closeLayer.getLayerID();
+
+			ErrorFeature errFeature = new ErrorFeature(featureID, reLayerId, reFeatureID,
+					NMQAOptions.Type.REFZVALUEMISS.getErrType(), NMQAOptions.Type.REFZVALUEMISS.getErrName(), "",
+					minDistPt);
 			return errFeature;
 		} else {
 			return null;
@@ -441,8 +443,10 @@ public class FeatureCloseCollectionValidatorImpl implements FeatureCloseCollecti
 			if (minDistPt == null) {
 				return null;
 			}
-			ErrorFeature errFeature = new ErrorFeature(featureID, NMQAOptions.Type.REFATTRIBUTEMISS.getErrType(),
-					NMQAOptions.Type.REFATTRIBUTEMISS.getErrName(), featureID + "_" + reFeatureID, minDistPt);
+			String reLayerId = closeLayer.getLayerID();
+			ErrorFeature errFeature = new ErrorFeature(featureID, reLayerId, reFeatureID,
+					NMQAOptions.Type.REFATTRIBUTEMISS.getErrType(), NMQAOptions.Type.REFATTRIBUTEMISS.getErrName(), "",
+					minDistPt);
 			return errFeature;
 		} else {
 			return null;

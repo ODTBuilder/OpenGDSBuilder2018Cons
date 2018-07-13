@@ -404,8 +404,12 @@ public class FeatureAttributeValidatorImpl implements FeatureAttributeValidator 
 								String uniqueReUfid = reUfid.substring(18, 34);
 								if (uniqueUfid.equals(uniqueReUfid)) {
 									isError = true;
-									comment += "UFID중복오류(" + featureID + "_" + relationSfID + ")";
-									break outer;
+									comment += "UFID중복오류";
+									String relayerId = relationLayer.getLayerID();
+									ErrorFeature errorFeature = new ErrorFeature(featureID, relayerId, relationSfID,
+											NMQAOptions.Type.UFIDMISS.getErrType(),
+											NMQAOptions.Type.UFIDMISS.getErrName(), comment, geom.getInteriorPoint());
+									return errorFeature;
 								}
 							}
 						}
@@ -509,15 +513,6 @@ public class FeatureAttributeValidatorImpl implements FeatureAttributeValidator 
 			return errorFeature;
 		} else {
 			return null;
-		}
-	}
-
-	private static boolean isStringDouble(String s) {
-		try {
-			Double.parseDouble(s);
-			return true;
-		} catch (NumberFormatException e) {
-			return false;
 		}
 	}
 
@@ -637,7 +632,8 @@ public class FeatureAttributeValidatorImpl implements FeatureAttributeValidator 
 	}
 
 	@Override
-	public ErrorFeature validateUSymbolDirection(DTFeature feature, List<AttributeFigure> attrFigures, DTFeature reFeature) {
+	public ErrorFeature validateUSymbolDirection(DTFeature feature, List<AttributeFigure> attrFigures,
+			DTFeature reFeature) {
 
 		// symbol
 		SimpleFeature sf = feature.getSimefeature();
@@ -665,9 +661,9 @@ public class FeatureAttributeValidatorImpl implements FeatureAttributeValidator 
 				double tmpRadians = Angle.angleBetween(tmpCoor, firCoor, secCoor);
 				int lineDegree = (int) Math.round(Angle.toDegrees(tmpRadians));
 				int revertDegree = 360 - lineDegree;
-				
+
 				String degreeKey;
-				for(AttributeFigure attrFigure : attrFigures){
+				for (AttributeFigure attrFigure : attrFigures) {
 					degreeKey = attrFigure.getKey();
 					int symbolDegree = (int) sf.getAttribute(degreeKey);
 					if (lineDegree != symbolDegree || revertDegree != symbolDegree) {

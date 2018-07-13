@@ -1119,37 +1119,47 @@ public class CollectionValidator {
 							}
 						}
 						if (option.equals("SelfEntity")) {
-							for (OptionTolerance tole : tolerance) {
-								String code = tole.getCode();
-								if (code != null) {
-									if (!code.equals(layerID)) {
-										continue;
+							List<OptionRelation> relations = geometricMiss.getRetaion();
+							if (tolerance != null) {
+								for (OptionTolerance tole : tolerance) {
+									String code = tole.getCode();
+									if (code != null) {
+										if (!code.equals(layerID)) {
+											continue;
+										}
+									}
+									// relation
+									DTLayerList relationLayers = null;
+									if (relations != null) {
+										relationLayers = new DTLayerList();
+										for (OptionRelation relation : relations) {
+											String relationName = relation.getName();
+											List<OptionFilter> reFilters = relation.getFilters();
+											if (reFilters != null) {
+												for (OptionFilter filter : reFilters) {
+													String filterCode = filter.getCode();
+													DTLayer relationLayer = types.getTypeLayer(relationName, filterCode,
+															layerCollection);
+													relationLayer.setFilter(filter);
+													relationLayers.add(relationLayer);
+												}
+											} else {
+												relationLayers = types.getTypeLayers(relationName, layerCollection);
+											}
+											LayerValidator layerValidator = new LayerValidatorImpl(typeLayer);
+											typeErrorLayer = layerValidator.validateSelfEntity(relationLayers, tole);
+											if (typeErrorLayer != null) {
+												geometricResult.mergeErrorLayer(typeErrorLayer);
+											}
+										}
 									}
 								}
-								// relation
-								List<OptionRelation> relations = geometricMiss.getRetaion();
-								DTLayerList relationLayers = null;
-								if (relations != null) {
-									relationLayers = new DTLayerList();
-									for (OptionRelation relation : relations) {
-										String relationName = relation.getName();
-										List<OptionFilter> reFilters = relation.getFilters();
-										if (reFilters != null) {
-											for (OptionFilter filter : reFilters) {
-												String filterCode = filter.getCode();
-												DTLayer relationLayer = types.getTypeLayer(relationName, filterCode,
-														layerCollection);
-												relationLayer.setFilter(filter);
-												relationLayers.add(relationLayer);
-											}
-										} else {
-											relationLayers = types.getTypeLayers(relationName, layerCollection);
-										}
-										LayerValidator layerValidator = new LayerValidatorImpl(typeLayer);
-										typeErrorLayer = layerValidator.validateSelfEntity(relationLayers, tole);
-										if (typeErrorLayer != null) {
-											geometricResult.mergeErrorLayer(typeErrorLayer);
-										}
+							} else {
+								if (relations == null) {
+									LayerValidator layerValidator = new LayerValidatorImpl(typeLayer);
+									typeErrorLayer = layerValidator.validateSelfEntity(null);
+									if (typeErrorLayer != null) {
+										geometricResult.mergeErrorLayer(typeErrorLayer);
 									}
 								}
 							}

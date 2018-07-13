@@ -37,6 +37,10 @@ public class ErrorFeature {
 
 	String layerID;
 	String featureID;
+
+	String refLayerId;
+	String refFeatureId;
+
 	String errType;
 	String errName;
 	String comment;
@@ -46,6 +50,31 @@ public class ErrorFeature {
 		super();
 		this.layerID = "";
 		this.featureID = featureID;
+		this.errType = errType;
+		this.errName = errName;
+		this.comment = comment;
+		this.errPoint = errPoint;
+	}
+
+	public ErrorFeature(String featureID, String refLayerId, String refFeatureId, String errType, String errName,
+			String comment, Geometry errPoint) {
+		super();
+		this.layerID = "";
+		this.featureID = featureID;
+		this.refLayerId = refLayerId;
+		this.refFeatureId = refFeatureId;
+		this.errType = errType;
+		this.errName = errName;
+		this.comment = comment;
+		this.errPoint = errPoint;
+	}
+
+	public ErrorFeature(String featureID, String refFeatureId, String errType, String errName, String comment,
+			Geometry errPoint) {
+		super();
+		this.layerID = "";
+		this.featureID = featureID;
+		this.refFeatureId = refFeatureId;
 		this.errType = errType;
 		this.errName = errName;
 		this.comment = comment;

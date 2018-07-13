@@ -1,12 +1,16 @@
 /**
  * 
  */
-package com.gitrnd.qaconsumer.qa.mobile.service;
+package com.gitrnd.qaconsumer.worker;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.stereotype.Service;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import com.git.gdsbuilder.parser.geoserver.QALayerParser;
 import com.git.gdsbuilder.parser.json.ErrorLayerParser;
@@ -22,18 +26,19 @@ import com.git.gdsbuilder.validator.collection.CollectionValidator;
  * @author GIT
  *
  */
-@ComponentScan
-@Service("mobileService")
-public class QAMobileServiceImpl implements QAMobileService {
+public class TEST {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.gitrnd.qaconsumer.service.QAMobileService#validate(org.json.simple.
-	 * JSONObject)
+	/**
+	 * @param args
+	 * @throws ParseException
+	 * @throws IOException
+	 * @throws FileNotFoundException
 	 */
-	@Override
-	public JSONObject validate(JSONObject param) {
+	public static void main(String[] args) throws FileNotFoundException, IOException, ParseException {
+
+		JSONParser parser = new JSONParser();
+		Object obj = parser.parse(new FileReader("d:\\option.json"));
+		JSONObject param = (JSONObject) obj;
 
 		JSONObject geoserver = (JSONObject) param.get("geoserver");
 		JSONArray layers = (JSONArray) param.get("layers");
@@ -44,12 +49,13 @@ public class QAMobileServiceImpl implements QAMobileService {
 		String user = (String) geoserver.get("user");
 		String pw = (String) geoserver.get("password");
 		String workspace = (String) geoserver.get("workspace");
-		JSONArray geoLayers = (JSONArray) param.get("layers");
+		JSONArray geoLayers = (JSONArray) geoserver.get("layers");
 
 		DTLayerList dtLayers = new DTLayerList();
 		for (int i = 0; i < geoLayers.size(); i++) {
 			String geoLayer = (String) geoLayers.get(i);
 			QALayerParser layerP = new QALayerParser(baseUrl, user, pw, workspace, geoLayer);
+			layerP.init();
 			DTLayer dtLayer = layerP.layerParse();
 			dtLayers.add(dtLayer);
 		}
@@ -71,10 +77,10 @@ public class QAMobileServiceImpl implements QAMobileService {
 				}
 			}
 			if (!isExist) {
-				JSONObject obj = new JSONObject();
-				obj.put("name", (String) lyrItem.get("name"));
-				obj.put("layers", (JSONArray) lyrItem.get("layers"));
-				typeValidate.add(obj);
+				JSONObject json = new JSONObject();
+				json.put("name", (String) lyrItem.get("name"));
+				json.put("layers", (JSONArray) lyrItem.get("layers"));
+				typeValidate.add(json);
 			}
 		}
 
@@ -85,9 +91,6 @@ public class QAMobileServiceImpl implements QAMobileService {
 		if (errorLayer != null) {
 			ErrorLayerParser errLayerP = new ErrorLayerParser();
 			JSONObject errLayerJson = errLayerP.parseGeoJSON(errorLayer);
-			return errLayerJson;
-		} else {
-			return null;
 		}
 	}
 
@@ -95,7 +98,7 @@ public class QAMobileServiceImpl implements QAMobileService {
 	 * @param dtCollection
 	 * @param validateLayerTypeList
 	 */
-	private ErrorLayer executorValidate(DTLayerCollection dtCollection, QALayerTypeList validateLayerTypeList) {
+	private static ErrorLayer executorValidate(DTLayerCollection dtCollection, QALayerTypeList validateLayerTypeList) {
 
 		CollectionValidator validator = new CollectionValidator(dtCollection, null, validateLayerTypeList);
 		ErrorLayer errorLayer = validator.getErrLayer();
