@@ -167,6 +167,12 @@ public class CollectionValidator {
 			errLayer.setCollectionName(collection.getCollectionName());
 			errLayer.setCollectionType(this.collectionType);
 
+			int layerCount = collection.getLayers().size();
+			int featureCount = getTotalFeatureCount(collection);
+
+			errLayer.setLayerCount(layerCount);
+			errLayer.setFeatureCount(featureCount);
+
 			// layerMiss 검수
 			layerMissValidate(types, collection);
 
@@ -185,6 +191,16 @@ public class CollectionValidator {
 			e.printStackTrace();
 			progress.put(collection.getCollectionName(), 3);
 		}
+	}
+
+	private int getTotalFeatureCount(DTLayerCollection collection) {
+
+		int totalCount = 0;
+		DTLayerList layers = collection.getLayers();
+		for (DTLayer layer : layers) {
+			totalCount += layer.getSimpleFeatureCollection().size();
+		}
+		return totalCount;
 	}
 
 	private void closeCollectionValidate(QALayerTypeList types, DTLayerCollection collection,

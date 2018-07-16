@@ -33,21 +33,20 @@ public class Consumer {
 		JSONParser jsonP = new JSONParser();
 		JSONObject param = (JSONObject) jsonP.parse(msg);
 
-		boolean qa = fileService.validate(param);
-		System.out.println(qa);
+		fileService.validate(param);
 	}
 
-	// @RabbitListener(queues = "${gitrnd.rabbitmq.queue}")
-	// public JSONObject recievedMobileMessage(String msg) throws Throwable {
-	//
-	// System.out.println(msg);
-	//
-	// // parse parameter
-	// JSONParser jsonP = new JSONParser();
-	// JSONObject param = (JSONObject) jsonP.parse(msg);
-	//
-	// JSONObject qa = mobileService.validate(param);
-	// System.out.println(qa);
-	// return qa;
-	// }
+	@RabbitListener(queues = "${gitrnd.rabbitmq.queue}")
+	public JSONObject recievedMobileMessage(String msg) throws Throwable {
+
+		System.out.println(msg);
+
+		// parse parameter
+		JSONParser jsonP = new JSONParser();
+		JSONObject param = (JSONObject) jsonP.parse(msg);
+
+		JSONObject qa = mobileService.validate(param);
+		System.out.println(qa);
+		return qa;
+	}
 }

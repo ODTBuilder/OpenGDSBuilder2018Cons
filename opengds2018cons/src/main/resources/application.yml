@@ -1,6 +1,6 @@
 spring:
   rabbitmq:
-    host: 175.116.181.42
+    host: 175.116.181.34
     port: 5672
     username: qaguest
     password: gitrnd!
@@ -20,12 +20,13 @@ spring:
       pool-name: gdoDBPool
       auto-commit: false
 server:
-  port: 8080
+  port: 8089
   context-path: /geodt
 gitrnd:
-  serverhost: 175.116.181.42
+  serverhost: 175.116.181.32
   apache:
     basedir: gdofiles
+    basedrive: C
   rabbitmq:
     queue: opengds_qa
 mybatis:

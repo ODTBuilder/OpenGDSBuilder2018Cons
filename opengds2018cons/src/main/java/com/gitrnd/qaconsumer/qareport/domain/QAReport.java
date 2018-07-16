@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class QAReport {
 
-	Integer rIdx;
+	Integer r_idx;
 	String layerId;
 	Integer layerCount;
 	Integer featureCount;

@@ -15,16 +15,19 @@
 		normal_count,
 		err_count,
 		except_count,
-		comment, p_idx)
+		comment,
+		p_idx)
 		values(
 		#{layerId},
+		#{layerCount},
 		#{featureCount},
 		#{normalCount},
 		#{errCount},
 		#{exceptCount},
 		#{comment},
 		#{pIdx})
-		<selectKey keyProperty="rIdx" resultType="int" order="AFTER">
+		<selectKey keyProperty="r_idx" resultType="int"
+			order="AFTER">
 			select
 			currval('tb_qa_report_r_idx_seq')
 		</selectKey>

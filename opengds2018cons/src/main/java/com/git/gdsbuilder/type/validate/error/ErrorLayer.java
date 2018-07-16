@@ -17,15 +17,11 @@
 
 package com.git.gdsbuilder.type.validate.error;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gitrnd.qaconsumer.filestatus.domain.FileStatus;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * ErrorLayer 정보를 담고 있는 클래스

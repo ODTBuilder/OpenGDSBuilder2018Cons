@@ -61,6 +61,7 @@ import com.git.gdsbuilder.parser.file.QAFileParser;
 import com.git.gdsbuilder.parser.qa.QATypeParser;
 import com.git.gdsbuilder.type.dt.collection.DTLayerCollection;
 import com.git.gdsbuilder.type.dt.collection.DTLayerCollectionList;
+import com.git.gdsbuilder.type.validate.error.ErrorFeature;
 import com.git.gdsbuilder.type.validate.error.ErrorLayer;
 import com.git.gdsbuilder.type.validate.layer.QALayerTypeList;
 import com.git.gdsbuilder.validator.collection.CollectionValidator;
@@ -73,6 +74,8 @@ import com.gitrnd.qaconsumer.preset.service.PresetService;
 import com.gitrnd.qaconsumer.qacategory.service.QACategoryService;
 import com.gitrnd.qaconsumer.qaprogress.domain.QAProgress;
 import com.gitrnd.qaconsumer.qaprogress.service.QAProgressService;
+import com.gitrnd.qaconsumer.qareport.details.domain.QADetailReport;
+import com.gitrnd.qaconsumer.qareport.details.service.QADetailReportService;
 import com.gitrnd.qaconsumer.qareport.domain.QAReport;
 import com.gitrnd.qaconsumer.qareport.service.QAReportService;
 import com.gitrnd.qaconsumer.user.domain.User;
@@ -115,6 +118,8 @@ public class QAFileServiceImpl implements QAFileService {
 	PresetService presetService;
 	@Autowired
 	QAReportService reportService;
+	@Autowired
+	QADetailReportService detailService;
 
 	@Value("${gitrnd.serverhost}")
 	private String producerAddr;
@@ -364,7 +369,7 @@ public class QAFileServiceImpl implements QAFileService {
 			createFileDirectory(ERR_FILE_DIR);
 
 			// excute validation
-			isSuccess = executorValidate(collectionList, validateLayerTypeList, epsg, pIdx);
+			isSuccess = executorValidate(collectionList, validateLayerTypeList, epsg, ERR_OUTPUT_NAME, pIdx);
 			if (isSuccess) {
 				// insert validate state
 				progress.setQaState(validateSuccess);
@@ -409,17 +414,8 @@ public class QAFileServiceImpl implements QAFileService {
 		}
 	}
 
-	/**
-	 * @author DY.Oh
-	 * @Date 2018. 2. 6. 오전 10:12:22
-	 * @param collectionList
-	 * @param validateLayerTypeList
-	 *            void
-	 * @param pIdx
-	 * @decription
-	 */
 	private boolean executorValidate(DTLayerCollectionList collectionList, QALayerTypeList validateLayerTypeList,
-			String epsg, int pIdx) {
+			String epsg, String errLayerName, int pIdx) {
 
 		// 도엽별 검수 쓰레드 생성
 		List<Future> futures = new ArrayList<>();
@@ -437,6 +433,7 @@ public class QAFileServiceImpl implements QAFileService {
 						e.printStackTrace();
 					}
 					ErrorLayer errLayer = validator.getErrLayer();
+					errLayer.setLayerName(errLayerName);
 					int errSize = errLayer.getErrFeatureList().size();
 					if (errSize > 0) {
 						// write shp file
@@ -492,7 +489,22 @@ public class QAFileServiceImpl implements QAFileService {
 		QAReport report = new QAReport(errLayerName, layerCount, featureCount, normalCount, errCount, exceptCount,
 				comment, pIdx);
 		Integer rIdx = reportService.insertQAReport(report);
-		System.out.println("");
+		
+		List<ErrorFeature> errList = errLayer.getErrFeatureList();
+		for (ErrorFeature err : errList) {
+
+			String refLayerId = err.getRefLayerId();
+			String featureId = err.getFeatureID();
+			String refFeatureId = err.getRefFeatureId();
+			String errType = err.getErrType();
+			String errName = err.getErrName();
+			String errPoint = err.getErrPoint().toString();
+			String detailComment = err.getComment();
+
+			QADetailReport detail = new QADetailReport(refLayerId, featureId, refFeatureId, errType, errName, errPoint,
+					detailComment, rIdx);
+			detailService.insertQADetailReport(detail);
+		}
 	}
 
 	private void zipFileDirectory() {
