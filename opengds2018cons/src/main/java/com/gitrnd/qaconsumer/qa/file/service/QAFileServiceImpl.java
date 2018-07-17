@@ -77,9 +77,9 @@ import com.gitrnd.qaconsumer.qaprogress.service.QAProgressService;
 import com.gitrnd.qaconsumer.qareport.details.domain.QADetailReport;
 import com.gitrnd.qaconsumer.qareport.details.service.QADetailReportService;
 import com.gitrnd.qaconsumer.qareport.domain.QAReport;
-import com.gitrnd.qaconsumer.qareport.service.QAReportService;
 import com.gitrnd.qaconsumer.user.domain.User;
 import com.gitrnd.qaconsumer.user.service.UserService;
+import com.gitrnd.qaproducer.qareport.service.QAReportService;
 
 @ComponentScan
 @Service("fileService")

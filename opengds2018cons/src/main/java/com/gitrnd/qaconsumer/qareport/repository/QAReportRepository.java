@@ -15,4 +15,12 @@ public class QAReportRepository {
 	public Integer insertQAReport(QAReport report) {
 		return mapper.insertQAReport(report);
 	}
+
+	/**
+	 * @param pIdx
+	 * @return
+	 */
+	public QAReport retrieveQAReportByPId(int pIdx) {
+		return null;
+	}
 }
