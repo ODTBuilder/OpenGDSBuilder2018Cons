@@ -33,7 +33,7 @@ public class QAMobileServiceImpl implements QAMobileService {
 	 * JSONObject)
 	 */
 	@Override
-	public JSONObject validate(JSONObject param) {
+	public String validate(JSONObject param) {
 
 		JSONObject geoserver = (JSONObject) param.get("geoserver");
 		JSONArray layers = (JSONArray) param.get("layers");
@@ -43,13 +43,13 @@ public class QAMobileServiceImpl implements QAMobileService {
 		String baseUrl = (String) geoserver.get("url");
 		String user = (String) geoserver.get("user");
 		String pw = (String) geoserver.get("password");
-		String workspace = (String) geoserver.get("workspace");
-		JSONArray geoLayers = (JSONArray) param.get("layers");
+		JSONArray geoLayers = (JSONArray) geoserver.get("layers");
 
 		DTLayerList dtLayers = new DTLayerList();
 		for (int i = 0; i < geoLayers.size(); i++) {
 			String geoLayer = (String) geoLayers.get(i);
-			QALayerParser layerP = new QALayerParser(baseUrl, user, pw, workspace, geoLayer);
+			QALayerParser layerP = new QALayerParser(baseUrl, user, pw, geoLayer);
+			layerP.init();
 			DTLayer dtLayer = layerP.layerParse();
 			dtLayers.add(dtLayer);
 		}
@@ -85,12 +85,13 @@ public class QAMobileServiceImpl implements QAMobileService {
 		if (errorLayer != null) {
 			ErrorLayerParser errLayerP = new ErrorLayerParser();
 			JSONObject errLayerJson = errLayerP.parseGeoJSON(errorLayer);
-			return errLayerJson;
+			System.out.println(errLayerJson.toString());
+			return errLayerJson.toString();
 		} else {
 			return null;
 		}
 	}
-
+ 
 	/**
 	 * @param dtCollection
 	 * @param validateLayerTypeList

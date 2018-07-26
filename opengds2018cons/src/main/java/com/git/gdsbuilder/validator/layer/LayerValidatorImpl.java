@@ -1459,7 +1459,7 @@ public class LayerValidatorImpl implements LayerValidator {
 	// 지하시설물 검수
 	@Override
 	public ErrorLayer validateUNodeMiss(DTLayerList relationLayers) {
-		
+
 		/**
 		 * 쓰레드 ValidateUNodeMiss 결과클래스
 		 * 
@@ -1476,30 +1476,30 @@ public class LayerValidatorImpl implements LayerValidator {
 				}
 			}
 		}
-		
+
 		final String layerID = validatorLayer.getLayerID();
 		final OptionFilter filter = validatorLayer.getFilter();
-		
-		
+
 		// 관로
 		SimpleFeatureCollection sfc = validatorLayer.getSimpleFeatureCollection();
-		
+
 		ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 		ValidateUNodeMissResult mergeValidateUNodeMissResult = new ValidateUNodeMissResult();
-		
+
 		class Task implements Runnable {
 			DTLayer relationLayer;
 			ValidateUNodeMissResult validateUNodeMissResult;
 			List<AttributeFilter> attrConditions;
-			
-			Task(ValidateUNodeMissResult validateUNodeMissResult, DTLayer relationLayer, List<AttributeFilter> attrConditions) {
+
+			Task(ValidateUNodeMissResult validateUNodeMissResult, DTLayer relationLayer,
+					List<AttributeFilter> attrConditions) {
 				this.relationLayer = relationLayer;
 				this.validateUNodeMissResult = validateUNodeMissResult;
 				this.attrConditions = attrConditions;
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				ErrorLayer errorLayer = new ErrorLayer();
 				OptionFilter reFilter = relationLayer.getFilter();
 				SimpleFeatureCollection relationSfc;
@@ -1525,24 +1525,24 @@ public class LayerValidatorImpl implements LayerValidator {
 					simpleFeatureIterator.close();
 				}
 				relationFeatureIterator.close();
-				
+
 				if (errorLayer.getErrFeatureList().size() > 0) {
 					errorLayer.setLayerName(validatorLayer.getLayerID());
 					validateUNodeMissResult.mergeErrorLayer(errorLayer);
-					errorLayer = null; //에러레이어 초기화
+					errorLayer = null; // 에러레이어 초기화
 				}
 			}
 		}
 		List<Future<ValidateUNodeMissResult>> futures = new ArrayList<Future<ValidateUNodeMissResult>>();
-		
-		List<AttributeFilter> attrConditions=null;
-		if(filter!=null){
-			attrConditions=  filter.getFilter();
+
+		List<AttributeFilter> attrConditions = null;
+		if (filter != null) {
+			attrConditions = filter.getFilter();
 		}
-		
+
 		for (int i = 0; i < relationLayers.size(); i++) {
 			DTLayer relationLayer = relationLayers.get(i);
-			if(relationLayer!=null){
+			if (relationLayer != null) {
 				Runnable task = new Task(mergeValidateUNodeMissResult, relationLayer, attrConditions);
 				Future<ValidateUNodeMissResult> future = executorService.submit(task, mergeValidateUNodeMissResult);
 				if (future != null) {
@@ -1561,16 +1561,14 @@ public class LayerValidatorImpl implements LayerValidator {
 		}
 		executorService.shutdown();
 		int size = mergeValidateUNodeMissResult.treadErrorLayer.getErrFeatureList().size();
-		
-		if(size>0){
+
+		if (size > 0) {
 			return mergeValidateUNodeMissResult.treadErrorLayer;
-		}else{
+		} else {
 			return null;
 		}
 	}
-	
-	
-	
+
 	@Override
 	public ErrorLayer validateUAvrgDPH20(List<OptionFigure> figures, DTLayerList relationLayers,
 			List<OptionFigure> reFigures) {
@@ -1591,31 +1589,30 @@ public class LayerValidatorImpl implements LayerValidator {
 				}
 			}
 		}
-		
-		
+
 		String layerID = validatorLayer.getLayerID();
 		OptionFilter filter = validatorLayer.getFilter();
 		SimpleFeatureCollection sfc = validatorLayer.getSimpleFeatureCollection();
-	
 
 		ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 		ValidateUAvrgDPH20Result mergeValidateUAvrgDPH20Result = new ValidateUAvrgDPH20Result();
-		
+
 		class Task implements Runnable {
 			DTLayer relationLayer;
 			List<AttributeFigure> attributeFigures;
 			DTFeature dtFeature;
 			ValidateUAvrgDPH20Result validateUAvrgDPH20Result;
-			
-			Task(ValidateUAvrgDPH20Result validateUAvrgDPH20Result, DTLayer relationLayer,List<AttributeFigure> attributeFigures, DTFeature dtFeature) {
+
+			Task(ValidateUAvrgDPH20Result validateUAvrgDPH20Result, DTLayer relationLayer,
+					List<AttributeFigure> attributeFigures, DTFeature dtFeature) {
 				this.relationLayer = relationLayer;
 				this.attributeFigures = attributeFigures;
 				this.dtFeature = dtFeature;
 				this.validateUAvrgDPH20Result = validateUAvrgDPH20Result;
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				ErrorLayer errorLayer = new ErrorLayer();
 				for (OptionFigure reFigure : reFigures) {
 					String relayerID = relationLayer.getLayerID();
@@ -1634,46 +1631,43 @@ public class LayerValidatorImpl implements LayerValidator {
 				if (errorLayer.getErrFeatureList().size() > 0) {
 					errorLayer.setLayerName(validatorLayer.getLayerID());
 					validateUAvrgDPH20Result.mergeErrorLayer(errorLayer);
-					errorLayer = null; //에러레이어 초기화
+					errorLayer = null; // 에러레이어 초기화
 				}
 			}
 		}
-		
-		
+
 		String code;
 		List<AttributeFigure> tempAttrFigures = new ArrayList<AttributeFigure>();
-		
+
 		for (OptionFigure figure : figures) {
-			code  = figure.getCode();
+			code = figure.getCode();
 			if (layerID.equals(code) || code == null) {
 				// 관로
 				List<AttributeFigure> attrFigs = figure.getFigure();
-				for(AttributeFigure attrFig : attrFigs){
+				for (AttributeFigure attrFig : attrFigs) {
 					tempAttrFigures.add(attrFig);
 				}
 			}
 		}
-		
-		
-		
+
 		List<AttributeFilter> attrConditions = null;
-		if(filter!=null){
+		if (filter != null) {
 			attrConditions = filter.getFilter();
 		}
-		
-		
+
 		SimpleFeatureIterator simpleFeatureIterator = sfc.features();
 		while (simpleFeatureIterator.hasNext()) {
 			List<Future<ValidateUAvrgDPH20Result>> futures = new ArrayList<Future<ValidateUAvrgDPH20Result>>();
-			
+
 			SimpleFeature simpleFeature = simpleFeatureIterator.next();
 			DTFeature feature = new DTFeature(layerID, simpleFeature, attrConditions);
-			
+
 			// 심도
 			for (DTLayer relationLayer : relationLayers) {
-				if(relationLayer!=null){
+				if (relationLayer != null) {
 					Runnable task = new Task(mergeValidateUAvrgDPH20Result, relationLayer, tempAttrFigures, feature);
-					Future<ValidateUAvrgDPH20Result> future = executorService.submit(task, mergeValidateUAvrgDPH20Result);
+					Future<ValidateUAvrgDPH20Result> future = executorService.submit(task,
+							mergeValidateUAvrgDPH20Result);
 					if (future != null) {
 						futures.add(future);
 					}
@@ -1688,21 +1682,20 @@ public class LayerValidatorImpl implements LayerValidator {
 					e.printStackTrace();
 				}
 			}
-			
+
 		}
 		simpleFeatureIterator.close();
 		executorService.shutdown();
-		
+
 		int size = mergeValidateUAvrgDPH20Result.treadErrorLayer.getErrFeatureList().size();
-		
-		if(size>0){
+
+		if (size > 0) {
 			return mergeValidateUAvrgDPH20Result.treadErrorLayer;
-		}else{
+		} else {
 			return null;
 		}
 	}
 
-	
 	@Override
 	public ErrorLayer validateULeaderline(DTLayerList relationLayers) throws SchemaException {
 		/**
@@ -1721,30 +1714,28 @@ public class LayerValidatorImpl implements LayerValidator {
 				}
 			}
 		}
-		
+
 		final String layerID = validatorLayer.getLayerID();
 		final OptionFilter filter = validatorLayer.getFilter();
 		ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 		ValidateULeaderlineResult mergeValidateULeaderlineResult = new ValidateULeaderlineResult();
-		
-		
-		
-		
+
 		class Task implements Runnable {
 			DTLayer relationLayer;
 			ValidateULeaderlineResult validateULeaderlineResult;
 			DTFeature feature;
 			List<AttributeFilter> attrConditions;
-			
-			Task(ValidateULeaderlineResult validateULeaderlineResult, DTFeature feature, DTLayer relationLayer, List<AttributeFilter> attrConditions) {
+
+			Task(ValidateULeaderlineResult validateULeaderlineResult, DTFeature feature, DTLayer relationLayer,
+					List<AttributeFilter> attrConditions) {
 				this.relationLayer = relationLayer;
 				this.feature = feature;
 				this.validateULeaderlineResult = validateULeaderlineResult;
 				this.attrConditions = attrConditions;
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				ErrorLayer errorLayer = new ErrorLayer();
 				SimpleFeatureCollection relationSfc = relationLayer.getSimpleFeatureCollection();
 				SimpleFeatureIterator relationIter = relationSfc.features();
@@ -1774,37 +1765,37 @@ public class LayerValidatorImpl implements LayerValidator {
 					}
 				}
 				relationIter.close();
-				
+
 				if (errorLayer.getErrFeatureList().size() > 0) {
 					errorLayer.setLayerName(validatorLayer.getLayerID());
 					validateULeaderlineResult.mergeErrorLayer(errorLayer);
-					errorLayer = null; //에러레이어 초기화
+					errorLayer = null; // 에러레이어 초기화
 				}
 			}
 		}
-		
-		
+
 		List<AttributeFilter> attrConditions = null;
-		
-		if(filter!=null){
+
+		if (filter != null) {
 			attrConditions = filter.getFilter();
 		}
-		
+
 		// 지시선 or 관로이력
 		SimpleFeatureCollection sfc = validatorLayer.getSimpleFeatureCollection();
 		SimpleFeatureIterator simpleFeatureIterator = sfc.features();
 		while (simpleFeatureIterator.hasNext()) {
 			SimpleFeature sf = simpleFeatureIterator.next();
-			
-			//쓰레드 생성
+
+			// 쓰레드 생성
 			List<Future<ValidateULeaderlineResult>> futures = new ArrayList<Future<ValidateULeaderlineResult>>();
 			DTFeature feature = new DTFeature(layerID, sf, attrConditions);
 			for (int i = 0; i < relationLayers.size(); i++) {
 				DTLayer relationLayer = relationLayers.get(i);
 				// 관로
-				if(relationLayer!=null){
+				if (relationLayer != null) {
 					Runnable task = new Task(mergeValidateULeaderlineResult, feature, relationLayer, attrConditions);
-					Future<ValidateULeaderlineResult> future = executorService.submit(task, mergeValidateULeaderlineResult);
+					Future<ValidateULeaderlineResult> future = executorService.submit(task,
+							mergeValidateULeaderlineResult);
 					if (future != null) {
 						futures.add(future);
 					}
@@ -1824,15 +1815,13 @@ public class LayerValidatorImpl implements LayerValidator {
 		executorService.shutdown();
 
 		int size = mergeValidateULeaderlineResult.treadErrorLayer.getErrFeatureList().size();
-		
-		if(size>0){
+
+		if (size > 0) {
 			return mergeValidateULeaderlineResult.treadErrorLayer;
-		}else{
+		} else {
 			return null;
 		}
 	}
-	
-	
 
 	@Override
 	public ErrorLayer validateUAvrgDPH10(DTLayerList relationLayers, List<OptionTolerance> reTolerances) {
@@ -1889,11 +1878,10 @@ public class LayerValidatorImpl implements LayerValidator {
 		}
 	}
 
-	
 	@Override
 	public ErrorLayer validateUSymbolDirection(List<OptionFigure> figures, DTLayerList relationLayers,
 			List<OptionFigure> reFigures) {
-		
+
 		/**
 		 * 쓰레드 ValidateUSymbolDirection 결과클래스
 		 * 
@@ -1910,7 +1898,7 @@ public class LayerValidatorImpl implements LayerValidator {
 				}
 			}
 		}
-		
+
 		String layerID = validatorLayer.getLayerID();
 		OptionFilter filter = validatorLayer.getFilter();
 		List<AttributeFilter> attrConditions = null;
@@ -1918,26 +1906,26 @@ public class LayerValidatorImpl implements LayerValidator {
 			attrConditions = filter.getFilter();
 		}
 		SimpleFeatureCollection sfc = validatorLayer.getSimpleFeatureCollection();
-		
-		
+
 		ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 		ValidateUSymbolDirectionResult mergeValidateUSymbolDirectionResult = new ValidateUSymbolDirectionResult();
-		
+
 		class Task implements Runnable {
 			DTLayer relationLayer;
 			List<AttributeFigure> attributeFigures;
 			DTFeature dtFeature;
 			ValidateUSymbolDirectionResult validateUSymbolDirectionResult;
-			
-			Task(ValidateUSymbolDirectionResult validateUSymbolDirectionResult, DTLayer relationLayer,List<AttributeFigure> attributeFigures, DTFeature dtFeature) {
+
+			Task(ValidateUSymbolDirectionResult validateUSymbolDirectionResult, DTLayer relationLayer,
+					List<AttributeFigure> attributeFigures, DTFeature dtFeature) {
 				this.relationLayer = relationLayer;
 				this.attributeFigures = attributeFigures;
 				this.dtFeature = dtFeature;
 				this.validateUSymbolDirectionResult = validateUSymbolDirectionResult;
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				ErrorLayer errorLayer = new ErrorLayer();
 				for (OptionFigure reFigure : reFigures) {
 					String relayerID = relationLayer.getLayerID();
@@ -1965,38 +1953,38 @@ public class LayerValidatorImpl implements LayerValidator {
 					if (errorLayer.getErrFeatureList().size() > 0) {
 						errorLayer.setLayerName(validatorLayer.getLayerID());
 						validateUSymbolDirectionResult.mergeErrorLayer(errorLayer);
-						errorLayer = null; //에러레이어 초기화
+						errorLayer = null; // 에러레이어 초기화
 					}
 				}
 			}
 		}
 
-		
 		String code;
 		List<AttributeFigure> tempAttrFigures = new ArrayList<AttributeFigure>();
-		
+
 		for (OptionFigure figure : figures) {
-			code  = figure.getCode();
+			code = figure.getCode();
 			if (layerID.equals(code) || code == null) {
 				// 관로
 				List<AttributeFigure> attrFigs = figure.getFigure();
-				for(AttributeFigure attrFig : attrFigs){
+				for (AttributeFigure attrFig : attrFigs) {
 					tempAttrFigures.add(attrFig);
 				}
 			}
 		}
-		
-		
+
 		List<Future<ValidateUSymbolDirectionResult>> futures = new ArrayList<Future<ValidateUSymbolDirectionResult>>();
-		
+
 		SimpleFeatureIterator simpleFeatureIterator = sfc.features();
 		while (simpleFeatureIterator.hasNext()) {
 			SimpleFeature simpleFeature = simpleFeatureIterator.next();
 			DTFeature feature = new DTFeature(layerID, simpleFeature, attrConditions);
 			for (DTLayer relationLayer : relationLayers) {
-				if(relationLayer!=null){
-					Runnable task = new Task(mergeValidateUSymbolDirectionResult, relationLayer, tempAttrFigures, feature);
-					Future<ValidateUSymbolDirectionResult> future = executorService.submit(task, mergeValidateUSymbolDirectionResult);
+				if (relationLayer != null) {
+					Runnable task = new Task(mergeValidateUSymbolDirectionResult, relationLayer, tempAttrFigures,
+							feature);
+					Future<ValidateUSymbolDirectionResult> future = executorService.submit(task,
+							mergeValidateUSymbolDirectionResult);
 					if (future != null) {
 						futures.add(future);
 					}
@@ -2014,12 +2002,12 @@ public class LayerValidatorImpl implements LayerValidator {
 			executorService.shutdown();
 		}
 		simpleFeatureIterator.close();
-		
+
 		int size = mergeValidateUSymbolDirectionResult.treadErrorLayer.getErrFeatureList().size();
-		
-		if(size>0){
+
+		if (size > 0) {
 			return mergeValidateUSymbolDirectionResult.treadErrorLayer;
-		}else{
+		} else {
 			return null;
 		}
 	}
@@ -2042,32 +2030,32 @@ public class LayerValidatorImpl implements LayerValidator {
 				}
 			}
 		}
-		
+
 		String layerID = validatorLayer.getLayerID();
 		OptionFilter filter = validatorLayer.getFilter();
-		
 
 		// 시설물, 심도
 		SimpleFeatureCollection sfc = validatorLayer.getSimpleFeatureCollection();
-		
+
 		ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 		ValidateUSymbolOutResult mergeValidateUSymbolOutResult = new ValidateUSymbolOutResult();
-		
+
 		class Task implements Runnable {
 			DTLayer relationLayer;
 			ValidateUSymbolOutResult validateUSymbolOutResult;
-			List<AttributeFilter> attrConditions; 
-			
-			Task(ValidateUSymbolOutResult validateUSymbolOutResult, DTLayer relationLayer, List<AttributeFilter> attrConditions) {
+			List<AttributeFilter> attrConditions;
+
+			Task(ValidateUSymbolOutResult validateUSymbolOutResult, DTLayer relationLayer,
+					List<AttributeFilter> attrConditions) {
 				this.relationLayer = relationLayer;
 				this.validateUSymbolOutResult = validateUSymbolOutResult;
 				this.attrConditions = attrConditions;
 			}
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				ErrorLayer errorLayer = new ErrorLayer();
-				
+
 				SimpleFeatureIterator simpleFeatureIterator = sfc.features();
 				while (simpleFeatureIterator.hasNext()) {
 					SimpleFeature sf = simpleFeatureIterator.next();
@@ -2082,22 +2070,22 @@ public class LayerValidatorImpl implements LayerValidator {
 				if (errorLayer.getErrFeatureList().size() > 0) {
 					errorLayer.setLayerName(validatorLayer.getLayerID());
 					validateUSymbolOutResult.mergeErrorLayer(errorLayer);
-					errorLayer = null; //에러레이어 초기화
+					errorLayer = null; // 에러레이어 초기화
 				}
 			}
 		}
-		
+
 		List<Future<ValidateUSymbolOutResult>> futures = new ArrayList<Future<ValidateUSymbolOutResult>>();
-		
-		List<AttributeFilter> attrConditions=null; 
-		if(filter!=null){
+
+		List<AttributeFilter> attrConditions = null;
+		if (filter != null) {
 			attrConditions = filter.getFilter();
 		}
-		
+
 		for (int i = 0; i < lines.size(); i++) {
 			// 관로
 			DTLayer lineLayer = lines.get(i);
-			if(lineLayer!=null){
+			if (lineLayer != null) {
 				Runnable task = new Task(mergeValidateUSymbolOutResult, lineLayer, attrConditions);
 				Future<ValidateUSymbolOutResult> future = executorService.submit(task, mergeValidateUSymbolOutResult);
 				if (future != null) {
@@ -2115,12 +2103,12 @@ public class LayerValidatorImpl implements LayerValidator {
 			}
 		}
 		executorService.shutdown();
-		
+
 		int size = mergeValidateUSymbolOutResult.treadErrorLayer.getErrFeatureList().size();
-		
-		if(size>0){
+
+		if (size > 0) {
 			return mergeValidateUSymbolOutResult.treadErrorLayer;
-		}else{
+		} else {
 			return null;
 		}
 	}
@@ -2160,8 +2148,7 @@ public class LayerValidatorImpl implements LayerValidator {
 			return null;
 		}
 	}
-	
-	
+
 	@Override
 	public ErrorLayer validateSymbolsDistance() {
 		ErrorLayer errorLayer = new ErrorLayer();
@@ -2196,8 +2183,7 @@ public class LayerValidatorImpl implements LayerValidator {
 		}
 
 	}
-	
-	
+
 	@Override
 	public ErrorLayer validateLineCross() {
 		ErrorLayer errorLayer = new ErrorLayer();
@@ -2207,7 +2193,7 @@ public class LayerValidatorImpl implements LayerValidator {
 		if (filter != null) {
 			attrConditions = filter.getFilter();
 		}
-		
+
 		List<ErrorFeature> errorFeatures;
 		SimpleFeatureCollection sfc = validatorLayer.getSimpleFeatureCollection();
 		SimpleFeatureIterator simpleFeatureIterator = sfc.features();

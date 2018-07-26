@@ -13,15 +13,15 @@ import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.feature.SchemaException;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
-import org.geotools.geojson.geom.GeometryJSON;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 import org.opengis.feature.Property;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 
 import com.git.gdsbuilder.type.validate.error.ErrorFeature;
 import com.git.gdsbuilder.type.validate.error.ErrorLayer;
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
@@ -103,9 +103,23 @@ public class ErrorLayerParser {
 	}
 
 	private JSONObject buildGeometry(Geometry geometry) {
-		GeometryJSON gjson = new GeometryJSON();
-		Object obj = JSONValue.parse(gjson.toString(geometry));
-		JSONObject jsonObj = (JSONObject) obj;
+
+		JSONObject jsonObj = new JSONObject();
+
+		// coordinates
+		Coordinate coor = geometry.getCoordinate();
+		double x = coor.x;
+		double y = coor.y;
+		JSONArray coors = new JSONArray();
+		coors.add(x);
+		coors.add(y);
+		
+		jsonObj.put("coordinates", coors);
+
+		// type
+		String type = geometry.getGeometryType();
+		jsonObj.put("type", type);
+		
 		return jsonObj;
 	}
 }

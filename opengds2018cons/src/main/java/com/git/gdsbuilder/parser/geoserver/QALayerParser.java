@@ -27,7 +27,6 @@ public class QALayerParser {
 	private String user;
 	private String pw;
 
-	private String workspace;
 	private String getCapabilities;
 	private String layerName;
 	private DataStore dataStore;
@@ -37,14 +36,12 @@ public class QALayerParser {
 	 * @param user
 	 * @param pw
 	 * @param workspace
-	 * @param layerName
 	 */
-	public QALayerParser(String baseUrl, String user, String pw, String workspace, String layerName) {
+	public QALayerParser(String baseUrl, String user, String pw, String layerName) {
 		super();
 		this.baseUrl = baseUrl;
 		this.user = user;
 		this.pw = pw;
-		this.workspace = workspace;
 		this.layerName = layerName;
 	}
 
@@ -66,13 +63,11 @@ public class QALayerParser {
 		SimpleFeatureCollection sfc = null;
 		DTLayer dtLayer = null;
 		try {
-			SimpleFeatureSource source = this.dataStore.getFeatureSource(this.workspace + ":" + this.layerName);
+			SimpleFeatureSource source = this.dataStore.getFeatureSource(this.layerName);
 			sfc = source.getFeatures();
-
-			System.out.println(sfc.size());
-
 			dtLayer = new DTLayer();
-			dtLayer.setLayerID(this.layerName);
+			String layrName = this.layerName.substring(this.layerName.indexOf(":") + 1, this.layerName.length());
+			dtLayer.setLayerID(layrName);
 			dtLayer.setSimpleFeatureCollection(sfc);
 		} catch (Exception e) {
 			e.printStackTrace();

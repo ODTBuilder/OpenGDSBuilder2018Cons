@@ -15,6 +15,6 @@ public interface QAMobileService {
 	 * @param param
 	 * @return
 	 */
-	public JSONObject validate(JSONObject param);
+	public String validate(JSONObject param);
 
 }

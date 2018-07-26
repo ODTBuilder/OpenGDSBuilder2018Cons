@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.gitrnd.qaconsumer.qareport.details.domain.QADetailReport;
-import com.gitrnd.qaproducer.qareport.repository.QADetailReportRepository;
+import com.gitrnd.qaconsumer.qareport.details.repository.QADetailReportRepository;
 
 @Service
 public class QADetailReportService {

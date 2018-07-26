@@ -25,7 +25,7 @@ public class Consumer {
 	QAMobileService mobileService;
 
 	@RabbitListener(queues = "${gitrnd.rabbitmq.queue}")
-	public void recievedWebMessage(String msg) throws Throwable {
+	public Object recievedWebMessage(String msg) throws Throwable {
 
 		System.out.println(msg);
 
@@ -33,20 +33,16 @@ public class Consumer {
 		JSONParser jsonP = new JSONParser();
 		JSONObject param = (JSONObject) jsonP.parse(msg);
 
-		fileService.validate(param);
-	}
-
-	@RabbitListener(queues = "${gitrnd.rabbitmq.queue}")
-	public JSONObject recievedMobileMessage(String msg) throws Throwable {
-
-		System.out.println(msg);
-
-		// parse parameter
-		JSONParser jsonP = new JSONParser();
-		JSONObject param = (JSONObject) jsonP.parse(msg);
-
-		JSONObject qa = mobileService.validate(param);
-		System.out.println(qa);
-		return qa;
+		if (param.get("file") != null) {
+			return fileService.validate(param);
+		}
+		if (param.get("web") != null) {
+			return null;
+		}
+		if (param.get("mobile") != null) {
+			return mobileService.validate((JSONObject) param.get("mobile"));
+		} else {
+			return null;
+		}
 	}
 }
