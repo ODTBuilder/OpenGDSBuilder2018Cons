@@ -33,7 +33,7 @@ public class QAMobileServiceImpl implements QAMobileService {
 	 * JSONObject)
 	 */
 	@Override
-	public String validate(JSONObject param) {
+	public JSONObject validate(JSONObject param) {
 
 		JSONObject geoserver = (JSONObject) param.get("geoserver");
 		JSONArray layers = (JSONArray) param.get("layers");
@@ -86,12 +86,12 @@ public class QAMobileServiceImpl implements QAMobileService {
 			ErrorLayerParser errLayerP = new ErrorLayerParser();
 			JSONObject errLayerJson = errLayerP.parseGeoJSON(errorLayer);
 			System.out.println(errLayerJson.toString());
-			return errLayerJson.toString();
+			return errLayerJson;
 		} else {
 			return null;
 		}
 	}
- 
+
 	/**
 	 * @param dtCollection
 	 * @param validateLayerTypeList
