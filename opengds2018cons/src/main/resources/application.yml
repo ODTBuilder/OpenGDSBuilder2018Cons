@@ -29,6 +29,8 @@ gitrnd:
     basedrive: C
   rabbitmq:
     queue: opengds_qa
+    exchange: opengds_qa_exchange
+    routingKey: opengds_qa_key
 mybatis:
   config-location: classpath:config/mybatis.xml
   mapper-location: classpath:sql/*.xml
