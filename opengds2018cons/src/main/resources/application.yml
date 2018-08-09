@@ -28,7 +28,7 @@ gitrnd:
     basedir: gdofiles
     basedrive: C
   rabbitmq:
-    queue: opengds_qa
+    queue: opengds_qa_queue
     exchange: opengds_qa_exchange
     routingKey: opengds_qa_key
 mybatis:
