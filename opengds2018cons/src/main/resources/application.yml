@@ -2,8 +2,12 @@ spring:
   rabbitmq:
     host: 175.116.181.42
     port: 5672
+    virtual-host: only_opengds
     username: qaconsumer
     password: qaconsumer
+    template:
+      exchange: opengds_qa_exchange
+      routing-key: opengds_qa_key
     listener:
       acknowledge-mode: auto
       default-requeue-rejected: false
@@ -29,8 +33,6 @@ gitrnd:
     basedrive: C
   rabbitmq:
     queue: opengds_qa_queue
-    exchange: opengds_qa_exchange
-    routingKey: opengds_qa_key
 mybatis:
   config-location: classpath:config/mybatis.xml
   mapper-location: classpath:sql/*.xml
