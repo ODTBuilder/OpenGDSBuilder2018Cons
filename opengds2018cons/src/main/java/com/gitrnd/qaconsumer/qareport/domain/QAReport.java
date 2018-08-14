@@ -5,7 +5,6 @@ package com.gitrnd.qaconsumer.qareport.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * @className FileValidateProgress.java
@@ -15,7 +14,6 @@ import lombok.NoArgsConstructor;
  */
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 public class QAReport {
 

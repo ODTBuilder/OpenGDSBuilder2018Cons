@@ -625,8 +625,7 @@ public class QAFileServiceImpl implements QAFileService {
 	 * 
 	 * @author SG.Lee
 	 * @Date 2018. 4. 18. 오전 9:09:33
-	 * @param source
-	 *            void
+	 * @param source void
 	 */
 	@SuppressWarnings("unused")
 	private static void subDirList(String source) {
@@ -693,8 +692,7 @@ public class QAFileServiceImpl implements QAFileService {
 	 * 
 	 * @author SG.Lee
 	 * @Date 2018. 4. 18. 오후 1:24:16
-	 * @param unzipFolder
-	 *            void
+	 * @param unzipFolder void
 	 */
 	private static File[] createCollectionFolders(File unzipFolder) {
 		boolean equalFlag = false; // 파일명이랑 압축파일명이랑 같을시 대비 flag값
@@ -815,8 +813,7 @@ public class QAFileServiceImpl implements QAFileService {
 	 * @Date 2018. 4. 18. 오전 9:45:55
 	 * @param source
 	 * @param dest
-	 * @throws IOException
-	 *             void
+	 * @throws IOException void
 	 */
 	private static void FileNio2Copy(String source, String dest) throws IOException {
 		Files.copy(new File(source).toPath(), new File(dest).toPath());

@@ -28,7 +28,6 @@ public class Consumer {
 	public Object recievedWebMessage(String msg) throws Throwable {
 
 		System.out.println(msg);
-
 		// parse parameter
 		JSONParser jsonP = new JSONParser();
 		JSONObject param = (JSONObject) jsonP.parse(msg);
