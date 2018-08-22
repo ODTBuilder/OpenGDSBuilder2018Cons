@@ -13,6 +13,7 @@ import org.opengis.feature.simple.SimpleFeature;
 
 import com.git.gdsbuilder.file.FileMeta;
 import com.git.gdsbuilder.file.FileMetaList;
+import com.git.gdsbuilder.file.writer.SHPFileWriter;
 import com.git.gdsbuilder.type.dt.collection.DTLayerCollection;
 import com.git.gdsbuilder.type.dt.collection.DTLayerCollectionList;
 import com.git.gdsbuilder.type.dt.collection.MapSystemRule;
@@ -191,6 +192,13 @@ public class QAFileParser {
 				try {
 					if (fileName.endsWith("ngi")) {
 						collection = collectionReader.ngiLayerParse(epsg, filePath, name, neatLine);
+						// test
+//						DTLayerList list = collection.getLayers();
+//						for (DTLayer tmp : list) {
+//							SHPFileWriter.writeSHP("EPSG:5186", tmp.getSimpleFeatureCollection(),
+//									"C:\\Users\\GIT\\Desktop\\새 폴더 (2)\\" + tmp.getLayerID() + ".shp");
+//							System.out.println("");
+//						}
 						if (collection == null) {
 							fileState += fileName + ":검수 대상 레이어 미존재" + brTag;
 							continue;
@@ -252,7 +260,7 @@ public class QAFileParser {
 						try {
 							layer = new SHPFileLayerParser().parseDTLayer(epsg, dirPath, name);
 							if (this.neatLine != null) {
-								if (this.neatLine.equals(layer.getLayerID())) {
+								if (this.neatLine.equalsIgnoreCase(layer.getLayerID())) {
 									collection.setNeatLine(layer);
 								} else {
 									layerList.add(layer);
@@ -376,7 +384,7 @@ public class QAFileParser {
 						try {
 							layer = new SHPFileLayerParser().parseDTLayer(epsg, dirPath, name);
 							if (this.neatLine != null) {
-								if (this.neatLine.equals(layer.getLayerID())) {
+								if (this.neatLine.toUpperCase().equals(layer.getLayerID().toUpperCase())) {
 									neatlineLayer = layer;
 								} else {
 									layerList.add(layer);

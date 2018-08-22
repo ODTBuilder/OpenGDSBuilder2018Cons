@@ -1504,7 +1504,7 @@ public class CollectionValidator {
 								}
 							}
 						}
-						if (option.equals("Overshoot")) {
+						if (option.equals("OverShoot")) {
 							for (OptionTolerance tole : tolerance) {
 
 								String code = tole.getCode();
@@ -1516,42 +1516,43 @@ public class CollectionValidator {
 										continue;
 									}
 								}
+								LayerValidator layerValidator = new LayerValidatorImpl(typeLayer);
+								typeErrorLayer = layerValidator.validateOverShoot(neatLayer, tole);
+
+								if (typeErrorLayer != null) {
+									geometricResult.mergeErrorLayer(typeErrorLayer);
+								}
 
 								// relation
-								List<OptionRelation> relations = geometricMiss.getRetaion();
-								DTLayerList relationLayers = null;
-
-								if (relations != null) {
-
-									relationLayers = new DTLayerList();
-
-									for (OptionRelation relation : relations) {
-
-										String relationName = relation.getName();
-										List<OptionFilter> reFilters = relation.getFilters();
-
-										if (reFilters != null) {
-
-											for (OptionFilter filter : reFilters) {
-
-												String filterCode = filter.getCode();
-												DTLayer relationLayer = types.getTypeLayer(relationName, filterCode,
-														layerCollection);
-												relationLayer.setFilter(filter);
-												relationLayers.add(relationLayer);
-											}
-										} else {
-
-											relationLayers = types.getTypeLayers(relationName, layerCollection);
-										}
-										LayerValidator layerValidator = new LayerValidatorImpl(typeLayer);
-										typeErrorLayer = layerValidator.validateOverShoot(relationLayers, tole);
-
-										if (typeErrorLayer != null) {
-											geometricResult.mergeErrorLayer(typeErrorLayer);
-										}
-									}
-								}
+//								List<OptionRelation> relations = geometricMiss.getRetaion();
+//								DTLayerList relationLayers = null;
+//
+//								if (relations != null) {
+//
+//									relationLayers = new DTLayerList();
+//
+//									for (OptionRelation relation : relations) {
+//
+//										String relationName = relation.getName();
+//										List<OptionFilter> reFilters = relation.getFilters();
+//
+//										if (reFilters != null) {
+//
+//											for (OptionFilter filter : reFilters) {
+//
+//												String filterCode = filter.getCode();
+//												DTLayer relationLayer = types.getTypeLayer(relationName, filterCode,
+//														layerCollection);
+//												relationLayer.setFilter(filter);
+//												relationLayers.add(relationLayer);
+//											}
+//										} else {
+//
+//											relationLayers = types.getTypeLayers(relationName, layerCollection);
+//										}
+//										
+//									}
+//								}
 							}
 						}
 						if (option.equals("EntityOpenMiss")) {

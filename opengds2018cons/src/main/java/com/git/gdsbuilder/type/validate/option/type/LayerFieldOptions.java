@@ -13,17 +13,29 @@ public class LayerFieldOptions {
 	
 	public enum Type {
 
-	LAYERFieldFIXMISS("LayerFixMiss", "필드구조오류", "레이어오류"),
-	LAYERTypeFIXMISS("LayerFixMiss", "Geometry타입오류", "레이어오류");
+	LAYERFIELDFIXMISS("LayerFixMiss", "Feature with wrong attribute value", "필드구조오류", "LayerError", "레이어오류"),
+	LAYERTYPEFIXMISS("LayerFixMiss", "Feature with wrong geometry type", "Geometry타입오류","LayerError", "레이어오류");
 		
+		String errCode;
 		String errNameE;
 		String errName;
+		String errTypeE;
 		String errType;
 
-		private Type(String errNameE, String errName, String errType) {
+		private Type(String errCode, String errNameE, String errName, String errTypeE, String errType) {
+			this.errCode = errCode;
 			this.errNameE = errNameE;
 			this.errName = errName;
+			this.errTypeE = errTypeE;
 			this.errType = errType;
+		}
+
+		public String getErrCode() {
+			return errCode;
+		}
+
+		public void setErrCode(String errCode) {
+			this.errCode = errCode;
 		}
 
 		public String getErrNameE() {
@@ -48,6 +60,15 @@ public class LayerFieldOptions {
 
 		public void setErrType(String errType) {
 			this.errType = errType;
+		}
+
+		public String getErrTypeE() {
+			return errTypeE;
+		}
+
+		public void setErrTypeE(String errTypeE) {
+			this.errTypeE = errTypeE;
 		}		
+		
 	}
 }

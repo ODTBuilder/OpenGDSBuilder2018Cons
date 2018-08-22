@@ -12,7 +12,6 @@ import org.geotools.data.simple.SimpleFeatureSource;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.GeometryType;
 import org.opengis.filter.Filter;
-import org.springframework.messaging.core.BeanFactoryMessageChannelDestinationResolver;
 
 import com.git.gdsbuilder.type.dt.layer.DTLayer;
 
@@ -55,22 +54,6 @@ public class SHPFileLayerParser {
 			SimpleFeatureSource source = beforeStore.getFeatureSource(typeName);
 			Filter filter = Filter.INCLUDE;
 			SimpleFeatureCollection collection = source.getFeatures(filter);
-
-			// CoordinateReferenceSystem dataCRS = CRS.decode(epsg);
-			// CoordinateReferenceSystem worldCRS = CRS.decode("EPSG:32652");
-			// MathTransform transform = CRS.findMathTransform(dataCRS,
-			// worldCRS);
-			//
-			// DefaultFeatureCollection dfc = new DefaultFeatureCollection();
-			// SimpleFeatureIterator sfi = collection.features();
-			// while (sfi.hasNext()) {
-			// SimpleFeature sf = sfi.next();
-			// Geometry beforeGeom = (Geometry) sf.getDefaultGeometry();
-			// Geometry afterGeom = JTS.transform(beforeGeom, transform);
-			// sf.setDefaultGeometry(afterGeom);
-			// dfc.add(sf);
-			// }
-			// sfi.close();
 			return collection;
 		} catch (Exception e) {
 			return null;

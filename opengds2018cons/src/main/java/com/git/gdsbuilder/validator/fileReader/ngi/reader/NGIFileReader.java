@@ -17,10 +17,6 @@
 
 package com.git.gdsbuilder.validator.fileReader.ngi.reader;
 
-import java.io.IOException;
-
-import org.geotools.feature.SchemaException;
-
 import com.git.gdsbuilder.type.dt.collection.DTLayerCollection;
 import com.git.gdsbuilder.type.dt.layer.DTLayer;
 import com.git.gdsbuilder.type.dt.layer.DTLayerList;
@@ -36,8 +32,7 @@ import com.git.gdsbuilder.validator.fileReader.ngi.parser.NGIFileParser;
  */
 public class NGIFileReader {
 
-	public DTLayerCollection read(String epsg, String filePath, String fileName, String neatLine)
-			throws Exception {
+	public DTLayerCollection read(String epsg, String filePath, String fileName, String neatLine) throws Exception {
 
 		NGIFileParser parser = new NGIFileParser();
 		NGIDataStore dataStore = parser.parse(filePath, epsg, "EUC-KR");
@@ -45,7 +40,8 @@ public class NGIFileReader {
 
 		DTLayerList list;
 		if (dataStore.isNDA()) {
-			NGIFileLayerParser dtlayers = new NGIFileLayerParser(epsg, dataStore.getNgiReader(), dataStore.getNdaReader());
+			NGIFileLayerParser dtlayers = new NGIFileLayerParser(epsg, dataStore.getNgiReader(),
+					dataStore.getNdaReader());
 			list = dtlayers.parseDTLayersWithAtt();
 		} else {
 			NGIFileLayerParser dtlayers = new NGIFileLayerParser(epsg, dataStore.getNgiReader());
@@ -57,7 +53,7 @@ public class NGIFileReader {
 			int sfcSize = layer.getSimpleFeatureCollection().size();
 			if (sfcSize != 0) {
 				if (neatLine != null) {
-					if (layerName.equals(neatLine)) {
+					if (layerName.toUpperCase().equals(neatLine.toUpperCase())) {
 						collection.setNeatLine(layer);
 					}
 				}

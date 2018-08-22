@@ -35,7 +35,7 @@ public class DXFFileReader {
 				DTLayer layer = dtLayers.get(i);
 				String layerName = layer.getLayerID();
 				if (neatLineName != null) {
-					if (layerName.equals(neatLineName)) {
+					if (layerName.toUpperCase().equals(neatLineName.toUpperCase())) {
 						dtCollection.setNeatLine(layer);
 					} else {
 						layerList.add(layer);

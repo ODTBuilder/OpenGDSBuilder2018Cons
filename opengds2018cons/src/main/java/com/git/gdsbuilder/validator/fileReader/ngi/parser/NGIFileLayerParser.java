@@ -56,7 +56,12 @@ public class NGIFileLayerParser {
 		String line = ngiReader.readLine();
 		while (line != null) {
 			if (line.equalsIgnoreCase("<LAYER_START>")) {
-				layers.addAll(parseDTLayerWithAtt());
+				DTLayerList layerList = parseDTLayerWithAtt();
+				for (DTLayer layer : layerList) {
+					if (layer.getSimpleFeatureCollection().size() > 0) {
+						layers.add(layer);
+					}
+				}
 			}
 			line = ngiReader.readLine();
 		}
@@ -128,7 +133,12 @@ public class NGIFileLayerParser {
 		String line = ngiReader.readLine();
 		while (line != null) {
 			if (line.equalsIgnoreCase("<LAYER_START>")) {
-				layers.addAll(parseDTLayer());
+				DTLayerList layerList = parseDTLayer();
+				for (DTLayer layer : layerList) {
+					if (layer.getSimpleFeatureCollection().size() > 0) {
+						layers.add(layer);
+					}
+				}
 			}
 			line = ngiReader.readLine();
 		}
@@ -257,8 +267,8 @@ public class NGIFileLayerParser {
 	}
 
 	/**
-	 * nda 파일에 저장된 객체의 속성정보를 List<NGIField> 객체로 파싱 @author DY.Oh @Date 2017. 3.
-	 * 11. 오전 11:31:07 @return List<NGIField> @throws IOException @throws
+	 * nda 파일에 저장된 객체의 속성정보를 List<NGIField> 객체로 파싱 @author DY.Oh @Date 2017. 3. 11.
+	 * 오전 11:31:07 @return List<NGIField> @throws IOException @throws
 	 */
 	private List<NDAField> getAttrib() throws IOException {
 

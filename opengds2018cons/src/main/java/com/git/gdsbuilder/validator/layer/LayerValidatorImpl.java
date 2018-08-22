@@ -90,6 +90,8 @@ public class LayerValidatorImpl implements LayerValidator {
 	}
 
 	/**
+	 * jf
+	 *
 	 * @return the validatorLayer
 	 */
 	public DTLayer getValidatorLayer() {
@@ -97,8 +99,7 @@ public class LayerValidatorImpl implements LayerValidator {
 	}
 
 	/**
-	 * @param validatorLayer
-	 *            the validatorLayer to set
+	 * @param validatorLayer the validatorLayer to set
 	 */
 	public void setValidatorLayer(DTLayer validatorLayer) {
 		this.validatorLayer = validatorLayer;
@@ -376,7 +377,7 @@ public class LayerValidatorImpl implements LayerValidator {
 	}
 
 	@Override
-	public ErrorLayer validateOverShoot(DTLayerList relationLayers, OptionTolerance tole) throws SchemaException {
+	public ErrorLayer validateOverShoot(DTLayer relationLayer, OptionTolerance tole) throws SchemaException {
 
 		OptionFilter filter = validatorLayer.getFilter();
 		List<AttributeFilter> attrConditions = null;
@@ -399,18 +400,18 @@ public class LayerValidatorImpl implements LayerValidator {
 			SimpleFeature simpleFeature = simpleFeatureIterator.next();
 			DTFeature feature = new DTFeature(layerID, simpleFeature, attrConditions);
 
-			for (DTLayer relationLayer : relationLayers) {
+			// for (DTLayer relationLayer : relationLayers) {
 
-				List<ErrorFeature> errFeatures = graphicValidator.validateOverShoot(feature, relationLayer, tole);
-				if (errFeatures != null) {
-					for (ErrorFeature errFeature : errFeatures) {
-						errFeature.setLayerID(layerID);
-						errorLayer.addErrorFeature(errFeature);
-					}
-				} else {
-					continue;
+			List<ErrorFeature> errFeatures = graphicValidator.validateOverShoot(feature, relationLayer, tole);
+			if (errFeatures != null) {
+				for (ErrorFeature errFeature : errFeatures) {
+					errFeature.setLayerID(layerID);
+					errorLayer.addErrorFeature(errFeature);
 				}
+			} else {
+				continue;
 			}
+			// }
 		}
 		simpleFeatureIterator.close();
 		if (errorLayer.getErrFeatureList().size() > 0) {

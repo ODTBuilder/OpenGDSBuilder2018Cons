@@ -146,7 +146,7 @@ public interface LayerValidator {
 	 * @throws SchemaException
 	 * @decription OverShoot 검수 수행
 	 */
-	public ErrorLayer validateOverShoot(DTLayerList relationLayers, OptionTolerance tole) throws SchemaException;
+	public ErrorLayer validateOverShoot(DTLayer relationLayer, OptionTolerance tole) throws SchemaException;
 
 	/**
 	 * @author DY.Oh

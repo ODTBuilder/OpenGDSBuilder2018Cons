@@ -21,7 +21,6 @@ import com.vividsolutions.jts.geom.Geometry;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * ErrorFeature 정보를 담고 있는 클래스
@@ -40,40 +39,45 @@ public class ErrorFeature {
 	String refLayerId;
 	String refFeatureId;
 
+	String errCode;
 	String errType;
 	String errName;
 	String comment;
 	Geometry errPoint;
 
-	public ErrorFeature(String featureID, String errType, String errName, String comment, Geometry errPoint) {
+	public ErrorFeature(String featureID, String errCode, String errType, String errName, String comment,
+			Geometry errPoint) {
 		super();
 		this.layerID = "";
 		this.featureID = featureID;
+		this.errCode = errCode;
 		this.errType = errType;
 		this.errName = errName;
 		this.comment = comment;
 		this.errPoint = errPoint;
 	}
 
-	public ErrorFeature(String featureID, String refLayerId, String refFeatureId, String errType, String errName,
-			String comment, Geometry errPoint) {
+	public ErrorFeature(String featureID, String refLayerId, String refFeatureId, String errCode, String errType,
+			String errName, String comment, Geometry errPoint) {
 		super();
 		this.layerID = "";
 		this.featureID = featureID;
 		this.refLayerId = refLayerId;
 		this.refFeatureId = refFeatureId;
+		this.errCode = errCode;
 		this.errType = errType;
 		this.errName = errName;
 		this.comment = comment;
 		this.errPoint = errPoint;
 	}
 
-	public ErrorFeature(String featureID, String refFeatureId, String errType, String errName, String comment,
-			Geometry errPoint) {
+	public ErrorFeature(String featureID, String refFeatureId, String errCode, String errType, String errName,
+			String comment, Geometry errPoint) {
 		super();
 		this.layerID = "";
 		this.featureID = featureID;
 		this.refFeatureId = refFeatureId;
+		this.errCode = errCode;
 		this.errType = errType;
 		this.errName = errName;
 		this.comment = comment;

@@ -41,6 +41,7 @@ public class SHPFileWriter {
 		ShapefileDataStore myData = (ShapefileDataStore) factory.createNewDataStore(map);
 		SimpleFeatureType featureType = simpleFeatureCollection.getSchema();
 		myData.forceSchemaCRS(CRS.decode(epsg));
+		myData.setCharset(Charset.forName("EUC-KR"));
 		myData.createSchema(featureType);
 		Transaction transaction = new DefaultTransaction("create");
 		String typeName = myData.getTypeNames()[0];
@@ -71,6 +72,7 @@ public class SHPFileWriter {
 				ErrorFeature err = errList.get(i);
 				String layerID = err.getLayerID();
 				String featureID = err.getFeatureID();
+				String errCode = err.getErrCode();
 				String errType = err.getErrType();
 				String errName = err.getErrName();
 				Geometry errPoint = err.getErrPoint();
@@ -92,10 +94,10 @@ public class SHPFileWriter {
 //					e.printStackTrace();
 //				}
 				SimpleFeatureType sfType = DataUtilities.createType(featureIdx,
-						"layerID:String,featureID:String,errType:String,errName:String,comment:String,the_geom:"
+						"layerID:String,featureID:String,오류코드:String,errType:String,errName:String,comment:String,the_geom:"
 								+ geomType);
 				SimpleFeature newSimpleFeature = SimpleFeatureBuilder.build(sfType,
-						new Object[] { layerID, featureID, errType, errName, comment, errPoint }, featureIdx);
+						new Object[] { layerID, featureID, errCode, errType, errName, comment, errPoint }, featureIdx);
 
 				collection.add(newSimpleFeature);
 			}
