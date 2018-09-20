@@ -9,12 +9,13 @@ import org.springframework.stereotype.Component;
 
 import com.gitrnd.qaconsumer.qa.file.service.QAFileService;
 import com.gitrnd.qaconsumer.qa.mobile.service.QAMobileService;
+import com.gitrnd.qaconsumer.qa.web.service.QAService;
 
 @Component
 public class Consumer {
 
-	// @Autowired
-	// QAService webService;
+	@Autowired
+	QAService webService;
 
 	@Autowired
 	@Qualifier("fileService")

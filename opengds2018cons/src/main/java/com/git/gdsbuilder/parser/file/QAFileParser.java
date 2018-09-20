@@ -3,6 +3,7 @@
  */
 package com.git.gdsbuilder.parser.file;
 
+import java.io.File;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -13,7 +14,6 @@ import org.opengis.feature.simple.SimpleFeature;
 
 import com.git.gdsbuilder.file.FileMeta;
 import com.git.gdsbuilder.file.FileMetaList;
-import com.git.gdsbuilder.file.writer.SHPFileWriter;
 import com.git.gdsbuilder.type.dt.collection.DTLayerCollection;
 import com.git.gdsbuilder.type.dt.collection.DTLayerCollectionList;
 import com.git.gdsbuilder.type.dt.collection.MapSystemRule;
@@ -34,12 +34,13 @@ import lombok.Data;
 @Data
 public class QAFileParser {
 
-	private String fileState = "";
+	private String status = "";
 	private String brTag = "<br>";
 
 	Integer cIdx;
 	String support;
-	UnZipFile unZipFile;
+	UnZipFile unZipFile; // file
+	File geoLayersPath; // geoserver
 	String neatLine;
 	String epsg;
 
@@ -73,8 +74,64 @@ public class QAFileParser {
 			parseForestQA20File();
 			isTrue = true;
 		} else {
-			fileState += "지원하지않는 파일포맷" + brTag;
+			status += "지원하지않는 파일포맷" + brTag;
 			isTrue = false;
+		}
+	}
+
+	public QAFileParser(String epsg, int cIdx, String support, File geoLayersPath, String neatLine) {
+
+		this.cIdx = cIdx;
+		this.support = support;
+		this.geoLayersPath = geoLayersPath;
+		this.neatLine = neatLine;
+		this.epsg = epsg;
+
+		// geolayersPath
+		if (geoLayersPath.exists() == false) {
+			System.out.println("경로가 존재하지 않습니다");
+		}
+		File[] layerFiles = geoLayersPath.listFiles();
+		if (layerFiles.length == 0) {
+			this.collectionList = null;
+			status += "검수 대상 파일 미존재" + brTag;
+		} else {
+			DTLayerCollectionList collectionList = new DTLayerCollectionList();
+			for (File layerFile : layerFiles) { // 작업공간 목록
+				DTLayerCollection collection = new DTLayerCollection();
+				boolean isDir = layerFile.isDirectory();
+				if (isDir) {
+					File[] subFiles = layerFile.listFiles();
+					if (subFiles.length == 0) {
+						this.collectionList = null;
+						status += "검수 대상 파일 미존재" + brTag;
+					}
+					DTLayerList dtLayerList = new DTLayerList();
+					for (File layer : subFiles) { // 레이어 목록
+						DTLayer dtLayer = null;
+						try {
+							dtLayer = new SHPFileLayerParser().parseDTLayer(epsg, layer);
+						} catch (Exception e) {
+							e.printStackTrace();
+							String fileName = layer.getName();
+							int Idx = fileName.lastIndexOf(".");
+							String layerName = fileName.substring(0, Idx);
+							status += layerName + ":손상된 파일" + brTag;
+						}
+						if (this.neatLine != null) {
+							if (this.neatLine.equalsIgnoreCase(layer.getName())) {
+								collection.setNeatLine(dtLayer);
+							} else {
+								dtLayerList.add(dtLayer);
+							}
+						} else {
+							dtLayerList.add(dtLayer);
+						}
+					}
+					collection.setLayers(dtLayerList);
+				}
+				collectionList.add(collection);
+			}
 		}
 	}
 
@@ -103,7 +160,7 @@ public class QAFileParser {
 							layerList.add(layer);
 						}
 					} catch (Exception e) {
-						fileState += fileName + ":손상된 파일" + brTag;
+						status += fileName + ":손상된 파일" + brTag;
 					}
 				}
 			}
@@ -113,17 +170,17 @@ public class QAFileParser {
 				collection.setLayers(layerList);
 				collectionList.add(collection);
 			} else {
-				fileState += collectionName + ":검수 대상 레이어 미존재" + brTag;
+				status += collectionName + ":검수 대상 레이어 미존재" + brTag;
 			}
 			if (collectionList.size() > 0) {
 				this.collectionList = collectionList;
 			} else {
 				this.collectionList = null;
-				fileState += "검수 대상 파일 미존재" + brTag;
+				status += "검수 대상 파일 미존재" + brTag;
 			}
 		} else {
 			this.collectionList = null;
-			fileState += "검수 대상 파일 미존재" + brTag;
+			status += "검수 대상 파일 미존재" + brTag;
 		}
 	}
 
@@ -149,13 +206,13 @@ public class QAFileParser {
 					try {
 						collection = collectionReader.dxfLayerParse(this.epsg, filePath, name, null);
 						if (collection == null) {
-							fileState += fileName + ":검수 대상 레이어 미존재" + brTag;
+							status += fileName + ":검수 대상 레이어 미존재" + brTag;
 							continue;
 						} else {
 							collectionList.add(collection);
 						}
 					} catch (Exception e) {
-						fileState += fileName + ":손상된 파일" + brTag;
+						status += fileName + ":손상된 파일" + brTag;
 					}
 				}
 			}
@@ -163,11 +220,11 @@ public class QAFileParser {
 				this.collectionList = collectionList;
 			} else {
 				this.collectionList = null;
-				fileState += "검수 대상 파일 미존재" + brTag;
+				status += "검수 대상 파일 미존재" + brTag;
 			}
 		} else {
 			this.collectionList = null;
-			fileState += "검수 대상 파일 미존재" + brTag;
+			status += "검수 대상 파일 미존재" + brTag;
 		}
 	}
 
@@ -200,12 +257,12 @@ public class QAFileParser {
 //							System.out.println("");
 //						}
 						if (collection == null) {
-							fileState += fileName + ":검수 대상 레이어 미존재" + brTag;
+							status += fileName + ":검수 대상 레이어 미존재" + brTag;
 							continue;
 						}
 					}
 					if (this.neatLine != null && collection.getNeatLine() == null) {
-						this.fileState += fileName + ":도곽미존재" + this.brTag;
+						this.status += fileName + ":도곽미존재" + this.brTag;
 						collection = null;
 					}
 					if (this.neatLine != null && collection.getNeatLine() != null) {
@@ -217,18 +274,18 @@ public class QAFileParser {
 						collectionList.add(collection);
 					}
 				} catch (Exception e) {
-					fileState += fileName + ":손상된 파일" + brTag;
+					status += fileName + ":손상된 파일" + brTag;
 				}
 			}
 			if (collectionList.size() > 0) {
 				this.collectionList = collectionList;
 			} else {
 				this.collectionList = null;
-				fileState += "검수 대상 파일 미존재" + brTag;
+				status += "검수 대상 파일 미존재" + brTag;
 			}
 		} else {
 			this.collectionList = null;
-			fileState += "검수 대상 파일 미존재" + brTag;
+			status += "검수 대상 파일 미존재" + brTag;
 		}
 	}
 
@@ -269,18 +326,18 @@ public class QAFileParser {
 								layerList.add(layer);
 							}
 						} catch (Exception e) {
-							fileState += fileName + ":손상된 파일" + brTag;
+							status += fileName + ":손상된 파일" + brTag;
 						}
 					}
 				}
 				if (layerList.size() > 0) {
 					collection.setLayers(layerList);
 				} else {
-					fileState += dirName + ":검수 대상 레이어 미존재" + brTag;
+					status += dirName + ":검수 대상 레이어 미존재" + brTag;
 					continue;
 				}
 				if (this.neatLine != null && collection.getNeatLine().getSimpleFeatureCollection() == null) {
-					this.fileState += dirName + ":도곽미존재" + this.brTag;
+					this.status += dirName + ":도곽미존재" + this.brTag;
 					collection = null;
 				}
 				if (this.neatLine != null && collection.getNeatLine().getSimpleFeatureCollection() != null) {
@@ -296,11 +353,11 @@ public class QAFileParser {
 				this.collectionList = collectionList;
 			} else {
 				this.collectionList = null;
-				fileState += "검수 대상 파일 미존재" + brTag;
+				status += "검수 대상 파일 미존재" + brTag;
 			}
 		} else {
 			this.collectionList = null;
-			fileState += "검수 대상 파일 미존재" + brTag;
+			status += "검수 대상 파일 미존재" + brTag;
 		}
 	}
 
@@ -327,12 +384,12 @@ public class QAFileParser {
 					try {
 						collection = collectionReader.dxfLayerParse(this.epsg, filePath, name, this.neatLine);
 						if (collection == null) {
-							fileState += fileName + ":검수 대상 레이어 미존재" + brTag;
+							status += fileName + ":검수 대상 레이어 미존재" + brTag;
 							continue;
 						}
 						DTLayer neatLineLayer = collection.getNeatLine();
 						if (this.neatLine != null && neatLineLayer == null) {
-							this.fileState += fileName + ":도곽미존재" + this.brTag;
+							this.status += fileName + ":도곽미존재" + this.brTag;
 							collection = null;
 							continue;
 						}
@@ -344,7 +401,7 @@ public class QAFileParser {
 							collectionList.add(collection);
 						}
 					} catch (Exception e) {
-						fileState += fileName + ":손상된 파일" + brTag;
+						status += fileName + ":손상된 파일" + brTag;
 					}
 				}
 			}
@@ -352,11 +409,11 @@ public class QAFileParser {
 				this.collectionList = collectionList;
 			} else {
 				this.collectionList = null;
-				fileState += "검수 대상 파일 미존재" + brTag;
+				status += "검수 대상 파일 미존재" + brTag;
 			}
 		} else {
 			this.collectionList = null;
-			fileState += "검수 대상 파일 미존재" + brTag;
+			status += "검수 대상 파일 미존재" + brTag;
 		}
 	}
 
@@ -393,13 +450,13 @@ public class QAFileParser {
 								layerList.add(layer);
 							}
 						} catch (Exception e) {
-							fileState += fileName + ":손상된 파일" + brTag;
+							status += fileName + ":손상된 파일" + brTag;
 						}
 					}
 				}
 				if (layerList.size() > 0) {
 					if (this.neatLine != null && neatlineLayer.getSimpleFeatureCollection() == null) {
-						this.fileState += dirName + ":도곽미존재" + this.brTag;
+						this.status += dirName + ":도곽미존재" + this.brTag;
 					}
 					if (this.neatLine != null && neatlineLayer.getSimpleFeatureCollection() != null) {
 						DTLayerCollection setDTCollection = setForestNeatLine(collection, neatlineLayer);
@@ -410,12 +467,12 @@ public class QAFileParser {
 						if (setDTCollection != null) {
 							collectionList.add(setDTCollection);
 						} else {
-							this.fileState += dirName + ":도곽미존재" + this.brTag;
+							this.status += dirName + ":도곽미존재" + this.brTag;
 						}
 					}
 				} else {
 					if (!collection.getCollectionName().equals(this.neatLine)) {
-						this.fileState += dirName + ":검수 대상 레이어 미존재" + brTag;
+						this.status += dirName + ":검수 대상 레이어 미존재" + brTag;
 						continue;
 					}
 				}
@@ -425,11 +482,11 @@ public class QAFileParser {
 				this.collectionList = collectionList;
 			} else {
 				this.collectionList = null;
-				fileState += "검수 대상 파일 미존재" + brTag;
+				status += "검수 대상 파일 미존재" + brTag;
 			}
 		} else {
 			this.collectionList = null;
-			fileState += "검수 대상 파일 미존재" + brTag;
+			status += "검수 대상 파일 미존재" + brTag;
 		}
 	}
 
