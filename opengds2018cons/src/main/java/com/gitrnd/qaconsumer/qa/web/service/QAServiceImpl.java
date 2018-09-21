@@ -79,7 +79,7 @@ import com.gitrnd.qaconsumer.user.domain.User;
 import com.gitrnd.qaconsumer.user.service.UserService;
 
 @ComponentScan
-@Service("fileService")
+@Service("webService")
 public class QAServiceImpl implements QAService {
 
 	@Value("${gitrnd.apache.basedir}")
@@ -237,16 +237,17 @@ public class QAServiceImpl implements QAService {
 			Timestamp cTime = progress.getStart_time();
 			String cTimeStr = new SimpleDateFormat("yyMMdd" + "_" + "HHmmss").format(cTime);
 
+			// 슬기씨 코딩
+			JSONObject layers = (JSONObject) param.get("layers"); // geoserver layer 정보
 			String basePath = "c:" + File.separator + baseDir + File.separator + uId + File.separator + cTimeStr
 					+ File.separator;
-
 			String geoLayersPath = basePath + File.separator + "geoLayers"; // geoserver layer file download 경로
 			String comment = "";
 
 			// option parsing
 			JSONParser jsonP = new JSONParser();
 			JSONObject option = (JSONObject) jsonP.parse(prst.getOptionDef());
-			JSONArray layers = (JSONArray) jsonP.parse(prst.getLayerDef());
+			JSONArray layerDef = (JSONArray) jsonP.parse(prst.getLayerDef());
 
 			Object neatLine = option.get("border");
 			String neatLineCode = null;
@@ -289,8 +290,8 @@ public class QAServiceImpl implements QAService {
 				qapgService.updateQAState(progress);
 			}
 			JSONArray typeValidate = (JSONArray) option.get("definition");
-			for (int j = 0; j < layers.size(); j++) {
-				JSONObject lyrItem = (JSONObject) layers.get(j);
+			for (int j = 0; j < layerDef.size(); j++) {
+				JSONObject lyrItem = (JSONObject) layerDef.get(j);
 				Boolean isExist = false;
 				for (int i = 0; i < typeValidate.size(); i++) {
 					JSONObject optItem = (JSONObject) typeValidate.get(i);

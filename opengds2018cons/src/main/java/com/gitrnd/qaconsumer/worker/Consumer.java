@@ -15,6 +15,7 @@ import com.gitrnd.qaconsumer.qa.web.service.QAService;
 public class Consumer {
 
 	@Autowired
+	@Qualifier("webService")
 	QAService webService;
 
 	@Autowired
@@ -37,7 +38,7 @@ public class Consumer {
 			return fileService.validate(param);
 		}
 		if (param.get("web") != null) {
-			return null;
+			return webService.validate((JSONObject) param.get("web"));
 		}
 		if (param.get("mobile") != null) {
 			return mobileService.validate((JSONObject) param.get("mobile"));
