@@ -21,6 +21,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -35,6 +38,14 @@ import java.util.concurrent.Future;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -361,38 +372,38 @@ public class QAFileServiceImpl implements QAFileService {
 			isSuccess = executorValidate(collectionList, validateLayerTypeList, epsg, ERR_OUTPUT_NAME, pIdx);
 			if (isSuccess) {
 				// insert validate state
-//				progress.setQaState(validateSuccess);
-//				qapgService.updateQAState(progress);
-//
-//				// zip err shp directory
-//				zipFileDirectory();
-//				String destination = "http://" + producerAddr + ":" + portNum + context + "/uploaderror.do";
-//				HttpPost post = new HttpPost(destination);
-//				InputStream inputStream = new FileInputStream(ERR_FILE_DIR + ".zip");
-//				MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-//				builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-//				builder.addTextBody("user", uId);
-//				builder.addTextBody("time", cTimeStr);
-//				builder.addTextBody("file", ERR_OUTPUT_NAME);
-//				builder.addTextBody("fid", Integer.toString(fIdx));
-//				builder.addBinaryBody("upstream", inputStream, ContentType.create("application/zip"),
-//						ERR_OUTPUT_NAME + ".zip");
-//				builder.setCharset(Charset.forName("UTF-8"));
-//
-//				HttpEntity entity = builder.build();
-//				post.setEntity(entity);
-//
-//				CloseableHttpClient client = HttpClients.createDefault();
-//				HttpResponse response = client.execute(post);
-//				client.close();
-//
-//				String encodeName = URLEncoder.encode(ERR_OUTPUT_NAME, "UTF-8");
-//				if (response.getStatusLine().getStatusCode() == 200) {
-//					String errDir = "http://" + serverhost + ":" + port + contextPath + "/downloaderror.do?" + "time="
-//							+ cTimeStr + "&" + "file=" + encodeName + ".zip";
-//					progress.setErrdirectory(errDir);
-//					qapgService.updateQAResponse(progress);
-//				}
+				progress.setQaState(validateSuccess);
+				qapgService.updateQAState(progress);
+
+				// zip err shp directory
+				zipFileDirectory();
+				String destination = "http://" + producerAddr + ":" + portNum + context + "/uploaderror.do";
+				HttpPost post = new HttpPost(destination);
+				InputStream inputStream = new FileInputStream(ERR_FILE_DIR + ".zip");
+				MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+				builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+				builder.addTextBody("user", uId);
+				builder.addTextBody("time", cTimeStr);
+				builder.addTextBody("file", ERR_OUTPUT_NAME);
+				builder.addTextBody("fid", Integer.toString(fIdx));
+				builder.addBinaryBody("upstream", inputStream, ContentType.create("application/zip"),
+						ERR_OUTPUT_NAME + ".zip");
+				builder.setCharset(Charset.forName("UTF-8"));
+
+				HttpEntity entity = builder.build();
+				post.setEntity(entity);
+
+				CloseableHttpClient client = HttpClients.createDefault();
+				HttpResponse response = client.execute(post);
+				client.close();
+
+				String encodeName = URLEncoder.encode(ERR_OUTPUT_NAME, "UTF-8");
+				if (response.getStatusLine().getStatusCode() == 200) {
+					String errDir = "http://" + serverhost + ":" + port + contextPath + "/downloaderror.do?" + "time="
+							+ cTimeStr + "&" + "file=" + encodeName + ".zip";
+					progress.setErrdirectory(errDir);
+					qapgService.updateQAResponse(progress);
+				}
 			} else {
 				// insert validate state
 				progress.setQaState(validateFail);
