@@ -1981,6 +1981,7 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 		List<ErrorFeature> errorFeatures = new ArrayList<>();
 		Geometry geometry = (Geometry) sf.getDefaultGeometry();
 		String featureID = sf.getID();
+
 		if (isTrue) {
 			GeometryFactory geometryFactory = new GeometryFactory();
 			Coordinate[] coordinates = geometry.getCoordinates();
