@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.gitrnd.qaconsumer.qaprogress.mapper.QAProgressMapper">
+
+	<select id="retrieveQAProgressById" parameterType="int"
+		resultType="com.gitrnd.qaconsumer.qaprogress.domain.QAProgress">
+		SELECT
+		tp.p_idx as pIdx,
+		tp.uidx as uIdx,
+		tp.fidx as fIdx,
+		tp.state as qaState,
+		tp.start_time,
+		tp.end_time as endTime,
+		tf.fname as
+		originName,
+		tp.qa_type as qaType,
+		tp.file_format as fileType,
+		tp.err_file_dir as errdirectory,
+		tp.err_file_name as errFileName,
+		tp.comment as comment
+		FROM
+		tb_progress tp
+		left join public.tb_file tf
+		on
+		tp.fidx = tf.fid
+		WHERE p_idx = #{pid}
+	</select>
+
+	<!-- insert request -->
+	<insert id="insertQARequest"
+		parameterType="com.gitrnd.qaconsumer.qaprogress.domain.QAProgress">
+		insert into tb_progress(uidx, qa_type, file_format, state, start_time,
+		fidx)
+		values(#{uIdx}, #{qaType}, #{fileType}, #{qaState},
+		CURRENT_TIMESTAMP, #{fIdx})
+		<selectKey keyProperty="pIdx" resultType="int" order="AFTER">
+			select
+			currval('tb_progress_p_idx_seq')
+		</selectKey>
+	</insert>
+
+	<!-- select start time -->
+	<select id="selectQAStartTime"
+		parameterType="com.gitrnd.qaconsumer.qaprogress.domain.QAProgress"
+		resultType="com.gitrnd.qaconsumer.qaprogress.domain.QAProgress">
+		select start_time
+		from tb_progress
+		where p_idx = #{pIdx}
+	</select>
+
+	<!-- update state -->
+	<select id="updateQAState"
+		parameterType="com.gitrnd.qaconsumer.qaprogress.domain.QAProgress">
+		update tb_progress set
+		state = #{qaState}, comment =
+		#{comment} where p_idx = #{pIdx}
+	</select>
+
+	<!-- insert response -->
+	<insert id="updateQAResponse"
+		parameterType="com.gitrnd.qaconsumer.qaprogress.domain.QAProgress">
+		update tb_progress
+		set err_file_dir = #{errdirectory},
+		err_file_name = #{errFileName},
+		end_time = CURRENT_TIMESTAMP
+		where p_idx
+		= #{pIdx}
+	</insert>
+
+</mapper>

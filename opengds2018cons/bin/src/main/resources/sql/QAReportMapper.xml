@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.gitrnd.qaconsumer.qareport.mapper.QAReportMapper">
+
+	<!-- insert report -->
+	<insert id="insertQAReport"
+		parameterType="com.gitrnd.qaconsumer.qareport.domain.QAReport">
+		insert into tb_qa_report(
+		layer_id,
+		layer_count,
+		feature_count,
+		normal_count,
+		err_count,
+		except_count,
+		comment,
+		p_idx)
+		values(
+		#{layerId},
+		#{layerCount},
+		#{featureCount},
+		#{normalCount},
+		#{errCount},
+		#{exceptCount},
+		#{comment},
+		#{pIdx})
+		<selectKey keyProperty="r_idx" resultType="int"
+			order="AFTER">
+			select
+			currval('tb_qa_report_r_idx_seq')
+		</selectKey>
+	</insert>
+</mapper>
