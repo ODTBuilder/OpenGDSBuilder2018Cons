@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.FileSystems;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -59,67 +58,60 @@ public class UndergroundExport {
 	 * */
 	public int export(){
 		int flag = 500;
-		Path tmp;
-		try {
-			tmp = Files.createTempDirectory(outputFolderPath, tmp_dir_prefix);//temp 디렉토리 생성(임시폴더)
-					if (layerNames != null) {
-						for (String layerName : layerNames) {
-							StringBuffer urlBuffer = new StringBuffer();
-							urlBuffer.append(serverURL);
-							urlBuffer.append("/" + workspace + "/ows?");
-							urlBuffer.append("service=" + SERVICE);
-							urlBuffer.append("&");
-							urlBuffer.append("version=" + VERSION);
-							urlBuffer.append("&");
-							urlBuffer.append("request=" + REQUEST);
-							urlBuffer.append("&");
-							urlBuffer.append("typeName=" + workspace + ":" + layerName);
-							urlBuffer.append("&");
-							urlBuffer.append("outputFormat=" + OUTPUTFORMAT);
-							urlBuffer.append("&");
-							urlBuffer.append("srsname=" + srs);
+		if (layerNames != null) {
+			for (String layerName : layerNames) {
+				StringBuffer urlBuffer = new StringBuffer();
+				urlBuffer.append(serverURL);
+				urlBuffer.append("/" + workspace + "/ows?");
+				urlBuffer.append("service=" + SERVICE);
+				urlBuffer.append("&");
+				urlBuffer.append("version=" + VERSION);
+				urlBuffer.append("&");
+				urlBuffer.append("request=" + REQUEST);
+				urlBuffer.append("&");
+				urlBuffer.append("typeName=" + workspace + ":" + layerName);
+				urlBuffer.append("&");
+				urlBuffer.append("outputFormat=" + OUTPUTFORMAT);
+				urlBuffer.append("&");
+				urlBuffer.append("srsname=" + srs);
+				try {
+					this.downloadFile(urlBuffer.toString(), outputFolderPath.toString());//다운로드 요청
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					flag = 703;
+					System.err.println(layerName + " 레이어 다운로드 에러");
+					return flag;
+				}
+			}
+			File zipFolder = new File(outputFolderPath.toString());
+			if(!zipFolder.exists()){
+				System.err.println("폴더가 존재하지 않습니다");
+			}else{
+				File[] fileList = zipFolder.listFiles();
+				for (int i = 0; i < fileList.length; i++) {
+					File file = fileList[i];
+					if (file.isFile()) {
+						String fFullName = file.getName();
+
+						if (fFullName.endsWith(".zip")) {
+							UndergroundUnzip unZipFile = new UndergroundUnzip(file);
 							try {
-								this.downloadFile(urlBuffer.toString(), tmp.toString());//다운로드 요청
-							} catch (IOException e) {
+								flag = unZipFile.decompress();
+								file.delete();
+							} catch (Throwable e) {
 								// TODO Auto-generated catch block
-								flag = 703;
-								System.err.println(layerName + " 레이어 다운로드 에러");
+								flag = 702;
+								System.err.println("압축풀기 실패");
+								file.delete();
 								return flag;
 							}
-						}
-						File zipFolder = new File(tmp.toString());
-						if(!zipFolder.exists()){
-							System.err.println("폴더가 존재하지 않습니다");
-						}else{
-							File[] fileList = zipFolder.listFiles();
-							for (int i = 0; i < fileList.length; i++) {
-								File file = fileList[i];
-								if (file.isFile()) {
-									String fFullName = file.getName();
-
-									if (fFullName.endsWith(".zip")) {
-										UndergroundUnzip unZipFile = new UndergroundUnzip(file);
-										try {
-											flag = unZipFile.decompress();
-											file.delete();
-										} catch (Throwable e) {
-											// TODO Auto-generated catch block
-											flag = 702;
-											System.err.println("압축풀기 실패");
-											file.delete();
-											return flag;
-										}
-									} 
-								}
-							}
-						}
-					} else {
-						flag = 701;
-						System.err.println("레이어 리스트 NULL");
+						} 
 					}
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			System.err.println("정상적으로 export되지 않았습니다.");
+				}
+			}
+		} else {
+			flag = 701;
+			System.err.println("레이어 리스트 NULL");
 		}
 		return flag;
 	}

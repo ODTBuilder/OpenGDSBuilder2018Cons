@@ -20,8 +20,6 @@ import com.git.gdsbuilder.geoserver.converter.unzip.ForestUnzip;
  * @Date 2018. 10. 30. 오전 9:53:18
  * */
 public class ForestExport {
-private final static String tmp_dir_prefix ="temp_";
-	
 	private static final int BUFFER_SIZE = 4096;	
 	private final static String SERVICE = "WFS";
 	private final static String REQUEST = "GetFeature";
@@ -77,75 +75,68 @@ private final static String tmp_dir_prefix ="temp_";
 	 * */
 	public int export(){
 			int flag = 500;
-			Path tmp;
-			try {
-				tmp = Files.createTempDirectory(outputFolderPath, tmp_dir_prefix);//temp 디렉토리 생성(임시폴더)
-						if (layerNames != null) {
-							for (String layerName : layerNames) {
-								StringBuffer urlBuffer = new StringBuffer();
-								urlBuffer.append(serverURL);
-								urlBuffer.append("/" + workspace + "/ows?");
-								urlBuffer.append("service=" + SERVICE);
-								urlBuffer.append("&");
-								urlBuffer.append("version=" + VERSION);
-								urlBuffer.append("&");
-								urlBuffer.append("request=" + REQUEST);
-								urlBuffer.append("&");
-								urlBuffer.append("typeName=" + workspace + ":" + layerName);
-								urlBuffer.append("&");
-								urlBuffer.append("outputFormat=" + OUTPUTFORMAT);
-								urlBuffer.append("&");
-								urlBuffer.append("srsname=" + srs);
+			if (layerNames != null) {
+				for (String layerName : layerNames) {
+					StringBuffer urlBuffer = new StringBuffer();
+					urlBuffer.append(serverURL);
+					urlBuffer.append("/" + workspace + "/ows?");
+					urlBuffer.append("service=" + SERVICE);
+					urlBuffer.append("&");
+					urlBuffer.append("version=" + VERSION);
+					urlBuffer.append("&");
+					urlBuffer.append("request=" + REQUEST);
+					urlBuffer.append("&");
+					urlBuffer.append("typeName=" + workspace + ":" + layerName);
+					urlBuffer.append("&");
+					urlBuffer.append("outputFormat=" + OUTPUTFORMAT);
+					urlBuffer.append("&");
+					urlBuffer.append("srsname=" + srs);
+					try {
+						this.downloadFile(urlBuffer.toString(), outputFolderPath.toString());//다운로드 요청
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						flag = 703;
+						System.err.println(layerName + " 레이어 다운로드 에러");
+						return flag;
+					}
+				}
+				File zipFolder = new File(outputFolderPath.toString());
+				if(!zipFolder.exists()){
+					System.err.println("폴더가 존재하지 않습니다");
+				}else{
+					File[] fileList = zipFolder.listFiles();
+					for (int i = 0; i < fileList.length; i++) {
+						File file = fileList[i];
+						if (file.isFile()) {
+							String filePath = file.getPath();
+							String fFullName = file.getName();
+
+							int Idx = fFullName.lastIndexOf(".");
+							String _fileName = fFullName.substring(0, Idx);
+
+							String parentPath = file.getParent(); // 상위 폴더 경로
+
+							if (fFullName.endsWith(".zip")) {
+								ForestUnzip unZipFile = new ForestUnzip(file);
 								try {
-									this.downloadFile(urlBuffer.toString(), tmp.toString());//다운로드 요청
-								} catch (IOException e) {
+									flag = unZipFile.decompress();
+									file.delete();
+								} catch (Throwable e) {
 									// TODO Auto-generated catch block
-									flag = 703;
-									System.err.println(layerName + " 레이어 다운로드 에러");
+									flag = 702;
+									file.delete();
+									System.err.println("압축풀기 실패");
 									return flag;
 								}
-							}
-							File zipFolder = new File(tmp.toString());
-							if(!zipFolder.exists()){
-								System.err.println("폴더가 존재하지 않습니다");
-							}else{
-								File[] fileList = zipFolder.listFiles();
-								for (int i = 0; i < fileList.length; i++) {
-									File file = fileList[i];
-									if (file.isFile()) {
-										String filePath = file.getPath();
-										String fFullName = file.getName();
-
-										int Idx = fFullName.lastIndexOf(".");
-										String _fileName = fFullName.substring(0, Idx);
-
-										String parentPath = file.getParent(); // 상위 폴더 경로
-
-										if (fFullName.endsWith(".zip")) {
-											ForestUnzip unZipFile = new ForestUnzip(file);
-											try {
-												flag = unZipFile.decompress();
-												file.delete();
-											} catch (Throwable e) {
-												// TODO Auto-generated catch block
-												flag = 702;
-												file.delete();
-												System.err.println("압축풀기 실패");
-												return flag;
-											}
-										} 
-									}
-								}
-							}
-							//임상도 폴더 재생성
-							createCollectionFolders(zipFolder, nearLine);
-						} else {
-							flag = 701;
-							System.err.println("레이어 리스트 NULL");
+							} 
 						}
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				System.err.println("정상적으로 export되지 않았습니다.");
+					}
+				}
+				//임상도 폴더 재생성
+				createCollectionFolders(zipFolder, nearLine);
+			} else {
+				flag = 701;
+				System.err.println("레이어 리스트 NULL");
 			}
 			return flag;
 	}
