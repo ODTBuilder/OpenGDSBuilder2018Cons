@@ -46,6 +46,7 @@ import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.factory.CommonFactoryFinder;
+import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.feature.SchemaException;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.filter.Filter;
@@ -65,6 +66,7 @@ import com.git.gdsbuilder.type.validate.option.specific.OptionFigure;
 import com.git.gdsbuilder.type.validate.option.specific.OptionFilter;
 import com.git.gdsbuilder.type.validate.option.specific.OptionTolerance;
 import com.git.gdsbuilder.type.validate.option.standard.FixedValue;
+import com.git.gdsbuilder.type.validate.option.type.DMQAOptions;
 import com.git.gdsbuilder.validator.feature.FeatureAttributeValidator;
 import com.git.gdsbuilder.validator.feature.FeatureAttributeValidatorImpl;
 import com.git.gdsbuilder.validator.feature.FeatureCloseCollectionValidator;
@@ -485,10 +487,12 @@ public class LayerValidatorImpl implements LayerValidator {
 		String layerID = validatorLayer.getLayerID();
 		SimpleFeatureCollection sfc = validatorLayer.getSimpleFeatureCollection();
 		SimpleFeatureIterator sfcIter = sfc.features();
+
+		DefaultFeatureCollection dfc = new DefaultFeatureCollection();
 		while (sfcIter.hasNext()) {
 			SimpleFeature sf = sfcIter.next();
 			Geometry geom = (Geometry) sf.getDefaultGeometry();
-			DTFeature feature = new DTFeature(layerID, sf, attrConditions);
+			System.out.println(sf.getID());
 			// relation
 			if (relationLayers != null) {
 				for (int i = 0; i < relationLayers.size(); i++) {
@@ -501,28 +505,23 @@ public class LayerValidatorImpl implements LayerValidator {
 					}
 					SimpleFeatureCollection reSfc = relationLayer.getSimpleFeatureCollection();
 					FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2();
-					Filter filter = ff.intersects(ff.property("the_geom"), ff.literal(geom.getEnvelope()));
+					Filter filter = ff.intersects(ff.property("the_geom"), ff.literal(geom));
 					SimpleFeatureSource source = DataUtilities.source(reSfc);
 					SimpleFeatureCollection refilterSfc = source.getFeatures(filter);
-					SimpleFeatureIterator reSfcIter = refilterSfc.features();
-					while (reSfcIter.hasNext()) {
-						SimpleFeature reSf = reSfcIter.next();
-						if (sf.equals(reSf)) {
-							continue;
-						}
-						DTFeature reFeature = new DTFeature(relationLayerId, reSf, reAttrConditions);
-						List<ErrorFeature> errFeatures = graphicValidator.validateSelfEntity(feature, reFeature,
-								tolerance);
-						if (errFeatures != null) {
-							for (ErrorFeature errFeature : errFeatures) {
-								errFeature.setLayerID(layerId);
-								errorLayer.addErrorFeature(errFeature);
-							}
-						}
-					}
-					reSfcIter.close();
+//					while (reSfcIter.hasNext()) {
+//						SimpleFeature reSf = reSfcIter.next();
+//						if (sf.equals(reSf)) {
+//							continue;
+//						}
+//						ErrorFeature errFeature = new ErrorFeature(sf.getID(), relationLayerId, reSf.getID(),
+//								DMQAOptions.Type.SELFENTITY.getErrCode(), DMQAOptions.Type.SELFENTITY.getErrTypeE(),
+//								DMQAOptions.Type.SELFENTITY.getErrNameE(), "", geom.getInteriorPoint());
+//						errFeature.setLayerID(layerId);
+//						errorLayer.addErrorFeature(errFeature);
 				}
+//					reSfcIter.close();
 			}
+//			}
 		}
 		if (errorLayer.getErrFeatureList().size() > 0) {
 			errorLayer.setLayerName(validatorLayer.getLayerID());

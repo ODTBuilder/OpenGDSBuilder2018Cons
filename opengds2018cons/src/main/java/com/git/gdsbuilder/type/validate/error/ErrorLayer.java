@@ -61,7 +61,7 @@ public class ErrorLayer {
 		this.errFeatureList.add(errFeature);
 	}
 
-	public void addErrorFeatureCollection(List<ErrorFeature> errFeatures) {
+	public void addErrorFeatureList(List<ErrorFeature> errFeatures) {
 		this.errFeatureList.addAll(errFeatures);
 	}
 

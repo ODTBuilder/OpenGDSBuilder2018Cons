@@ -680,8 +680,6 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 		boolean isTrue = false;
 		SimpleFeature sf = dtFeature.getSimefeature();
 
-		System.out.println(sf.getID());
-
 		List<AttributeFilter> filters = dtFeature.getFilter();
 		if (filters != null) {
 			isTrue = FeatureFilter.filter(sf, filters);
