@@ -89,9 +89,9 @@ public class QAFileServiceImpl implements QAFileService {
 	private String baseDir;
 	@Value("${gitrnd.serverhost}")
 	private String serverhost;
-	@Value("${server.port}")
+	@Value("${server.servlet.port}")
 	private String port;
-	@Value("${server.context-path}")
+	@Value("${server.servlet.context-path}")
 	private String contextPath;
 
 	// file dir
@@ -101,10 +101,10 @@ public class QAFileServiceImpl implements QAFileService {
 	protected static String ERR_ZIP_DIR;
 
 	// qa progress
-	protected static int fileUpload = 1;
-	protected static int validateProgresing = 2;
-	protected static int validateSuccess = 3;
-	protected static int validateFail = 4;
+	protected static int FILEUPLOAD = 1;
+	protected static int VALIDATEPROGRESING = 2;
+	protected static int VALIDATESUCCESS = 3;
+	protected static int VALIDATEFAIL = 4;
 
 	@Autowired
 	FileStatusService fileStatusService;
@@ -120,15 +120,6 @@ public class QAFileServiceImpl implements QAFileService {
 	QAReportService reportService;
 	@Autowired
 	QADetailReportService detailService;
-
-	@Value("${gitrnd.serverhost}")
-	private String producerAddr;
-
-	@Value("${server.port}")
-	private String portNum;
-
-	@Value("${server.context-path}")
-	private String context;
 
 	@SuppressWarnings("unchecked")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -157,7 +148,7 @@ public class QAFileServiceImpl implements QAFileService {
 		String type = progress.getFileType();
 
 		// start
-		progress.setQaState(validateProgresing);
+		progress.setQaState(VALIDATEPROGRESING);
 		qapgService.updateQAState(progress);
 
 		Preset prst = null;
@@ -222,17 +213,17 @@ public class QAFileServiceImpl implements QAFileService {
 		// 옵션또는 파일이 제대로 넘어오지 않았을때 강제로 예외발생
 		if (qaVer == null || qaType == null || prid == null) {
 			progress.setComment("재로그인 후 다시 요청해주세요.");
-			progress.setQaState(validateFail);
+			progress.setQaState(VALIDATEFAIL);
 			qapgService.updateQAState(progress);
 			return isSuccess;
 		} else if (prst == null) {
 			progress.setComment("옵션을 재설정 해주세요.");
-			progress.setQaState(validateFail);
+			progress.setQaState(VALIDATEFAIL);
 			qapgService.updateQAState(progress);
 			return isSuccess;
 		} else if (fileformat == null) {
 			progress.setComment("파일포맷을 설정해주세요.");
-			progress.setQaState(validateFail);
+			progress.setQaState(VALIDATEFAIL);
 			qapgService.updateQAState(progress);
 			return isSuccess;
 		} else {
@@ -257,7 +248,7 @@ public class QAFileServiceImpl implements QAFileService {
 			DownloadValidateFile download = new DownloadValidateFile();
 			boolean downloaded = download.download(location, zipfilePath);
 			if (!downloaded) {
-				progress.setQaState(validateFail);
+				progress.setQaState(VALIDATEFAIL);
 				qapgService.updateQAState(progress);
 				return isSuccess;
 			}
@@ -298,7 +289,7 @@ public class QAFileServiceImpl implements QAFileService {
 				if (!comment.equals("")) {
 					progress.setComment(comment);
 				}
-				progress.setQaState(validateFail);
+				progress.setQaState(VALIDATEFAIL);
 				qapgService.updateQAState(progress);
 				deleteDirectory(baseDirFile);
 				return isSuccess;
@@ -310,7 +301,7 @@ public class QAFileServiceImpl implements QAFileService {
 				if (!comment.equals("")) {
 					progress.setComment(comment);
 				}
-				progress.setQaState(validateFail);
+				progress.setQaState(VALIDATEFAIL);
 				qapgService.updateQAState(progress);
 				deleteDirectory(baseDirFile);
 				return isSuccess;
@@ -350,7 +341,7 @@ public class QAFileServiceImpl implements QAFileService {
 				if (!comment.equals("")) {
 					progress.setComment(comment);
 				}
-				progress.setQaState(validateFail);
+				progress.setQaState(VALIDATEFAIL);
 				qapgService.updateQAState(progress);
 				deleteDirectory(baseDirFile);
 				return isSuccess;
@@ -372,12 +363,12 @@ public class QAFileServiceImpl implements QAFileService {
 			isSuccess = executorValidate(collectionList, validateLayerTypeList, epsg, ERR_OUTPUT_NAME, pIdx);
 			if (isSuccess) {
 				// insert validate state
-				progress.setQaState(validateSuccess);
+				progress.setQaState(VALIDATESUCCESS);
 				qapgService.updateQAState(progress);
 
 				// zip err shp directory
 				zipFileDirectory();
-				String destination = "http://" + producerAddr + ":" + portNum + context + "/uploaderror.do";
+				String destination = "http://" + serverhost + ":" + port + contextPath + "/uploaderror.do";
 				HttpPost post = new HttpPost(destination);
 				InputStream inputStream = new FileInputStream(ERR_FILE_DIR + ".zip");
 				MultipartEntityBuilder builder = MultipartEntityBuilder.create();
@@ -406,7 +397,7 @@ public class QAFileServiceImpl implements QAFileService {
 				}
 			} else {
 				// insert validate state
-				progress.setQaState(validateFail);
+				progress.setQaState(VALIDATEFAIL);
 				qapgService.updateQAState(progress);
 			}
 			deleteDirectory(baseDirFile);

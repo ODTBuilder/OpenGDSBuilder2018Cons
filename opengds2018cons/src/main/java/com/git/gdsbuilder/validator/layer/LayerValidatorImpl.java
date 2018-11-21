@@ -465,6 +465,7 @@ public class LayerValidatorImpl implements LayerValidator {
 			}
 			selfSfcIter.close();
 		}
+		sfcIter.close();
 		if (errorLayer.getErrFeatureList().size() > 0) {
 			errorLayer.setLayerName(validatorLayer.getLayerID());
 			return errorLayer;
@@ -487,12 +488,10 @@ public class LayerValidatorImpl implements LayerValidator {
 		String layerID = validatorLayer.getLayerID();
 		SimpleFeatureCollection sfc = validatorLayer.getSimpleFeatureCollection();
 		SimpleFeatureIterator sfcIter = sfc.features();
-
-		DefaultFeatureCollection dfc = new DefaultFeatureCollection();
 		while (sfcIter.hasNext()) {
 			SimpleFeature sf = sfcIter.next();
 			Geometry geom = (Geometry) sf.getDefaultGeometry();
-			System.out.println(sf.getID());
+			DTFeature feature = new DTFeature(layerID, sf, attrConditions);
 			// relation
 			if (relationLayers != null) {
 				for (int i = 0; i < relationLayers.size(); i++) {
@@ -505,24 +504,30 @@ public class LayerValidatorImpl implements LayerValidator {
 					}
 					SimpleFeatureCollection reSfc = relationLayer.getSimpleFeatureCollection();
 					FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2();
-					Filter filter = ff.intersects(ff.property("the_geom"), ff.literal(geom));
+					Filter filter = ff.intersects(ff.property("the_geom"), ff.literal(geom.getEnvelope()));
 					SimpleFeatureSource source = DataUtilities.source(reSfc);
 					SimpleFeatureCollection refilterSfc = source.getFeatures(filter);
-//					while (reSfcIter.hasNext()) {
-//						SimpleFeature reSf = reSfcIter.next();
-//						if (sf.equals(reSf)) {
-//							continue;
-//						}
-//						ErrorFeature errFeature = new ErrorFeature(sf.getID(), relationLayerId, reSf.getID(),
-//								DMQAOptions.Type.SELFENTITY.getErrCode(), DMQAOptions.Type.SELFENTITY.getErrTypeE(),
-//								DMQAOptions.Type.SELFENTITY.getErrNameE(), "", geom.getInteriorPoint());
-//						errFeature.setLayerID(layerId);
-//						errorLayer.addErrorFeature(errFeature);
+					SimpleFeatureIterator reSfcIter = refilterSfc.features();
+					while (reSfcIter.hasNext()) {
+						SimpleFeature reSf = reSfcIter.next();
+						if (sf.equals(reSf)) {
+							continue;
+						}
+						DTFeature reFeature = new DTFeature(relationLayerId, reSf, reAttrConditions);
+						List<ErrorFeature> errFeatures = graphicValidator.validateSelfEntity(feature, reFeature,
+								tolerance);
+						if (errFeatures != null) {
+							for (ErrorFeature errFeature : errFeatures) {
+								errFeature.setLayerID(layerId);
+								errorLayer.addErrorFeature(errFeature);
+							}
+						}
+					}
+					reSfcIter.close();
 				}
-//					reSfcIter.close();
 			}
-//			}
 		}
+		sfcIter.close();
 		if (errorLayer.getErrFeatureList().size() > 0) {
 			errorLayer.setLayerName(validatorLayer.getLayerID());
 			return errorLayer;
@@ -1414,6 +1419,7 @@ public class LayerValidatorImpl implements LayerValidator {
 				continue;
 			}
 		}
+		simpleFeatureIterator.close();
 		if (errorLayer.getErrFeatureList().size() > 0) {
 			errorLayer.setLayerName(validatorLayer.getLayerID());
 			return errorLayer;
@@ -1950,6 +1956,7 @@ public class LayerValidatorImpl implements LayerValidator {
 							errorLayer.addErrorFeature(errFeature);
 						}
 					}
+					reSimpleFeatureIter.close();
 					if (errorLayer.getErrFeatureList().size() > 0) {
 						errorLayer.setLayerName(validatorLayer.getLayerID());
 						validateUSymbolDirectionResult.mergeErrorLayer(errorLayer);
@@ -2397,6 +2404,7 @@ public class LayerValidatorImpl implements LayerValidator {
 				}
 			}
 		}
+		iter.close();
 		if (errorLayer.getErrFeatureList().size() > 0) {
 			errorLayer.setLayerName(validatorLayer.getLayerID());
 			return errorLayer;
@@ -2452,6 +2460,7 @@ public class LayerValidatorImpl implements LayerValidator {
 				}
 			}
 		}
+		iter.close();
 		if (errorLayer.getErrFeatureList().size() > 0) {
 			errorLayer.setLayerName(validatorLayer.getLayerID());
 			return errorLayer;

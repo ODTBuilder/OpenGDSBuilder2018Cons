@@ -57,6 +57,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.git.gdsbuilder.file.writer.SHPFileWriter;
+import com.git.gdsbuilder.geoserver.converter.GeoserverDataConverter;
+import com.git.gdsbuilder.geoserver.converter.impl.GeoserverDataConverterImpl;
 import com.git.gdsbuilder.parser.file.QAFileParser;
 import com.git.gdsbuilder.parser.qa.QATypeParser;
 import com.git.gdsbuilder.type.dt.collection.DTLayerCollection;
@@ -65,6 +67,7 @@ import com.git.gdsbuilder.type.validate.error.ErrorFeature;
 import com.git.gdsbuilder.type.validate.error.ErrorLayer;
 import com.git.gdsbuilder.type.validate.layer.QALayerTypeList;
 import com.git.gdsbuilder.validator.collection.CollectionValidator;
+import com.gitrnd.qaconsumer.filestatus.domain.FileStatus;
 import com.gitrnd.qaconsumer.filestatus.service.FileStatusService;
 import com.gitrnd.qaconsumer.preset.domain.Preset;
 import com.gitrnd.qaconsumer.preset.service.PresetService;
@@ -86,9 +89,9 @@ public class QAServiceImpl implements QAService {
 	private String baseDir;
 	@Value("${gitrnd.serverhost}")
 	private String serverhost;
-	@Value("${server.port}")
+	@Value("${server.servlet.port}")
 	private String port;
-	@Value("${server.context-path}")
+	@Value("${server.servlet.context-path}")
 	private String contextPath;
 
 	// file dir
@@ -98,10 +101,10 @@ public class QAServiceImpl implements QAService {
 	protected static String ERR_ZIP_DIR;
 
 	// qa progress
-	protected static int fileUpload = 1;
-	protected static int validateProgresing = 2;
-	protected static int validateSuccess = 3;
-	protected static int validateFail = 4;
+	protected static int FILEUPLOAD = 1;
+	protected static int VALIDATEPROGRESING = 2;
+	protected static int VALIDATESUCCESS = 3;
+	protected static int VALIDATEFAIL = 4;
 
 	@Autowired
 	FileStatusService fileStatusService;
@@ -118,15 +121,6 @@ public class QAServiceImpl implements QAService {
 	@Autowired
 	QADetailReportService detailService;
 
-	@Value("${gitrnd.serverhost}")
-	private String producerAddr;
-
-	@Value("${server.port}")
-	private String portNum;
-
-	@Value("${server.context-path}")
-	private String context;
-
 	@SuppressWarnings("unchecked")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@Override
@@ -137,21 +131,22 @@ public class QAServiceImpl implements QAService {
 		String qaVer = (String) param.get("qaVer");
 		String qaType = (String) param.get("qaType");
 		String prid = (String) param.get("prid");
-		String fileformat = (String) param.get("fileformat");
 
 		Long catetoryIdx = (Long) param.get("category");
-		int cIdx = catetoryIdx.intValue();
+		int cidx = catetoryIdx.intValue();
 
 		Long pid = (Long) param.get("pid");
-		int pIdx = pid.intValue();
+		int pidx = pid.intValue();
+
+		Long fileIdx = (Long) param.get("fid");
+		int fidx = fileIdx.intValue();
 
 		String epsg = (String) param.get("crs");
 
-		QAProgress progress = qapgService.retrieveQAProgressById(pIdx);
-		String type = progress.getFileType();
+		QAProgress progress = qapgService.retrieveQAProgressById(pidx);
 
 		// start
-		progress.setQaState(validateProgresing);
+		progress.setQaState(VALIDATEPROGRESING);
 		qapgService.updateQAState(progress);
 
 		Preset prst = null;
@@ -216,17 +211,12 @@ public class QAServiceImpl implements QAService {
 		// 옵션또는 파일이 제대로 넘어오지 않았을때 강제로 예외발생
 		if (qaVer == null || qaType == null || prid == null) {
 			progress.setComment("재로그인 후 다시 요청해주세요.");
-			progress.setQaState(validateFail);
+			progress.setQaState(VALIDATEFAIL);
 			qapgService.updateQAState(progress);
 			return isSuccess;
 		} else if (prst == null) {
 			progress.setComment("옵션을 재설정 해주세요.");
-			progress.setQaState(validateFail);
-			qapgService.updateQAState(progress);
-			return isSuccess;
-		} else if (fileformat == null) {
-			progress.setComment("파일포맷을 설정해주세요.");
-			progress.setQaState(validateFail);
+			progress.setQaState(VALIDATEFAIL);
 			qapgService.updateQAState(progress);
 			return isSuccess;
 		} else {
@@ -234,16 +224,7 @@ public class QAServiceImpl implements QAService {
 			User user = userService.retrieveUserByIdx(uIdx);
 			String uId = user.getUid();
 
-			Timestamp cTime = progress.getStart_time();
-			String cTimeStr = new SimpleDateFormat("yyMMdd" + "_" + "HHmmss").format(cTime);
-
-			// 슬기씨 코딩
-			JSONObject layers = (JSONObject) param.get("layers"); // geoserver layer 정보
-			String basePath = "c:" + File.separator + baseDir + File.separator + uId + File.separator + cTimeStr
-					+ File.separator;
-			String geoLayersPath = basePath + File.separator + "geoLayers"; // geoserver layer file download 경로
 			String comment = "";
-
 			// option parsing
 			JSONParser jsonP = new JSONParser();
 			JSONObject option = (JSONObject) jsonP.parse(prst.getOptionDef());
@@ -256,16 +237,37 @@ public class QAServiceImpl implements QAService {
 				neatLineCode = (String) neatLineObj.get("code");
 			}
 
+			FileStatus fileStatus = fileStatusService.retrieveFileStatusById(fidx);
+			Timestamp cTime = fileStatus.getCtime();
+			String cTimeStr = new SimpleDateFormat("yyMMdd" + "_" + "HHmmss").format(cTime);
+
+			// geoserver layer download
+			String basePath = "c:" + File.separator + baseDir + File.separator + uId + File.separator + cTimeStr;
+			File baseDirFile = new File(basePath);
+
+			String serverURL = (String) param.get("serverURL");
+			JSONObject layersMap = (JSONObject) param.get("layersMap");
+			String geolayerPath = basePath + File.separator + "unzipfiles";
+			GeoserverDataConverter geoDataConverter = new GeoserverDataConverterImpl(serverURL, layersMap, geolayerPath,
+					epsg);
+			if (cidx == 1 || cidx == 2) {
+				geoDataConverter.digitalExport();
+			} else if (cidx == 3 || cidx == 4) {
+				geoDataConverter.undergroundExport();
+			} else if (cidx == 5) {
+				geoDataConverter.forestExport(neatLineCode);
+			}
+
 			// files
-			File baseDirFile = new File(geoLayersPath);
-			QAFileParser parser = new QAFileParser(epsg, cIdx, type, baseDirFile, neatLineCode);
+			File geolayerPathFile = new File(geolayerPath);
+			QAFileParser parser = new QAFileParser(epsg, cidx, geolayerPathFile, neatLineCode);
 			boolean parseTrue = parser.isTrue();
 			if (!parseTrue) {
 				comment += parser.getStatus();
 				if (!comment.equals("")) {
 					progress.setComment(comment);
 				}
-				progress.setQaState(validateFail);
+				progress.setQaState(VALIDATEFAIL);
 				qapgService.updateQAState(progress);
 				deleteDirectory(baseDirFile);
 				return isSuccess;
@@ -277,7 +279,7 @@ public class QAServiceImpl implements QAService {
 				if (!comment.equals("")) {
 					progress.setComment(comment);
 				}
-				progress.setQaState(validateFail);
+				progress.setQaState(VALIDATEFAIL);
 				qapgService.updateQAState(progress);
 				deleteDirectory(baseDirFile);
 				return isSuccess;
@@ -317,15 +319,15 @@ public class QAServiceImpl implements QAService {
 				if (!comment.equals("")) {
 					progress.setComment(comment);
 				}
-				progress.setQaState(validateFail);
+				progress.setQaState(VALIDATEFAIL);
 				qapgService.updateQAState(progress);
 				deleteDirectory(baseDirFile);
 				return isSuccess;
 			}
-			validateLayerTypeList.setCategory(cIdx);
+			validateLayerTypeList.setCategory(cidx);
 
 			// set err directory
-			ERR_OUTPUT_DIR = basePath + "error";
+			ERR_OUTPUT_DIR = basePath + File.separator + "error";
 
 			String entryName = progress.getOriginName(); // 호철씨가 준 파일 이름
 			ERR_OUTPUT_NAME = entryName + "_" + cTimeStr;
@@ -336,15 +338,15 @@ public class QAServiceImpl implements QAService {
 			createFileDirectory(ERR_FILE_DIR);
 
 			// excute validation
-			isSuccess = executorValidate(collectionList, validateLayerTypeList, epsg, ERR_OUTPUT_NAME, pIdx);
+			isSuccess = executorValidate(collectionList, validateLayerTypeList, epsg, ERR_OUTPUT_NAME, pidx);
+			// isSuccess = true;
 			if (isSuccess) {
 				// insert validate state
-				progress.setQaState(validateSuccess);
+				progress.setQaState(VALIDATESUCCESS);
 				qapgService.updateQAState(progress);
-
 				// zip err shp directory
 				zipFileDirectory();
-				String destination = "http://" + producerAddr + ":" + portNum + context + "/uploaderror.do";
+				String destination = "http://" + serverhost + ":" + port + contextPath + "/uploadGsError.do";
 				HttpPost post = new HttpPost(destination);
 				InputStream inputStream = new FileInputStream(ERR_FILE_DIR + ".zip");
 				MultipartEntityBuilder builder = MultipartEntityBuilder.create();
@@ -352,7 +354,8 @@ public class QAServiceImpl implements QAService {
 				builder.addTextBody("user", uId);
 				builder.addTextBody("time", cTimeStr);
 				builder.addTextBody("file", ERR_OUTPUT_NAME);
-				// builder.addTextBody("fid", Integer.toString(fIdx));
+				builder.addTextBody("fid", Integer.toString(fidx));
+//				builder.addTextBody("fpath", basePath);
 				builder.addBinaryBody("upstream", inputStream, ContentType.create("application/zip"),
 						ERR_OUTPUT_NAME + ".zip");
 				builder.setCharset(Charset.forName("UTF-8"));
@@ -373,7 +376,7 @@ public class QAServiceImpl implements QAService {
 				}
 			} else {
 				// insert validate state
-				progress.setQaState(validateFail);
+				progress.setQaState(VALIDATEFAIL);
 				qapgService.updateQAState(progress);
 			}
 			deleteDirectory(baseDirFile);

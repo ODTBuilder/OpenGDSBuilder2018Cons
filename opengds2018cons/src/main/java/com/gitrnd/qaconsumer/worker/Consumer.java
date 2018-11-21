@@ -34,14 +34,16 @@ public class Consumer {
 		JSONParser jsonP = new JSONParser();
 		JSONObject param = (JSONObject) jsonP.parse(msg);
 
-		if (param.get("file") != null) {
+		String type = (String) param.get("type");
+
+		if (type.equals("file")) {
 			return fileService.validate(param);
 		}
-		if (param.get("web") != null) {
-			return webService.validate((JSONObject) param.get("web"));
+		if (type.equals("web")) {
+			return webService.validate(param);
 		}
-		if (param.get("mobile") != null) {
-			return mobileService.validate((JSONObject) param.get("mobile"));
+		if (type.equals("mobile")) {
+			return mobileService.validate(param);
 		} else {
 			return null;
 		}

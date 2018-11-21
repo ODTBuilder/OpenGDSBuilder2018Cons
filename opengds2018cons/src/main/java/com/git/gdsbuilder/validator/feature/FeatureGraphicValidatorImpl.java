@@ -167,6 +167,7 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 						}
 					}
 				}
+				iterator.close();
 			}
 		}
 
@@ -1087,6 +1088,7 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 						}
 					}
 				}
+				iterator.close();
 			}
 		}
 		if (!isErr) {
@@ -1222,6 +1224,7 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 							}
 						}
 					}
+					iterator.close();
 				}
 			} else {
 
@@ -1262,6 +1265,7 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 						}
 					}
 				}
+				iterator.close();
 			}
 
 			if (isError) {
@@ -1414,6 +1418,7 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 					}
 				}
 			}
+			rIterator.close();
 			if (notInter) {
 				return null;
 			}
@@ -1461,6 +1466,7 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 						}
 					}
 				}
+				tIterator.close();
 				String reLayerId = relationLayer.getLayerID();
 				if (!firTrue && firErr && firInter) {
 					ErrorFeature errorFeature = new ErrorFeature(featureID, reLayerId, reFeatureId,
@@ -1596,6 +1602,7 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 					}
 				}
 			}
+			sfIterator.close();
 			// 1개의 지류계에 1개의 경지계가 겹쳐있는 경우, 1개의 지류계에는 2개 이상의 경지계가 포합되어있어야 함
 			String comment = "";
 			if (withinCount > 1) {
@@ -1660,6 +1667,7 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 					}
 				}
 			}
+			iterator.close();
 			if (!isError) {
 				String featureID = sf.getID();
 				Geometry returnGeom = ((Geometry) sf.getDefaultGeometry()).getCentroid();
@@ -1708,6 +1716,7 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 						}
 					}
 				}
+				iterator.close();
 			}
 			if (isError) {
 				ErrorFeature errorFeature = new ErrorFeature(featureID, DMQAOptions.Type.BUILDINGSITEMISS.getErrCode(),
@@ -1765,6 +1774,7 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 						}
 					}
 				}
+				iterator.close();
 			}
 
 			if (!isIntersected) {
@@ -1827,6 +1837,7 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 					}
 				}
 			}
+			iterator.close();
 		}
 		if (!isIntersected) {
 			ErrorFeature errorFeature = new ErrorFeature(featureID, DMQAOptions.Type.CENTERLINEMISS.getErrCode(),
@@ -1951,6 +1962,7 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 								}
 							}
 						}
+						relationSfcIterator.close();
 					}
 				}
 			}
@@ -2030,6 +2042,7 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 					}
 				}
 			}
+			simpleFeatureIterator.close();
 		}
 		if (errorFeatures.size() > 0) {
 			return errorFeatures;
@@ -2250,7 +2263,7 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 						}
 					}
 				}
-
+				relationIterator.close();
 				if (isOut) {
 					String featureID = sf.getID();
 					ErrorFeature errorFeature = new ErrorFeature(featureID, UFMQAOptions.Type.USYMBOLOUT.getErrCode(),
@@ -2329,6 +2342,7 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 							break;
 						}
 					}
+					relationIterator.close();
 					if (isOut) {
 						errFeatures.add(new ErrorFeature(featureID, UFMQAOptions.Type.SYMBOLINLINE.getErrCode(),
 								UFMQAOptions.Type.SYMBOLINLINE.getErrTypeE(),
@@ -2473,6 +2487,7 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 						}
 					}
 				}
+				iterator.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -2572,6 +2587,7 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 					}
 				}
 			}
+			leaderIter.close();
 		}
 		if (isError) {
 			String featureID = sf.getID();
@@ -2659,6 +2675,7 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 								}
 							}
 						}
+						iter.close();
 						double interArea = interiorPolygon.getArea();
 						if (interGeoms.size() == 1) {
 							Geometry interGeom = interGeoms.get(0);
@@ -2760,6 +2777,7 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 						}
 					}
 				}
+				relationIterator.close();
 			}
 		}
 		if (isOut) {

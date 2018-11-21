@@ -24,8 +24,9 @@ spring:
       pool-name: gdoDBPool
       auto-commit: false
 server:
-  port: 8080
-  context-path: /geodt
+  servlet:
+    context-path: /geodt
+    port: 8089
 gitrnd:
   serverhost: 175.116.181.32
   apache:

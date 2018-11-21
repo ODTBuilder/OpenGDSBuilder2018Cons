@@ -40,6 +40,7 @@ public class SHPFileLayerParser {
 	public SimpleFeatureCollection getShpObject(String epsg, File file, String shpName) {
 
 		ShapefileDataStore beforeStore = null;
+		SimpleFeatureCollection collection = null;
 		try {
 			Map<String, Object> beforeMap = new HashMap<String, Object>();
 			beforeMap.put("url", file.toURI().toURL());
@@ -49,11 +50,13 @@ public class SHPFileLayerParser {
 			String typeName = beforeStore.getTypeNames()[0];
 			SimpleFeatureSource source = beforeStore.getFeatureSource(typeName);
 			Filter filter = Filter.INCLUDE;
-			SimpleFeatureCollection collection = source.getFeatures(filter);
-			return collection;
+			collection = source.getFeatures(filter);
+			beforeStore.dispose();
+			beforeStore = null;
 		} catch (Exception e) {
 			return null;
 		}
+		return collection;
 	}
 
 	public DTLayer parseDTLayer(String epsg, String filePath, String shpName) throws Exception {
@@ -93,6 +96,9 @@ public class SHPFileLayerParser {
 			SimpleFeatureSource source = beforeStore.getFeatureSource(typeName);
 			Filter filter = Filter.INCLUDE;
 			SimpleFeatureCollection collection = source.getFeatures(filter);
+			beforeStore.dispose();
+			beforeStore = null;
+			source = null;
 			return collection;
 		} catch (Exception e) {
 			return null;

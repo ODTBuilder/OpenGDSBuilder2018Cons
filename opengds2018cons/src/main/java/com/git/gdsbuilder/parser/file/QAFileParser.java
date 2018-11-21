@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.commons.io.FilenameUtils;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.feature.DefaultFeatureCollection;
@@ -79,13 +80,129 @@ public class QAFileParser {
 		}
 	}
 
-	public QAFileParser(String epsg, int cIdx, String support, File geoLayersPath, String neatLine) {
+	public QAFileParser(String epsg, int cIdx, File geoLayersPath, String neatLine) {
 
 		this.cIdx = cIdx;
-		this.support = support;
 		this.geoLayersPath = geoLayersPath;
 		this.neatLine = neatLine;
 		this.epsg = epsg;
+
+		if (cIdx == 1 || cIdx == 2) {
+			parseDigitalGeoserverLayers();
+			isTrue = true;
+		} else if (cIdx == 3 || cIdx == 4) {
+			parseUnderGeoserverLayers();
+			isTrue = true;
+		} else if (cIdx == 5) {
+			parseForestGeoserverLayers();
+			isTrue = true;
+		} else {
+			status += "지원하지않는 파일포맷" + brTag;
+			isTrue = false;
+		}
+
+	}
+
+	private void parseForestGeoserverLayers() {
+
+		// geolayersPath
+		if (geoLayersPath.exists() == false) {
+			status += "경로가 존재하지 않습니다" + brTag;
+		} else {
+			File[] collectionDir = geoLayersPath.listFiles();
+			if (collectionDir.length == 0) {
+				this.collectionList = null;
+				status += "검수 대상 파일 미존재" + brTag;
+			} else {
+				DTLayerCollectionList collectionList = new DTLayerCollectionList();
+				for (File collectionFile : collectionDir) {
+					if(!collectionFile.isDirectory()) {
+						continue;
+					}
+					String collectionName = FilenameUtils.getName(collectionFile.getName());
+					DTLayerCollection collection = new DTLayerCollection();
+					collection.setCollectionName(collectionName);
+					File[] layerFiles = collectionFile.listFiles();
+					DTLayerList dtLayerList = new DTLayerList();
+					for (File layerFile : layerFiles) { // 레이어
+						DTLayer dtLayer = null;
+
+						String fileName = layerFile.getName();
+						int Idx = fileName.lastIndexOf(".");
+						String layerName = fileName.substring(0, Idx);
+
+						String ext = FilenameUtils.getExtension(layerFile.getPath());
+						if (!ext.endsWith("shp")) {
+							continue;
+						}
+						try {
+							dtLayer = new SHPFileLayerParser().parseDTLayer(epsg, layerFile);
+						} catch (Exception e) {
+							e.printStackTrace();
+							status += layerName + ":손상된 파일" + brTag;
+						}
+						if (this.neatLine != null) {
+							if (this.neatLine.equalsIgnoreCase(layerName)) {
+								collection.setNeatLine(dtLayer);
+							} else {
+								dtLayerList.add(dtLayer);
+							}
+						} else {
+							dtLayerList.add(dtLayer);
+						}
+					}
+					collection.setLayers(dtLayerList);
+					collectionList.add(collection);
+				}
+				this.collectionList = collectionList;
+			}
+		}
+	}
+
+	private void parseUnderGeoserverLayers() {
+
+		// geolayersPath
+		if (geoLayersPath.exists() == false) {
+			status += "경로가 존재하지 않습니다" + brTag;
+		}
+		File[] layerFiles = geoLayersPath.listFiles();
+		if (layerFiles.length == 0) {
+			this.collectionList = null;
+			status += "검수 대상 파일 미존재" + brTag;
+		} else {
+			DTLayerCollectionList collectionList = new DTLayerCollectionList();
+			DTLayerCollection collection = new DTLayerCollection();
+			DTLayerList dtLayerList = new DTLayerList();
+			for (File layerFile : layerFiles) { // 레이어
+				DTLayer dtLayer = null;
+				String ext = FilenameUtils.getExtension(layerFile.getPath());
+				if (!ext.endsWith("shp")) {
+					continue;
+				}
+				try {
+					dtLayer = new SHPFileLayerParser().parseDTLayer(epsg, layerFile);
+				} catch (Exception e) {
+					e.printStackTrace();
+					String fileName = layerFile.getName();
+					int Idx = fileName.lastIndexOf(".");
+					String layerName = fileName.substring(0, Idx);
+					status += layerName + ":손상된 파일" + brTag;
+				}
+				if (dtLayer != null) {
+					dtLayerList.add(dtLayer);
+				}
+			}
+			if (dtLayerList.size() > 0) {
+				collection.setLayers(dtLayerList);
+				collectionList.add(collection);
+				this.collectionList = collectionList;
+			} else {
+				status += "검수 대상 파일 미존재" + brTag;
+			}
+		}
+	}
+
+	private void parseDigitalGeoserverLayers() {
 
 		// geolayersPath
 		if (geoLayersPath.exists() == false) {
@@ -109,6 +226,10 @@ public class QAFileParser {
 					DTLayerList dtLayerList = new DTLayerList();
 					for (File layer : subFiles) { // 레이어 목록
 						DTLayer dtLayer = null;
+						String ext = FilenameUtils.getExtension(layer.getPath());
+						if (!ext.endsWith("shp")) {
+							continue;
+						}
 						try {
 							dtLayer = new SHPFileLayerParser().parseDTLayer(epsg, layer);
 						} catch (Exception e) {
@@ -129,8 +250,9 @@ public class QAFileParser {
 						}
 					}
 					collection.setLayers(dtLayerList);
+					collectionList.add(collection);
+					this.collectionList = collectionList;
 				}
-				collectionList.add(collection);
 			}
 		}
 	}
@@ -430,16 +552,15 @@ public class QAFileParser {
 				collection.setCollectionName(dirName);
 				DTLayerList layerList = new DTLayerList();
 				FileMetaList metaList = dirMetaList.get(dirPath);
-				DTLayer neatlineLayer = new DTLayer();
+				DTLayer neatlineLayer = null;
 				for (int i = 0; i < metaList.size(); i++) {
-					DTLayer layer = new DTLayer();
 					FileMeta fileMeta = metaList.get(i);
 					String fileName = fileMeta.getFileName();
 					int pos = fileName.lastIndexOf(".");
 					String name = fileName.substring(0, pos);
 					if (fileName.endsWith("shp")) {
 						try {
-							layer = new SHPFileLayerParser().parseDTLayer(epsg, dirPath, name);
+							DTLayer layer = new SHPFileLayerParser().parseDTLayer(epsg, dirPath, name);
 							if (this.neatLine != null) {
 								if (this.neatLine.toUpperCase().equals(layer.getLayerID().toUpperCase())) {
 									neatlineLayer = layer;
@@ -519,6 +640,7 @@ public class QAFileParser {
 				}
 			}
 		}
+		iter.close();
 		return dtLayerCollection;
 	}
 

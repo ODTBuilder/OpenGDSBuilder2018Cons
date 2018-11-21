@@ -400,6 +400,7 @@ public class FeatureCloseCollectionValidatorImpl implements FeatureCloseCollecti
 
 				}
 			}
+			closeIter.close();
 			if (maxSf != null && maxValue > value) {
 				List<AttributeFigure> attrFigures = figure.getFigure();
 				for (AttributeFigure attrFigure : attrFigures) {

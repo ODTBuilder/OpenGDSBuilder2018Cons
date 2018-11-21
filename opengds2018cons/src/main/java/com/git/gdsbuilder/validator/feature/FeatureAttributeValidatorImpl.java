@@ -420,6 +420,7 @@ public class FeatureAttributeValidatorImpl implements FeatureAttributeValidator 
 						}
 					}
 				}
+				iterator.close();
 			}
 			// 규칙 검사
 			if (!isError) {
@@ -859,6 +860,9 @@ public class FeatureAttributeValidatorImpl implements FeatureAttributeValidator 
 					List<AttributeFigure> attrFigures = figure.getFigure();
 					for (int i = 0; i < attrFigures.size(); i++) {
 						String otherKey = attrFigures.get(i).getKey();
+						if (selfSf.getAttribute(otherKey) == null || sf.getAttribute(otherKey) == null) {
+							continue;
+						}
 						if (!selfSf.getAttribute(otherKey).equals(sf.getAttribute(otherKey))) {
 							isEqual = false;
 						}
