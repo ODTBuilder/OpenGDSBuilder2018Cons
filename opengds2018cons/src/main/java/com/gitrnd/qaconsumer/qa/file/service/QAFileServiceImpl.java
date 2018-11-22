@@ -349,7 +349,7 @@ public class QAFileServiceImpl implements QAFileService {
 			}
 			validateLayerTypeList.setCategory(cIdx);
 			// set err directory
-			ERR_OUTPUT_DIR = baseDir + File.separator + "error";
+			ERR_OUTPUT_DIR = basePath + File.separator + "error";
 			String entryName = unZipFile.getEntryName();
 			ERR_OUTPUT_NAME = entryName + "_" + cTimeStr;
 			ERR_FILE_DIR = ERR_OUTPUT_DIR + File.separator + ERR_OUTPUT_NAME;
