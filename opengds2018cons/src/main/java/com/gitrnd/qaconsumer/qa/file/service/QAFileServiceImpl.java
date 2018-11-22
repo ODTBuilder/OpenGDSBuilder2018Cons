@@ -231,6 +231,7 @@ public class QAFileServiceImpl implements QAFileService {
 			int uIdx = fileStatus.getUidx();
 			User user = userService.retrieveUserByIdx(uIdx);
 			String uId = user.getUid();
+			String fname = fileStatus.getFname();
 
 			Timestamp cTime = fileStatus.getCtime();
 			String cTimeStr = new SimpleDateFormat("yyMMdd" + "_" + "HHmmss").format(cTime);
@@ -347,52 +348,56 @@ public class QAFileServiceImpl implements QAFileService {
 				return isSuccess;
 			}
 			validateLayerTypeList.setCategory(cIdx);
-
 			// set err directory
-			ERR_OUTPUT_DIR = basePath + "error";
-
+			ERR_OUTPUT_DIR = baseDir + File.separator + "error";
 			String entryName = unZipFile.getEntryName();
 			ERR_OUTPUT_NAME = entryName + "_" + cTimeStr;
-
-			progress.setErrFileName(ERR_OUTPUT_NAME + ".zip");
-
 			ERR_FILE_DIR = ERR_OUTPUT_DIR + File.separator + ERR_OUTPUT_NAME;
 			createFileDirectory(ERR_FILE_DIR);
 
 			// excute validation
 			isSuccess = executorValidate(collectionList, validateLayerTypeList, epsg, ERR_OUTPUT_NAME, pIdx);
+			// isSuccess = true;
 			if (isSuccess) {
 				// insert validate state
 				progress.setQaState(VALIDATESUCCESS);
 				qapgService.updateQAState(progress);
 
 				// zip err shp directory
-				zipFileDirectory();
-				String destination = "http://" + serverhost + ":" + port + contextPath + "/uploaderror.do";
-				HttpPost post = new HttpPost(destination);
-				InputStream inputStream = new FileInputStream(ERR_FILE_DIR + ".zip");
-				MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-				builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-				builder.addTextBody("user", uId);
-				builder.addTextBody("time", cTimeStr);
-				builder.addTextBody("file", ERR_OUTPUT_NAME);
-				builder.addTextBody("fid", Integer.toString(fIdx));
-				builder.addBinaryBody("upstream", inputStream, ContentType.create("application/zip"),
-						ERR_OUTPUT_NAME + ".zip");
-				builder.setCharset(Charset.forName("UTF-8"));
+				boolean isTrue = zipFileDirectory();
+				if (isTrue) {
+					// err 파일이 있는 경우
+					String destination = "http://" + serverhost + ":" + port + contextPath + "/uploaderror.do";
+					HttpPost post = new HttpPost(destination);
+					InputStream inputStream = new FileInputStream(ERR_FILE_DIR + ".zip");
+					MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+					builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+					builder.addTextBody("user", uId);
+					builder.addTextBody("time", cTimeStr);
+					builder.addTextBody("file", ERR_OUTPUT_NAME);
+					builder.addTextBody("fid", Integer.toString(fIdx));
+					builder.addBinaryBody("upstream", inputStream, ContentType.create("application/zip"),
+							ERR_OUTPUT_NAME + ".zip");
+					builder.setCharset(Charset.forName("UTF-8"));
 
-				HttpEntity entity = builder.build();
-				post.setEntity(entity);
+					HttpEntity entity = builder.build();
+					post.setEntity(entity);
 
-				CloseableHttpClient client = HttpClients.createDefault();
-				HttpResponse response = client.execute(post);
-				client.close();
+					CloseableHttpClient client = HttpClients.createDefault();
+					HttpResponse response = client.execute(post);
+					client.close();
 
-				String encodeName = URLEncoder.encode(ERR_OUTPUT_NAME, "UTF-8");
-				if (response.getStatusLine().getStatusCode() == 200) {
-					String errDir = "http://" + serverhost + ":" + port + contextPath + "/downloaderror.do?" + "time="
-							+ cTimeStr + "&" + "file=" + encodeName + ".zip";
-					progress.setErrdirectory(errDir);
+					String encodeName = URLEncoder.encode(ERR_OUTPUT_NAME, "UTF-8");
+					if (response.getStatusLine().getStatusCode() == 200) {
+						String errDir = "http://" + serverhost + ":" + port + contextPath + "/downloaderror.do?"
+								+ "time=" + cTimeStr + "&" + "file=" + encodeName + ".zip";
+						progress.setErrdirectory(errDir);
+						progress.setErrFileName(fname);
+						qapgService.updateQAResponse(progress);
+					}
+				} else {
+					progress.setComment("오류파일이 존재하지 않습니다");
+					qapgService.updateQAState(progress);
 					qapgService.updateQAResponse(progress);
 				}
 			} else {
@@ -498,37 +503,42 @@ public class QAFileServiceImpl implements QAFileService {
 		}
 	}
 
-	private void zipFileDirectory() {
+	private boolean zipFileDirectory() {
 
 		File directory = new File(ERR_FILE_DIR);
 		List<String> fileList = getFileList(directory);
-		try {
-			ERR_ZIP_DIR = ERR_FILE_DIR + ".zip";
-			FileOutputStream fos = new FileOutputStream(ERR_ZIP_DIR);
-			ZipOutputStream zos = new ZipOutputStream(fos);
+		if (fileList.size() > 0) {
+			try {
+				ERR_ZIP_DIR = ERR_FILE_DIR + ".zip";
+				FileOutputStream fos = new FileOutputStream(ERR_ZIP_DIR);
+				ZipOutputStream zos = new ZipOutputStream(fos);
 
-			for (String filePath : fileList) {
-				String name = filePath.substring(directory.getAbsolutePath().length() + 1, filePath.length());
-				ZipEntry zipEntry = new ZipEntry(name);
-				zos.putNextEntry(zipEntry);
-				FileInputStream fis = new FileInputStream(filePath);
-				byte[] buffer = new byte[1024];
-				int length;
-				while ((length = fis.read(buffer)) > 0) {
-					zos.write(buffer, 0, length);
+				for (String filePath : fileList) {
+					String name = filePath.substring(directory.getAbsolutePath().length() + 1, filePath.length());
+					ZipEntry zipEntry = new ZipEntry(name);
+					zos.putNextEntry(zipEntry);
+					FileInputStream fis = new FileInputStream(filePath);
+					byte[] buffer = new byte[1024];
+					int length;
+					while ((length = fis.read(buffer)) > 0) {
+						zos.write(buffer, 0, length);
+					}
+					zos.closeEntry();
+					fis.close();
+
+					// 압축 후 삭제
+					File file = new File(filePath);
+					file.delete();
 				}
-				zos.closeEntry();
-				fis.close();
-
-				// 압축 후 삭제
-				File file = new File(filePath);
-				file.delete();
+				zos.close();
+				fos.close();
+				directory.delete();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-			zos.close();
-			fos.close();
-			directory.delete();
-		} catch (IOException e) {
-			e.printStackTrace();
+			return true;
+		} else {
+			return false;
 		}
 	}
 
