@@ -27,7 +27,7 @@ public class Consumer {
 	QAMobileService mobileService;
 
 	@RabbitListener(queues = "${gitrnd.rabbitmq.queue}")
-	public Object recievedWebMessage(String msg) throws Throwable {
+	public void recievedWebMessage(String msg) throws Throwable {
 
 		System.out.println(msg);
 		// parse parameter
@@ -37,15 +37,34 @@ public class Consumer {
 		String type = (String) param.get("type");
 
 		if (type.equals("file")) {
-			return fileService.validate(param);
+			fileService.validate(param);
 		}
 		if (type.equals("web")) {
-			return webService.validate(param);
+			webService.validate(param);
 		}
-		if (type.equals("mobile")) {
-			return mobileService.validate(param);
-		} else {
-			return null;
-		}
+
 	}
+
+//	@RabbitListener(queues = "${gitrnd.rabbitmq.queue}")
+//	public Object recievedWebMessage(String msg) throws Throwable {
+//
+//		System.out.println(msg);
+//		// parse parameter
+//		JSONParser jsonP = new JSONParser();
+//		JSONObject param = (JSONObject) jsonP.parse(msg);
+//
+//		String type = (String) param.get("type");
+//
+//		if (type.equals("file")) {
+//			return fileService.validate(param);
+//		}
+//		if (type.equals("web")) {
+//			return webService.validate(param);
+//		}
+//		if (type.equals("mobile")) {
+//			return mobileService.validate(param);
+//		} else {
+//			return null;
+//		}
+//	}
 }
