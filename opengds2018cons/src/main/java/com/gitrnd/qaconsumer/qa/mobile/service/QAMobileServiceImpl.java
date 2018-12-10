@@ -35,59 +35,63 @@ public class QAMobileServiceImpl implements QAMobileService {
 	@Override
 	public JSONObject validate(JSONObject param) {
 
-		JSONObject geoserver = (JSONObject) param.get("geoserver");
-		JSONArray layers = (JSONArray) param.get("layers");
-		JSONObject options = (JSONObject) param.get("options");
+		param = (JSONObject) param.get("mobile");
+		ErrorLayer errorLayer = null;
+		try {
+			JSONObject geoserver = (JSONObject) param.get("geoserver");
+			JSONArray layers = (JSONArray) param.get("layers");
+			JSONObject options = (JSONObject) param.get("options");
 
-		// geoserver
-		String baseUrl = (String) geoserver.get("url");
-		String user = (String) geoserver.get("user");
-		String pw = (String) geoserver.get("password");
-		JSONArray geoLayers = (JSONArray) geoserver.get("layers");
+			// geoserver
+			String baseUrl = (String) geoserver.get("url");
+			String user = (String) geoserver.get("user");
+			String pw = (String) geoserver.get("password");
+			JSONArray geoLayers = (JSONArray) geoserver.get("layers");
+			// options
+			JSONArray typeValidate = (JSONArray) options.get("definition");
 
-		DTLayerList dtLayers = new DTLayerList();
-		for (int i = 0; i < geoLayers.size(); i++) {
-			String geoLayer = (String) geoLayers.get(i);
-			QALayerParser layerP = new QALayerParser(baseUrl, user, pw, geoLayer);
-			layerP.init();
-			DTLayer dtLayer = layerP.layerParse();
-			dtLayers.add(dtLayer);
-		}
-		DTLayerCollection dtCollection = new DTLayerCollection();
-		dtCollection.setLayers(dtLayers);
+			DTLayerList dtLayers = new DTLayerList();
+			for (int i = 0; i < geoLayers.size(); i++) {
+				String geoLayer = (String) geoLayers.get(i);
+				QALayerParser layerP = new QALayerParser(baseUrl, user, pw, geoLayer);
+				layerP.init();
+				DTLayer dtLayer = layerP.layerParse();
+				dtLayers.add(dtLayer);
+			}
+			DTLayerCollection dtCollection = new DTLayerCollection();
+			dtCollection.setLayers(dtLayers);
 
-		// options
-		JSONArray typeValidate = (JSONArray) options.get("definition");
-		for (int j = 0; j < layers.size(); j++) {
-			// layers
-			JSONObject lyrItem = (JSONObject) layers.get(j);
-			Boolean isExist = false;
-			for (int i = 0; i < typeValidate.size(); i++) {
-				JSONObject optItem = (JSONObject) typeValidate.get(i);
-				String typeName = (String) optItem.get("name");
-				if (typeName.equals((String) lyrItem.get("name"))) {
-					optItem.put("layers", (JSONArray) lyrItem.get("layers"));
-					isExist = true;
+			for (int j = 0; j < layers.size(); j++) {
+				// layers
+				JSONObject lyrItem = (JSONObject) layers.get(j);
+				Boolean isExist = false;
+				for (int i = 0; i < typeValidate.size(); i++) {
+					JSONObject optItem = (JSONObject) typeValidate.get(i);
+					String typeName = (String) optItem.get("name");
+					if (typeName.equals((String) lyrItem.get("name"))) {
+						optItem.put("layers", (JSONArray) lyrItem.get("layers"));
+						isExist = true;
+					}
+				}
+				if (!isExist) {
+					JSONObject obj = new JSONObject();
+					obj.put("name", (String) lyrItem.get("name"));
+					obj.put("layers", (JSONArray) lyrItem.get("layers"));
+					typeValidate.add(obj);
 				}
 			}
-			if (!isExist) {
-				JSONObject obj = new JSONObject();
-				obj.put("name", (String) lyrItem.get("name"));
-				obj.put("layers", (JSONArray) lyrItem.get("layers"));
-				typeValidate.add(obj);
-			}
-		}
-
-		QATypeParser validateTypeParser = new QATypeParser(typeValidate);
-		QALayerTypeList validateLayerTypeList = validateTypeParser.getValidateLayerTypeList();
-
-		ErrorLayer errorLayer = executorValidate(dtCollection, validateLayerTypeList);
-		if (errorLayer != null) {
-			ErrorLayerParser errLayerP = new ErrorLayerParser();
-			JSONObject errLayerJson = errLayerP.parseGeoJSON(errorLayer);
-			System.out.println(errLayerJson.toString());
-			return errLayerJson;
-		} else {
+			QATypeParser validateTypeParser = new QATypeParser(typeValidate);
+			QALayerTypeList validateLayerTypeList = validateTypeParser.getValidateLayerTypeList();
+			errorLayer = executorValidate(dtCollection, validateLayerTypeList);
+		//	if (errorLayer != null) {
+				ErrorLayerParser errLayerP = new ErrorLayerParser();
+				JSONObject errLayerJson = errLayerP.parseGeoJSON(errorLayer);
+				System.out.println(errLayerJson.toString());
+				return errLayerJson;
+	//		} else {
+	//			return null;
+	//		}
+		} catch (Exception e) {
 			return null;
 		}
 	}

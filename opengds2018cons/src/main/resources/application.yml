@@ -8,6 +8,7 @@ spring:
     template:
       exchange: opengds_qa_exchange
       routing-key: opengds_qa_key
+      routing-key-mobile: opengds_mobile_qa_key
     listener:
       acknowledge-mode: auto
       default-requeue-rejected: false
@@ -34,6 +35,7 @@ gitrnd:
     basedrive: C
   rabbitmq:
     queue: opengds_qa_queue
+    mobilequeue: opengds_moblie_qa_queue
 mybatis:
   config-location: classpath:config/mybatis.xml
   mapper-location: classpath:sql/*.xml

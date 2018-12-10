@@ -45,26 +45,19 @@ public class Consumer {
 
 	}
 
-//	@RabbitListener(queues = "${gitrnd.rabbitmq.queue}")
-//	public Object recievedWebMessage(String msg) throws Throwable {
-//
-//		System.out.println(msg);
-//		// parse parameter
-//		JSONParser jsonP = new JSONParser();
-//		JSONObject param = (JSONObject) jsonP.parse(msg);
-//
-//		String type = (String) param.get("type");
-//
-//		if (type.equals("file")) {
-//			return fileService.validate(param);
-//		}
-//		if (type.equals("web")) {
-//			return webService.validate(param);
-//		}
-//		if (type.equals("mobile")) {
-//			return mobileService.validate(param);
-//		} else {
-//			return null;
-//		}
-//	}
+	@RabbitListener(queues = "opengds_moblie_qa_queue")
+	public Object test(String msg) throws Throwable {
+
+		System.out.println(msg);
+		// parse parameter
+		JSONParser jsonP = new JSONParser();
+		JSONObject param = (JSONObject) jsonP.parse(msg);
+
+		String type = (String) param.get("type");
+		if (type.equals("mobile")) {
+			return mobileService.validate(param);
+		} else {
+			return null;
+		}
+	}
 }

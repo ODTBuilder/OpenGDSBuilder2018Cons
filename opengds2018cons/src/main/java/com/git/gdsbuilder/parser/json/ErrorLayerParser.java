@@ -36,36 +36,37 @@ public class ErrorLayerParser {
 	public JSONObject parseGeoJSON(ErrorLayer errorLayer) {
 
 		DefaultFeatureCollection collection = new DefaultFeatureCollection();
-		List<ErrorFeature> errList = errorLayer.getErrFeatureList();
 
-		if (errList.size() > 0) {
-			for (int i = 0; i < errList.size(); i++) {
-				ErrorFeature err = errList.get(i);
-				String layerID = err.getLayerID();
-				String featureID = err.getFeatureID();
-				String errType = err.getErrType();
-				String errName = err.getErrName();
-				Geometry errPoint = err.getErrPoint();
-				String featureIdx = "f_" + i;
-				String geomType = errPoint.getGeometryType();
-				String comment = err.getComment();
+		if (errorLayer != null) {
+			List<ErrorFeature> errList = errorLayer.getErrFeatureList();
+			if (errList.size() > 0) {
+				for (int i = 0; i < errList.size(); i++) {
+					ErrorFeature err = errList.get(i);
+					String layerID = err.getLayerID();
+					String featureID = err.getFeatureID();
+					String errType = err.getErrType();
+					String errName = err.getErrName();
+					Geometry errPoint = err.getErrPoint();
+					String featureIdx = "f_" + i;
+					String geomType = errPoint.getGeometryType();
+					String comment = err.getComment();
 
-				SimpleFeatureType sfType;
-				try {
-					sfType = DataUtilities.createType(featureIdx,
-							"layerID:String,featureID:String,errType:String,errName:String,comment:String,the_geom:"
-									+ geomType);
-					SimpleFeature newSimpleFeature = SimpleFeatureBuilder.build(sfType,
-							new Object[] { layerID, featureID, errType, errName, comment, errPoint }, featureIdx);
+					SimpleFeatureType sfType;
+					try {
+						sfType = DataUtilities.createType(featureIdx,
+								"layerID:String,featureID:String,errType:String,errName:String,comment:String,the_geom:"
+										+ geomType);
+						SimpleFeature newSimpleFeature = SimpleFeatureBuilder.build(sfType,
+								new Object[] { layerID, featureID, errType, errName, comment, errPoint }, featureIdx);
 
-					collection.add(newSimpleFeature);
-				} catch (SchemaException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+						collection.add(newSimpleFeature);
+					} catch (SchemaException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		}
-
 		JSONObject json = buildFeatureCollection(collection);
 		return json;
 	}
@@ -113,13 +114,13 @@ public class ErrorLayerParser {
 		JSONArray coors = new JSONArray();
 		coors.add(x);
 		coors.add(y);
-		
+
 		jsonObj.put("coordinates", coors);
 
 		// type
 		String type = geometry.getGeometryType();
 		jsonObj.put("type", type);
-		
+
 		return jsonObj;
 	}
 }
