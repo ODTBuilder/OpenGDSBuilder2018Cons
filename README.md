@@ -33,7 +33,6 @@ Getting Started
 =====
 ### 1. 개발환경 ###
 - Java - OpenGDK 1.8.0.111 64 bit
-- Tomcat - Tomcat8.0.43 64bit
 - eclipse neon 
 - PostgreSQL 9.4 
 - Geoserver 2.13.0
