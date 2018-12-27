@@ -39,7 +39,7 @@ Getting Started
 - https://github.com/ODTBuilder/OpenGDSBuilder2018Cons 접속 후 소스코드 다운로드
 - eclipse 실행 후 zip 파일 형태로 Project Import
 - 프로젝트 경로내 src/main/resources/application.yml 접근 후 다음과 같이 수정
-===================================================================================
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  spring:
   rabbitmq:
     host: 래빗앰큐 서버 주소
@@ -51,14 +51,14 @@ Getting Started
       exchange: 사용할 익스체인지 이름
       routing-key: 웹 검수에 사용할 라우팅키 값
       routing-key-mobile: 모바일 검수에 사용할 라우팅키 값
- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:postgresql://데이터베이스 주소:포트번호/데이터베이스 이름?charSet=UTF-8&prepareThreshold=1
     username: 데이터베이스 계정명
     password: 데이터베이스 비밀번호
     driver-class-name: org.postgresql.Driver  
- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   
+   
  server:
   servlet:
     context-path: /geodt
@@ -68,8 +68,7 @@ Getting Started
   rabbitmq:
     queue: 웹 검수에 사용할 래빗앰큐 큐 이름
     mobilequeue: 모바일 검수에 사용할 래빗앰큐 큐 이름
-    
-===================================================================================      
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### 3. 빌드 및 실행 ###
  - eclipse에서 프로젝트 오른클릭 > Rus as > Maven Build...
  - Goals에 package 입력 후 Run 클릭
