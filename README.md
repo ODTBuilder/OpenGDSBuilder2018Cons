@@ -31,9 +31,10 @@ OpenGeoDT 팀
 
 Getting Started
 =====
-### 1. 개발환경 ###
+### 1. 실행환경 ###
+- Windows 7 64bit
 - Java - OpenGDK 1.8.0.111 64 bit
-- eclipse neon 
+- RabbitMQ 3.7.7 (Erlang 21.0.1)
 - PostgreSQL 9.4 
 - Geoserver 2.13.0
 
@@ -82,7 +83,6 @@ Getting Started
 사용 라이브러리
 =====
 GeoTools 16.5 (LGPL) http://www.geotools.org/
-등
 
 Mail
 =====
