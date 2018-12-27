@@ -41,7 +41,7 @@ Getting Started
 ### 2. 소스코드 설치 및 프로젝트 실행 ###
 - https://github.com/ODTBuilder/OpenGDSBuilder2018Cons 접속 후 소스코드 다운로드
 - eclipse 실행 후 zip 파일 형태로 Project Import
-- 프로젝트 경로내 src/main/resources/application.yml 접근 후 아래 속성들을 수정
+- 프로젝트 경로 내 src/main/resources/application.yml 접근 후 아래 속성들을 수정
 <pre><code>
  spring:
   rabbitmq:
