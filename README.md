@@ -40,6 +40,7 @@ Getting Started
 - eclipse 실행 후 zip 파일 형태로 Project Import
 - 프로젝트 경로내 src/main/resources/application.yml 접근 후 다음과 같이 수정
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+<pre><code>
  spring:
   rabbitmq:
     host: 래빗앰큐 서버 주소
@@ -68,6 +69,7 @@ Getting Started
   rabbitmq:
     queue: 웹 검수에 사용할 래빗앰큐 큐 이름
     mobilequeue: 모바일 검수에 사용할 래빗앰큐 큐 이름
+</code></pre>
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### 3. 빌드 및 실행 ###
  - eclipse에서 프로젝트 오른클릭 > Rus as > Maven Build...
