@@ -1,22 +1,22 @@
 spring:
   rabbitmq:
-    host: 175.116.181.42
-    port: 5672
-    virtual-host: only_opengds
-    username: qaconsumer
-    password: qaconsumer
+    host: 래빗앰큐 서버 주소
+    port: 래빗앰큐 서버 포트번호
+    virtual-host: 래빗앰큐 가상 계정 이름
+    username: 래빗앰큐 실제 접속 계정
+    password: 래빗앰큐 실제 접속 비밀번호
     template:
-      exchange: opengds_qa_exchange
-      routing-key: opengds_qa_key
-      routing-key-mobile: opengds_mobile_qa_key
+      exchange: 사용할 익스체인지 이름
+      routing-key: 웹 검수에 사용할 라우팅키 값
+      routing-key-mobile: 모바일 검수에 사용할 라우팅키 값
     listener:
       acknowledge-mode: auto
       default-requeue-rejected: false
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://175.116.181.42:5432/opengds_2018?charSet=UTF-8&prepareThreshold=1
-    username: opensource
-    password: opensource
+    url: jdbc:postgresql://데이터베이스 주소:포트번호/데이터베이스 이름?charSet=UTF-8&prepareThreshold=1
+    username: 데이터베이스 계정명
+    password: 데이터베이스 비밀번호
     driver-class-name: org.postgresql.Driver
     hikari:
       connection-test-query: SELECT 1
@@ -27,15 +27,15 @@ spring:
 server:
   servlet:
     context-path: /geodt
-    port: 8089
+    port: 연결될 OpenGDSBuilder2018Prod 서버의 포트번호
 gitrnd:
-  serverhost: 175.116.181.32
+  serverhost: 연결될 OpenGDSBuilder2018Prod 서버의 주소
   apache:
     basedir: gdofiles
     basedrive: C
   rabbitmq:
-    queue: opengds_qa_queue
-    mobilequeue: opengds_moblie_qa_queue
+    queue: 웹 검수에 사용할 래빗앰큐 큐 이름
+    mobilequeue: 모바일 검수에 사용할 래빗앰큐 큐 이름
 mybatis:
   config-location: classpath:config/mybatis.xml
   mapper-location: classpath:sql/*.xml
