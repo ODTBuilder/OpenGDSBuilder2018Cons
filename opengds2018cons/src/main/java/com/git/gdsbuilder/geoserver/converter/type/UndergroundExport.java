@@ -52,7 +52,7 @@ public class UndergroundExport {
 	 * @return int 200 성공
 	 * 			   500 내부에러
 	 * 			   700 파일구조에러
-	 * 			   701 레이어 리스트 NULL
+	 * 			   612 레이어 리스트 NULL
 	 *             702 파일손상
 	 *             703 Geoserver Layer 다운에러
 	 * */
@@ -110,7 +110,7 @@ public class UndergroundExport {
 				}
 			}
 		} else {
-			flag = 701;
+			flag = 612;
 			System.err.println("레이어 리스트 NULL");
 		}
 		return flag;
