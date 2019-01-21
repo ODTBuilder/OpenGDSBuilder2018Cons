@@ -453,6 +453,8 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 
 		boolean isError = false;
 		String featureID = sf.getID();
+
+		// String osmId = sf.getAttribute("osm_id").toString();
 		Geometry geometry = (Geometry) sf.getDefaultGeometry();
 		Double value = optionTolerance.getValue();
 		String conditon = optionTolerance.getCondition();
@@ -532,6 +534,8 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 		}
 		boolean isError = false;
 		String featureID = sf.getID();
+
+		// String osmId = sf.getAttribute("osm_id").toString();
 		Geometry geometry = (Geometry) sf.getDefaultGeometry();
 		Double value = optionTolerance.getValue();
 		String conditon = optionTolerance.getCondition();
@@ -680,7 +684,6 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 
 		boolean isTrue = false;
 		SimpleFeature sf = dtFeature.getSimefeature();
-
 		List<AttributeFilter> filters = dtFeature.getFilter();
 		if (filters != null) {
 			isTrue = FeatureFilter.filter(sf, filters);
@@ -722,9 +725,12 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 			if (geomIType.equals("Polygon") || geomIType.equals("MultiPolygon")) {
 				returnGeom = selfEntityPolygon(geometryI, geometryJ, value, condition);
 			}
-			if (returnGeom != null) {
+			if (returnGeom != null && !returnGeom.isEmpty()) {
 				String featureID = sf.getID();
 				String reFeatureID = reSf.getID();
+				// String osmId = sf.getAttribute("osm_id").toString();
+				// String reOmsId = reSf.getAttribute("osm_id").toString();
+
 				String reLayerId = reFeature.getLayerID();
 				String returnGeomType = returnGeom.getGeometryType().toUpperCase();
 				if (returnGeomType.equals("LINESTRING")) {
@@ -1007,7 +1013,7 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 			}
 			return returnGeom;
 		} catch (Exception e) {
-			return returnGeom;
+			return null;
 		}
 	}
 
@@ -1027,12 +1033,6 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 
 		String featureId = sf.getID();
 		Geometry geom = (Geometry) sf.getDefaultGeometry();
-		String geomType = geom.getGeometryType();
-		if (!geomType.equals("Polygon") || !geomType.equals("MultiPolygon")) {
-
-			return null;
-		}
-
 		Coordinate[] geomCoors = geom.getCoordinates();
 		int geomCoorsLength = geomCoors.length;
 		boolean isErr = false;
@@ -1054,6 +1054,10 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 					SimpleFeature relationSf = iterator.next();
 					if (FeatureFilter.filter(relationSf, reAttrFilters)) {
 						Geometry relationGeom = (Geometry) relationSf.getDefaultGeometry();
+						String geomType = relationGeom.getGeometryType();
+						if (!geomType.equals("Polygon") || !geomType.equals("MultiPolygon")) {
+							return null;
+						}
 						if (geom.intersects(relationGeom)) {
 							Coordinate[] rGeomCoors = relationGeom.getCoordinates();
 							for (int i = 0; i < rGeomCoors.length - 1; i++) {
@@ -1132,6 +1136,10 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 				} else {
 					String featureID = sfI.getID();
 					String reFeatrueId = sfJ.getID();
+
+//					String osmId = sfI.getAttribute("osm_id").toString();
+//					String reOmsId = sfJ.getAttribute("osm_id").toString();
+
 					ErrorFeature errFeature = new ErrorFeature(featureID, reFeatrueId,
 							DMQAOptions.Type.ENTITYDUPLICATED.getErrCode(),
 							DMQAOptions.Type.ENTITYDUPLICATED.getErrTypeE(),
@@ -1323,7 +1331,9 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 				GeometryFactory f = new GeometryFactory();
 				Coordinate[] coordinates = geometry.getCoordinates();
 				Geometry errGeometry = f.createPoint(coordinates[0]);
+
 				String featureID = sf.getID();
+				// String osmId = sf.getAttribute("osm_id").toString();
 				ErrorFeature errorFeature = new ErrorFeature(featureID, DMQAOptions.Type.TWISTEDPOLYGON.getErrCode(),
 						DMQAOptions.Type.TWISTEDPOLYGON.getErrTypeE(), DMQAOptions.Type.TWISTEDPOLYGON.getErrNameE(),
 						"", errGeometry);
@@ -1505,49 +1515,68 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 		} else {
 			isTrue = true;
 		}
+		List<ErrorFeature> errFeatures = new ArrayList<ErrorFeature>();
 		if (isTrue) {
+			String featureID = sf.getID();
+			// String osmId = sf.getAttribute("osm_id").toString();
 			Geometry geometry = (Geometry) sf.getDefaultGeometry();
-			Coordinate[] coors = geometry.getCoordinates();
-			int coorLength = coors.length;
-			if (coorLength == 0 || coorLength == 1) {
-				return null;
-			} else {
-				List<ErrorFeature> errFeatures = new ArrayList<ErrorFeature>();
-				if (coorLength == 2) {
-					Coordinate coor0 = coors[0];
-					Coordinate coor1 = coors[1];
-					if (coor0.equals3D(coor1)) {
-						// errFeature
-						String featureID = sf.getID();
-						Geometry errGeom = new GeometryFactory().createPoint(coor1);
-						ErrorFeature errorFeature = new ErrorFeature(featureID,
-								DMQAOptions.Type.POINTDUPLICATED.getErrCode(),
-								DMQAOptions.Type.POINTDUPLICATED.getErrTypeE(),
-								DMQAOptions.Type.POINTDUPLICATED.getErrNameE(), "", errGeom);
-
-						errFeatures.add(errorFeature);
+			int numGeom = geometry.getNumGeometries();
+			for (int i = 0; i < numGeom; i++) {
+				Geometry singleGeom = geometry.getGeometryN(i);
+				if (singleGeom instanceof LineString) {
+					LineString lineString = (LineString) singleGeom;
+					errFeatures.addAll(pointDuplicated(lineString.getCoordinates(), featureID));
+				}
+				if (singleGeom instanceof Polygon) {
+					Polygon polygon = (Polygon) singleGeom;
+					LineString exteriorRing = polygon.getExteriorRing();
+					errFeatures.addAll(pointDuplicated(exteriorRing.getCoordinates(), featureID));
+					int numInnerRings = polygon.getNumInteriorRing();
+					for (int in = 0; in < numInnerRings; in++) {
+						LineString innerRing = polygon.getInteriorRingN(in);
+						errFeatures.addAll(pointDuplicated(innerRing.getCoordinates(), featureID));
 					}
 				}
-				if (coorLength > 3) {
-					for (int i = 0; i < coorLength - 1; i++) {
-						Coordinate coor0 = coors[i];
-						Coordinate coor1 = coors[i + 1];
-						if (coor0.equals3D(coor1)) {
-							// errFeature
-							String featureID = sf.getID();
-							Geometry errGeom = new GeometryFactory().createPoint(coor1);
-							ErrorFeature errorFeature = new ErrorFeature(featureID,
-									DMQAOptions.Type.POINTDUPLICATED.getErrCode(),
-									DMQAOptions.Type.POINTDUPLICATED.getErrTypeE(),
-									DMQAOptions.Type.POINTDUPLICATED.getErrNameE(), "", errGeom);
-							errFeatures.add(errorFeature);
-						}
-					}
-				}
-				return errFeatures;
 			}
 		}
-		return null;
+		if (errFeatures.size() > 0) {
+			return errFeatures;
+		} else {
+			return null;
+		}
+	}
+
+	private List<ErrorFeature> pointDuplicated(Coordinate[] coors, String featureId) {
+
+		List<ErrorFeature> errFeatures = new ArrayList<ErrorFeature>();
+
+		int coorLength = coors.length;
+		if (coorLength == 2) {
+			Coordinate coor0 = coors[0];
+			Coordinate coor1 = coors[1];
+			if (coor0.equals3D(coor1)) {
+				Geometry errGeom = new GeometryFactory().createPoint(coor1);
+				ErrorFeature errorFeature = new ErrorFeature(featureId, DMQAOptions.Type.POINTDUPLICATED.getErrCode(),
+						DMQAOptions.Type.POINTDUPLICATED.getErrTypeE(), DMQAOptions.Type.POINTDUPLICATED.getErrNameE(),
+						"", errGeom);
+				errFeatures.add(errorFeature);
+			}
+		}
+		if (coorLength > 3) {
+			for (int c = 0; c < coorLength - 1; c++) {
+				Coordinate coor0 = coors[c];
+				Coordinate coor1 = coors[c + 1];
+				if (coor0.equals3D(coor1)) {
+					Geometry errGeom = new GeometryFactory().createPoint(coor1);
+					ErrorFeature errorFeature = new ErrorFeature(featureId,
+							DMQAOptions.Type.POINTDUPLICATED.getErrCode(),
+							DMQAOptions.Type.POINTDUPLICATED.getErrTypeE(),
+							DMQAOptions.Type.POINTDUPLICATED.getErrNameE(), "", errGeom);
+					errFeatures.add(errorFeature);
+				}
+			}
+		}
+		return errFeatures;
 	}
 
 	@Override
@@ -2056,7 +2085,7 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 
 		SimpleFeature sf = feature.getSimefeature();
 		String featureID = sf.getID();
-
+		// String osmId = sf.getAttribute("osm_id").toString();
 		// filter
 		boolean isTrue = false;
 		List<AttributeFilter> filters = feature.getFilter();

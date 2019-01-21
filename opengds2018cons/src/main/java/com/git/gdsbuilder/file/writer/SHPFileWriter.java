@@ -79,7 +79,10 @@ public class SHPFileWriter {
 				String errType = err.getErrType();
 				String errName = err.getErrName();
 				Geometry errPoint = err.getErrPoint();
-				String featureIdx = "f_" + i;
+
+				String featureIdx = errCode + "_" + featureID;
+
+				// String featureIdx = "f_" + i;
 				String geomType = errPoint.getGeometryType();
 				String comment = err.getComment();
 
@@ -97,7 +100,7 @@ public class SHPFileWriter {
 //					e.printStackTrace();
 //				}
 				SimpleFeatureType sfType = DataUtilities.createType(featureIdx,
-						"layerID:String,featureID:String,refLayerId:String,refFeatureId:String,errCode:String,errType:String,errName:String,comment:String,the_geom:"
+						"layer:String,feature:String,refLayer:String,refFeature:String,errCode:String,errType:String,errName:String,comment:String,the_geom:"
 								+ geomType);
 				SimpleFeature newSimpleFeature = SimpleFeatureBuilder.build(sfType, new Object[] { layerID, featureID,
 						refLayerId, refFeatureId, errCode, errType, errName, comment, errPoint }, featureIdx);

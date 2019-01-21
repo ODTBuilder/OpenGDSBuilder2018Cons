@@ -174,13 +174,13 @@ public class CollectionValidator {
 			errLayer.setFeatureCount(featureCount);
 
 			// layerMiss 검수
-			// layerMissValidate(types, collection);
+			layerMissValidate(types, collection);
 
 			// geometric 검수
 			geometricValidate(types, collection);
 
 			// attribute 검수
-			// attributeValidate(types, collection);
+			attributeValidate(types, collection);
 
 			// 인접 검수
 			if (closeCollections != null) {
@@ -861,7 +861,6 @@ public class CollectionValidator {
 		errLayer.mergeErrorLayer(attrResult.treadErrorLayer);
 	}
 
-	@SuppressWarnings("unused")
 	private void geometricValidate(QALayerTypeList types, DTLayerCollection layerCollection)
 			throws SchemaException, NoSuchAuthorityCodeException, FactoryException, TransformException, IOException {
 

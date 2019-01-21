@@ -283,7 +283,7 @@ public class FeatureAttributeValidatorImpl implements FeatureAttributeValidator 
 				}
 			}
 			String valueType = attrObj.getClass().getSimpleName();
-			if (type != null) {
+			if (!type.equals("null")) {
 				if (valueType.equals("Long")) {
 					if (!type.equals("INTEGER") && !type.equals("NUMBER")) {
 						isErr = true;
