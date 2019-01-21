@@ -72,7 +72,7 @@ public class UnZipFile {
 			// 파일 스트림
 			fis = new FileInputStream(zipFile);
 			// Zip 파일 스트림
-			zis = new ZipInputStream(new BufferedInputStream(fis, BUFFER_SIZE), Charset.forName("Cp437"));
+			zis = new ZipInputStream(new BufferedInputStream(fis, BUFFER_SIZE), Charset.forName("EUC-KR"));
 			// Fentry가 없을때까지 뽑기
 			while ((zipentry = zis.getNextEntry()) != null) {
 				String zipentryName = zipentry.getName();
@@ -112,8 +112,7 @@ public class UnZipFile {
 	 * 
 	 * @author SG.Lee
 	 * @Date 2018. 4. 18. 오전 9:09:33
-	 * @param source
-	 *            void
+	 * @param source void
 	 */
 	@SuppressWarnings("unused")
 	private static void subDirList(String source) {
@@ -180,8 +179,7 @@ public class UnZipFile {
 	 * 
 	 * @author SG.Lee
 	 * @Date 2018. 4. 18. 오후 1:24:16
-	 * @param unzipFolder
-	 *            void
+	 * @param unzipFolder void
 	 */
 	private static File[] createCollectionFolders(File unzipFolder) {
 		// boolean equalFlag = false; // 파일명이랑 압축파일명이랑 같을시 대비 flag값
@@ -198,8 +196,8 @@ public class UnZipFile {
 		for (int i = 0; i < fileList.length; i++) {
 			if (fileList[i].isDirectory()) {
 				/*
-				 * String message = "[디렉토리] "; message = fileList[ i
-				 * ].getName(); System.out.println( message );
+				 * String message = "[디렉토리] "; message = fileList[ i ].getName();
+				 * System.out.println( message );
 				 * 
 				 * subDirList( fileList[ i ].getPath());//하위 폴더 탐색
 				 */ } else {
@@ -301,8 +299,7 @@ public class UnZipFile {
 	 * @Date 2018. 4. 18. 오전 9:45:55
 	 * @param source
 	 * @param dest
-	 * @throws IOException
-	 *             void
+	 * @throws IOException void
 	 */
 	private static void FileNio2Copy(String source, String dest) throws IOException {
 		Files.copy(new File(source).toPath(), new File(dest).toPath());
