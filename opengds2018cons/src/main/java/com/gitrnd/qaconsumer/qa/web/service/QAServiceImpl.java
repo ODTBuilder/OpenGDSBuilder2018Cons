@@ -339,7 +339,7 @@ public class QAServiceImpl implements QAService {
 			isSuccess = executorValidate(collectionList, validateLayerTypeList, epsg, ERR_OUTPUT_NAME, pidx);
 			// isSuccess = true;
 			if (isSuccess) {
-				// insert validate state
+				// insert validate state9
 				progress.setQaState(VALIDATESUCCESS);
 				qapgService.updateQAState(progress);
 
