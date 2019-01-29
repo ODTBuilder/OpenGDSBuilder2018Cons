@@ -1767,9 +1767,15 @@ public class CollectionValidator {
 					if (option.equals("LayerFixMiss")) { // tmp -> enum으로 대체
 						String geometry = layerFixMiss.getGeometry();
 						List<FixedValue> fixedValue = layerFixMiss.getFix();
-						typeErrorLayer = layerValidator.validateLayerFixMiss(geometry, fixedValue);
-						if (typeErrorLayer != null) {
-							errLayer.mergeErrorLayer(typeErrorLayer);
+						if (fixedValue == null) {
+							continue;
+						} else {
+							if (fixedValue.size() > 0) {
+								typeErrorLayer = layerValidator.validateLayerFixMiss(geometry, fixedValue);
+								if (typeErrorLayer != null) {
+									errLayer.mergeErrorLayer(typeErrorLayer);
+								}
+							}
 						}
 					}
 				}
