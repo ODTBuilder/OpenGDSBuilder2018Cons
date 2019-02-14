@@ -278,18 +278,16 @@ public class QAFileParser {
 						}
 					}
 					collection.setLayers(dtLayerList);
-					if (this.neatLine != null && collection.getNeatLine().getSimpleFeatureCollection() == null) {
+					if (this.neatLine != null && collection.getNeatLine() == null) {
 						this.status += collectionName + " : 일치하는 " + this.neatLine + " 도곽이 없습니다." + this.brTag;
 						collection = null;
-					}
-					if (this.neatLine != null && collection.getNeatLine().getSimpleFeatureCollection() != null) {
+					} else if (this.neatLine != null && collection.getNeatLine().getSimpleFeatureCollection() != null) {
 						MapSystemRule mapRule = new MapSystemRule().setMapSystemRule(collection.getCollectionName());
 						if (mapRule != null) {
 							collection.setMapRule(mapRule);
 						}
 						collectionList.add(collection);
-					}
-					if (this.neatLine == null) {
+					} else if (this.neatLine == null) {
 						MapSystemRule mapRule = new MapSystemRule().setMapSystemRule(collection.getCollectionName());
 						if (mapRule != null) {
 							collection.setMapRule(mapRule);
