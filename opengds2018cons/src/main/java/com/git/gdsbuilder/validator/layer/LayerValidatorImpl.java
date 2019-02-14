@@ -46,7 +46,6 @@ import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.factory.CommonFactoryFinder;
-import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.feature.SchemaException;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.filter.Filter;
@@ -66,7 +65,6 @@ import com.git.gdsbuilder.type.validate.option.specific.OptionFigure;
 import com.git.gdsbuilder.type.validate.option.specific.OptionFilter;
 import com.git.gdsbuilder.type.validate.option.specific.OptionTolerance;
 import com.git.gdsbuilder.type.validate.option.standard.FixedValue;
-import com.git.gdsbuilder.type.validate.option.type.DMQAOptions;
 import com.git.gdsbuilder.validator.feature.FeatureAttributeValidator;
 import com.git.gdsbuilder.validator.feature.FeatureAttributeValidatorImpl;
 import com.git.gdsbuilder.validator.feature.FeatureCloseCollectionValidator;
@@ -439,7 +437,6 @@ public class LayerValidatorImpl implements LayerValidator {
 		SimpleFeatureIterator sfcIter = sfc.features();
 		while (sfcIter.hasNext()) {
 			SimpleFeature sf = sfcIter.next();
-
 			Geometry geom = (Geometry) sf.getDefaultGeometry();
 			DTFeature feature = new DTFeature(layerID, sf, attrConditions);
 			// self
@@ -479,7 +476,6 @@ public class LayerValidatorImpl implements LayerValidator {
 			throws SchemaException, IOException {
 
 		ErrorLayer errorLayer = new ErrorLayer();
-		String layerId = validatorLayer.getLayerID();
 		OptionFilter optionFilter = validatorLayer.getFilter();
 		List<AttributeFilter> attrConditions = null;
 		if (optionFilter != null) {
@@ -488,26 +484,20 @@ public class LayerValidatorImpl implements LayerValidator {
 		String layerID = validatorLayer.getLayerID();
 		SimpleFeatureCollection sfc = validatorLayer.getSimpleFeatureCollection();
 		SimpleFeatureIterator sfcIter = sfc.features();
-		while (sfcIter.hasNext()) {
-			SimpleFeature sf = sfcIter.next();
-			Geometry geom = (Geometry) sf.getDefaultGeometry();
-			DTFeature feature = new DTFeature(layerID, sf, attrConditions);
-			// relation
-			if (relationLayers != null) {
-				for (int i = 0; i < relationLayers.size(); i++) {
-					DTLayer relationLayer = relationLayers.get(i);
-					String relationLayerId = relationLayer.getLayerID();
-					OptionFilter reFilter = relationLayer.getFilter();
-					List<AttributeFilter> reAttrConditions = null;
-					if (reFilter != null) {
-						reAttrConditions = optionFilter.getFilter();
-					}
-					SimpleFeatureCollection reSfc = relationLayer.getSimpleFeatureCollection();
-					FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2();
-					Filter filter = ff.intersects(ff.property("the_geom"), ff.literal(geom.getEnvelope()));
-					SimpleFeatureSource source = DataUtilities.source(reSfc);
-					SimpleFeatureCollection refilterSfc = source.getFeatures(filter);
-					SimpleFeatureIterator reSfcIter = refilterSfc.features();
+		if (relationLayers != null) {
+			for (int i = 0; i < relationLayers.size(); i++) {
+				DTLayer relationLayer = relationLayers.get(i);
+				String relationLayerId = relationLayer.getLayerID();
+				OptionFilter reFilter = relationLayer.getFilter();
+				List<AttributeFilter> reAttrConditions = null;
+				if (reFilter != null) {
+					reAttrConditions = optionFilter.getFilter();
+				}
+				SimpleFeatureCollection reSfc = relationLayer.getSimpleFeatureCollection();
+				while (sfcIter.hasNext()) {
+					SimpleFeature sf = sfcIter.next();
+					DTFeature feature = new DTFeature(layerID, sf, attrConditions);
+					SimpleFeatureIterator reSfcIter = reSfc.features();
 					while (reSfcIter.hasNext()) {
 						SimpleFeature reSf = reSfcIter.next();
 						if (sf.equals(reSf)) {
@@ -518,7 +508,7 @@ public class LayerValidatorImpl implements LayerValidator {
 								tolerance);
 						if (errFeatures != null) {
 							for (ErrorFeature errFeature : errFeatures) {
-								errFeature.setLayerID(layerId);
+								errFeature.setLayerID(layerID);
 								errorLayer.addErrorFeature(errFeature);
 							}
 						}

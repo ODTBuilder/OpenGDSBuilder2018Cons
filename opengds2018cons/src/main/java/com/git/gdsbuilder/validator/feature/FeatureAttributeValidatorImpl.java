@@ -63,6 +63,8 @@ import com.git.gdsbuilder.validator.feature.filter.FeatureFilter;
 import com.vividsolutions.jts.algorithm.Angle;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.TopologyException;
 
 public class FeatureAttributeValidatorImpl implements FeatureAttributeValidator {
 
@@ -120,9 +122,16 @@ public class FeatureAttributeValidatorImpl implements FeatureAttributeValidator 
 			}
 		}
 		if (isError) {
+			Geometry errPt = null;
+			try {
+				errPt = geometry.getInteriorPoint();
+			} catch (TopologyException e) {
+				Coordinate[] coors = geometry.getCoordinates();
+				errPt = new GeometryFactory().createPoint(coors[0]);
+			}
 			ErrorFeature errorFeature = new ErrorFeature(featureID, DMQAOptions.Type.ZVALUEAMBIGUOUS.getErrCode(),
 					DMQAOptions.Type.ZVALUEAMBIGUOUS.getErrTypeE(), DMQAOptions.Type.ZVALUEAMBIGUOUS.getErrNameE(), "",
-					geometry.getInteriorPoint());
+					errPt);
 			return errorFeature;
 		} else {
 			return null;
@@ -180,11 +189,17 @@ public class FeatureAttributeValidatorImpl implements FeatureAttributeValidator 
 			}
 		}
 		if (isError) {
-			Geometry returnGeom = geometry.intersection(relGeometry);
+			Geometry errPt = null;
+			try {
+				Geometry interGeom = geometry.intersection(relGeometry);
+				errPt = interGeom.getInteriorPoint();
+			} catch (TopologyException e) {
+				Coordinate[] coors = geometry.getCoordinates();
+				errPt = new GeometryFactory().createPoint(coors[0]);
+			}
 			String featureID = sf.getID();
 			ErrorFeature errorFeature = new ErrorFeature(featureID, DMQAOptions.Type.BRIDGENAME.getErrCode(),
-					DMQAOptions.Type.BRIDGENAME.getErrTypeE(), DMQAOptions.Type.BRIDGENAME.getErrNameE(), "",
-					returnGeom.getInteriorPoint());
+					DMQAOptions.Type.BRIDGENAME.getErrTypeE(), DMQAOptions.Type.BRIDGENAME.getErrNameE(), "", errPt);
 			return errorFeature;
 		} else {
 			return null;
@@ -237,9 +252,15 @@ public class FeatureAttributeValidatorImpl implements FeatureAttributeValidator 
 			}
 		}
 		if (isError) {
+			Geometry errPt = null;
+			try {
+				errPt = geometry.getInteriorPoint();
+			} catch (TopologyException e) {
+				Coordinate[] coors = geometry.getCoordinates();
+				errPt = new GeometryFactory().createPoint(coors[0]);
+			}
 			ErrorFeature errorFeature = new ErrorFeature(featureID, DMQAOptions.Type.ADMINMISS.getErrCode(),
-					DMQAOptions.Type.ADMINMISS.getErrTypeE(), DMQAOptions.Type.ADMINMISS.getErrNameE(), "",
-					geometry.getInteriorPoint());
+					DMQAOptions.Type.ADMINMISS.getErrTypeE(), DMQAOptions.Type.ADMINMISS.getErrNameE(), "", errPt);
 			return errorFeature;
 		} else {
 			return null;
@@ -284,22 +305,24 @@ public class FeatureAttributeValidatorImpl implements FeatureAttributeValidator 
 			}
 			String valueType = attrObj.getClass().getSimpleName();
 			if (type != null) {
-				if (valueType.equals("Long")) {
-					if (!type.equals("INTEGER") && !type.equals("NUMBER")) {
-						isErr = true;
-						break;
+				if (!type.equals("null")) {
+					if (valueType.equals("Long")) {
+						if (!type.equals("INTEGER") && !type.equals("NUMBER")) {
+							isErr = true;
+							break;
+						}
 					}
-				}
-				if (valueType.equals("String")) {
-					if (!type.startsWith("VARCHAR")) {
-						isErr = true;
-						break;
+					if (valueType.equals("String")) {
+						if (!type.startsWith("VARCHAR")) {
+							isErr = true;
+							break;
+						}
 					}
+					// if (!type.equals(valueType)) {
+					// isErr = true;
+					// break;
+					// }
 				}
-				// if (!type.equals(valueType)) {
-				// isErr = true;
-				// break;
-				// }
 			}
 			if (valuesObj != null) {
 				if (valuesObj != null) {
@@ -338,11 +361,17 @@ public class FeatureAttributeValidatorImpl implements FeatureAttributeValidator 
 			if (geom.isEmpty()) {
 				return null;
 			}
-
+			Geometry errPt = null;
+			try {
+				errPt = geom.getInteriorPoint();
+			} catch (TopologyException e) {
+				Coordinate[] coors = geom.getCoordinates();
+				errPt = new GeometryFactory().createPoint(coors[0]);
+			}
 			ErrorFeature errorFeature = new ErrorFeature(featureID,
 					LayerFieldOptions.Type.LAYERFIELDFIXMISS.getErrCode(),
 					LayerFieldOptions.Type.LAYERFIELDFIXMISS.getErrTypeE(),
-					LayerFieldOptions.Type.LAYERFIELDFIXMISS.getErrNameE(), "", geom.getInteriorPoint());
+					LayerFieldOptions.Type.LAYERFIELDFIXMISS.getErrNameE(), "", errPt);
 			return errorFeature;
 		} else {
 			return null;
@@ -454,9 +483,15 @@ public class FeatureAttributeValidatorImpl implements FeatureAttributeValidator 
 			}
 		}
 		if (isError) {
+			Geometry errPt = null;
+			try {
+				errPt = geom.getInteriorPoint();
+			} catch (TopologyException e) {
+				Coordinate[] coors = geom.getCoordinates();
+				errPt = new GeometryFactory().createPoint(coors[0]);
+			}
 			ErrorFeature errorFeature = new ErrorFeature(featureID, DMQAOptions.Type.UFIDMISS.getErrCode(),
-					DMQAOptions.Type.UFIDMISS.getErrTypeE(), DMQAOptions.Type.UFIDMISS.getErrNameE(), comment,
-					geom.getInteriorPoint());
+					DMQAOptions.Type.UFIDMISS.getErrTypeE(), DMQAOptions.Type.UFIDMISS.getErrNameE(), comment, errPt);
 			return errorFeature;
 		} else {
 			return null;
@@ -515,9 +550,16 @@ public class FeatureAttributeValidatorImpl implements FeatureAttributeValidator 
 			}
 		}
 		if (isError) {
+			Geometry errPt = null;
+			try {
+				errPt = geometry.getInteriorPoint();
+			} catch (TopologyException e) {
+				Coordinate[] coors = geometry.getCoordinates();
+				errPt = new GeometryFactory().createPoint(coors[0]);
+			}
 			ErrorFeature errorFeature = new ErrorFeature(featureID, DMQAOptions.Type.NUMERICALVALUE.getErrCode(),
 					DMQAOptions.Type.NUMERICALVALUE.getErrTypeE(), DMQAOptions.Type.NUMERICALVALUE.getErrNameE(), "",
-					geometry.getInteriorPoint());
+					errPt);
 			return errorFeature;
 		} else {
 			return null;
@@ -554,9 +596,16 @@ public class FeatureAttributeValidatorImpl implements FeatureAttributeValidator 
 		if (equalsCount == attrIList.size() - 1) {
 			String featureID = sfI.getID();
 			Geometry geometryI = (Geometry) sfI.getDefaultGeometry();
+			Geometry errPt = null;
+			try {
+				errPt = geometryI.getInteriorPoint();
+			} catch (TopologyException e) {
+				Coordinate[] coors = geometryI.getCoordinates();
+				errPt = new GeometryFactory().createPoint(coors[0]);
+			}
 			ErrorFeature errFeature = new ErrorFeature(featureID, DMQAOptions.Type.ENTITYDUPLICATED.getErrCode(),
 					DMQAOptions.Type.ENTITYDUPLICATED.getErrTypeE(), DMQAOptions.Type.ENTITYDUPLICATED.getErrNameE(),
-					"", geometryI.getInteriorPoint());
+					"", errPt);
 
 			return errFeature;
 		} else {
@@ -633,9 +682,15 @@ public class FeatureAttributeValidatorImpl implements FeatureAttributeValidator 
 		}
 		if (isError) {
 			String featureID = sf.getID();
+			Geometry errPt = null;
+			try {
+				errPt = geom.getInteriorPoint();
+			} catch (TopologyException e) {
+				Coordinate[] coors = geom.getCoordinates();
+				errPt = new GeometryFactory().createPoint(coors[0]);
+			}
 			return new ErrorFeature(featureID, UFMQAOptions.Type.UAVRGDPH20.getErrCode(),
-					UFMQAOptions.Type.UAVRGDPH20.getErrTypeE(), UFMQAOptions.Type.UAVRGDPH20.getErrNameE(), "",
-					geom.getInteriorPoint());
+					UFMQAOptions.Type.UAVRGDPH20.getErrTypeE(), UFMQAOptions.Type.UAVRGDPH20.getErrNameE(), "", errPt);
 		} else {
 			return null;
 		}
@@ -738,9 +793,16 @@ public class FeatureAttributeValidatorImpl implements FeatureAttributeValidator 
 			if (geom.isEmpty()) {
 				return null;
 			}
+			Geometry errPt = null;
+			try {
+				errPt = geom.getInteriorPoint();
+			} catch (TopologyException e) {
+				Coordinate[] coors = geom.getCoordinates();
+				errPt = new GeometryFactory().createPoint(coors[0]);
+			}
 			ErrorFeature errFeature = new ErrorFeature(sf.getID(), FTMQAOptions.Type.FCODELOGICALATTRIBUTE.getErrCode(),
 					FTMQAOptions.Type.FCODELOGICALATTRIBUTE.getErrTypeE(),
-					FTMQAOptions.Type.FCODELOGICALATTRIBUTE.getErrNameE(), "", geom.getCentroid());
+					FTMQAOptions.Type.FCODELOGICALATTRIBUTE.getErrNameE(), "", errPt);
 			return errFeature;
 		} else {
 			return null;
@@ -811,10 +873,17 @@ public class FeatureAttributeValidatorImpl implements FeatureAttributeValidator 
 			if (geom.isEmpty()) {
 				return null;
 			}
+			Geometry errPt = null;
+			try {
+				errPt = geom.getInteriorPoint();
+			} catch (TopologyException e) {
+				Coordinate[] coors = geom.getCoordinates();
+				errPt = new GeometryFactory().createPoint(coors[0]);
+			}
 			ErrorFeature errFeature = new ErrorFeature(sf.getID(),
 					FTMQAOptions.Type.FLABELLOGICALATTRIBUTE.getErrCode(),
 					FTMQAOptions.Type.FLABELLOGICALATTRIBUTE.getErrTypeE(),
-					FTMQAOptions.Type.FLABELLOGICALATTRIBUTE.getErrNameE(), "", geom.getCentroid());
+					FTMQAOptions.Type.FLABELLOGICALATTRIBUTE.getErrNameE(), "", errPt);
 			return errFeature;
 		} else {
 			return null;
@@ -881,9 +950,15 @@ public class FeatureAttributeValidatorImpl implements FeatureAttributeValidator 
 			}
 		}
 		if (isError) {
+			Geometry errPt = null;
+			try {
+				errPt = geom.getInteriorPoint();
+			} catch (TopologyException e) {
+				Coordinate[] coors = geom.getCoordinates();
+				errPt = new GeometryFactory().createPoint(coors[0]);
+			}
 			errFeatures.add(new ErrorFeature(sf.getID(), FTMQAOptions.Type.DISSOLVE.getErrCode(),
-					FTMQAOptions.Type.DISSOLVE.getErrTypeE(), FTMQAOptions.Type.DISSOLVE.getErrNameE(), "",
-					geom.getInteriorPoint()));
+					FTMQAOptions.Type.DISSOLVE.getErrTypeE(), FTMQAOptions.Type.DISSOLVE.getErrNameE(), "", errPt));
 			return errFeatures;
 		} else {
 			return null;

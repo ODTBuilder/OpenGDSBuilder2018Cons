@@ -174,13 +174,13 @@ public class CollectionValidator {
 			errLayer.setFeatureCount(featureCount);
 
 			// layerMiss 검수
-			// layerMissValidate(types, collection);
+			layerMissValidate(types, collection);
 
 			// geometric 검수
 			geometricValidate(types, collection);
 
 			// attribute 검수
-			// attributeValidate(types, collection);
+			attributeValidate(types, collection);
 
 			// 인접 검수
 			if (closeCollections != null) {
@@ -861,7 +861,6 @@ public class CollectionValidator {
 		errLayer.mergeErrorLayer(attrResult.treadErrorLayer);
 	}
 
-	@SuppressWarnings("unused")
 	private void geometricValidate(QALayerTypeList types, DTLayerCollection layerCollection)
 			throws SchemaException, NoSuchAuthorityCodeException, FactoryException, TransformException, IOException {
 
@@ -1768,9 +1767,15 @@ public class CollectionValidator {
 					if (option.equals("LayerFixMiss")) { // tmp -> enum으로 대체
 						String geometry = layerFixMiss.getGeometry();
 						List<FixedValue> fixedValue = layerFixMiss.getFix();
-						typeErrorLayer = layerValidator.validateLayerFixMiss(geometry, fixedValue);
-						if (typeErrorLayer != null) {
-							errLayer.mergeErrorLayer(typeErrorLayer);
+						if (fixedValue == null) {
+							continue;
+						} else {
+							if (fixedValue.size() > 0) {
+								typeErrorLayer = layerValidator.validateLayerFixMiss(geometry, fixedValue);
+								if (typeErrorLayer != null) {
+									errLayer.mergeErrorLayer(typeErrorLayer);
+								}
+							}
 						}
 					}
 				}

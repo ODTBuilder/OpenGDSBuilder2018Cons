@@ -83,7 +83,7 @@ public class GeoserverDataConverterImpl implements GeoserverDataConverter {
 
 			if (mapSize > 1) {
 				System.err.println("지하시설물은 workspace 하나만 가능합니다");
-				flag = 704;
+				flag = 700;
 			} else {
 				Iterator<String> keys = layerMaps.keySet().iterator();
 				while (keys.hasNext()) {
@@ -92,7 +92,7 @@ public class GeoserverDataConverterImpl implements GeoserverDataConverter {
 					if (layerNames != null) {
 						flag = new UndergroundExport(serverURL, workspace, layerNames, outputFolderPath, srs).export();
 					} else {
-						flag = 701;
+						flag = 612;
 						System.err.println("레이어 리스트 NULL");
 					}
 				}
@@ -116,7 +116,7 @@ public class GeoserverDataConverterImpl implements GeoserverDataConverter {
 
 			if (mapSize > 1) {
 				System.err.println("임상도는 workspace 하나만 가능합니다");
-				flag = 704;
+				flag = 700;
 			} else {
 				Iterator<String> keys = layerMaps.keySet().iterator();
 				while (keys.hasNext()) {
@@ -126,7 +126,7 @@ public class GeoserverDataConverterImpl implements GeoserverDataConverter {
 						flag = new ForestExport(serverURL, workspace, layerNames, outputFolderPath, srs, nearLine)
 								.export();
 					} else {
-						flag = 701;
+						flag = 612;
 						System.err.println("레이어 리스트 NULL");
 					}
 				}
