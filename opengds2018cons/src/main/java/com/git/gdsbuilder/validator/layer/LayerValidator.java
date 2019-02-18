@@ -68,7 +68,7 @@ public interface LayerValidator {
 	 * @throws SchemaException
 	 * @decription ConBreak 검수 수행
 	 */
-	public ErrorLayer validateConBreak(DTLayerList relationLayers, OptionTolerance tole) throws SchemaException;
+	public ErrorLayer validateConBreak(DTLayerList relationLayers, OptionTolerance tolerance) throws SchemaException;
 
 	/**
 	 * @author DY.Oh
@@ -90,7 +90,7 @@ public interface LayerValidator {
 	 * @throws SchemaException
 	 * @decription ConOverDegree 검수 수행
 	 */
-	public ErrorLayer validateConOverDegree(OptionTolerance tole) throws SchemaException;
+	public ErrorLayer validateConOverDegree(OptionTolerance tolerance) throws SchemaException;
 
 	/**
 	 * @author DY.Oh
@@ -124,7 +124,7 @@ public interface LayerValidator {
 	 * @throws SchemaException
 	 * @decription SmallArea 검수 수행
 	 */
-	public ErrorLayer validateSmallArea(OptionTolerance tole) throws SchemaException;
+	public ErrorLayer validateSmallArea(OptionTolerance tolerance) throws SchemaException;
 
 	/**
 	 * @author DY.Oh
@@ -135,7 +135,7 @@ public interface LayerValidator {
 	 * @throws SchemaException
 	 * @decription SmallLength 검수 수행
 	 */
-	public ErrorLayer validateSmallLength(OptionTolerance tole) throws SchemaException;
+	public ErrorLayer validateSmallLength(OptionTolerance tolerance) throws SchemaException;
 
 	/**
 	 * @author DY.Oh
@@ -146,7 +146,7 @@ public interface LayerValidator {
 	 * @throws SchemaException
 	 * @decription OverShoot 검수 수행
 	 */
-	public ErrorLayer validateOverShoot(DTLayer relationLayer, OptionTolerance tole) throws SchemaException;
+	public ErrorLayer validateOverShoot(DTLayerList relationLayers, OptionTolerance tolerance) throws SchemaException;
 
 	/**
 	 * @author DY.Oh
@@ -162,6 +162,23 @@ public interface LayerValidator {
 			throws SchemaException, IOException;
 
 	/**
+	 * @param relationLayer
+	 * @param tolerance
+	 * @return
+	 * @throws SchemaException
+	 * @throws IOException
+	 */
+	ErrorLayer validateSelfEntity(DTLayer relationLayer, OptionTolerance tolerance) throws SchemaException, IOException;
+
+	/**
+	 * @param relationLayer
+	 * @param tole
+	 * @return
+	 * @throws SchemaException
+	 */
+	public ErrorLayer validateOutBoundary(DTLayer relationLayer, OptionTolerance tolerance) throws SchemaException;
+
+	/**
 	 * @author DY.Oh
 	 * @Date 2018. 1. 30. 오후 3:13:23
 	 * @param neatLayer
@@ -170,7 +187,7 @@ public interface LayerValidator {
 	 * @throws SchemaException
 	 * @decription OutBoundary 검수 수행
 	 */
-	public ErrorLayer validateOutBoundary(DTLayerList relationLayers, OptionTolerance tole) throws SchemaException;
+	public ErrorLayer validateOutBoundary(DTLayerList relationLayers, OptionTolerance tolerance) throws SchemaException;
 
 	/**
 	 * @author DY.Oh
@@ -182,17 +199,6 @@ public interface LayerValidator {
 	 * @decription EntityDuplicated 검수 수행
 	 */
 	public ErrorLayer validateEntityDuplicated() throws SchemaException;
-
-	// /**
-	// * @author DY.Oh
-	// * @Date 2018. 1. 30. 오후 3:13:23
-	// * @param neatLayer
-	// * @param tolerence
-	// * @return ErrorLayer
-	// * @throws SchemaException
-	// * @decription UselessEntity 검수 수행
-	// */
-	// public ErrorLayer validateUselessEntity() throws SchemaException;
 
 	/**
 	 * @author DY.Oh
@@ -251,7 +257,7 @@ public interface LayerValidator {
 	 * @throws SchemaException
 	 * @decription NodeMiss 검수 수행
 	 */
-	public ErrorLayer validateNodeMiss(DTLayerList relationLayers, String geomColumn, OptionTolerance tole)
+	public ErrorLayer validateNodeMiss(DTLayerList relationLayers, OptionTolerance tolerance)
 			throws SchemaException, IOException;
 
 	/**
@@ -274,7 +280,7 @@ public interface LayerValidator {
 	 * @throws SchemaException
 	 * @decription OneAcre 검수 수행
 	 */
-	public ErrorLayer validateOneAcre(DTLayerList typeLayers, double spatialAccuracyTolorence);
+	public ErrorLayer validateOneAcre(DTLayerList typeLayers, double tolerance);
 
 	/**
 	 * @author DY.Oh
@@ -365,7 +371,7 @@ public interface LayerValidator {
 	 * @throws SchemaException
 	 * @decription LinearDisconnection 검수 수행
 	 */
-	public ErrorLayer valildateLinearDisconnection(DTLayerList relationLayers, OptionTolerance tole)
+	public ErrorLayer valildateLinearDisconnection(DTLayerList relationLayers, OptionTolerance tolerance)
 			throws SchemaException;
 
 	/**
@@ -545,8 +551,7 @@ public interface LayerValidator {
 	 * @param tolerance
 	 * @return
 	 * @throws SchemaException
-	 * @throws IOException
-	 *             ErrorLayer
+	 * @throws IOException     ErrorLayer
 	 * @decription
 	 */
 	ErrorLayer validateSelfEntity(OptionTolerance tolerance) throws SchemaException, IOException;
@@ -559,4 +564,18 @@ public interface LayerValidator {
 	 * @decription
 	 */
 	public ErrorLayer validateSymbolOut(DTLayerList relationLayers);
+
+	public ErrorLayer validateBoundaryMiss(DTLayer relationLayer);
+
+	public ErrorLayer validateCenterLineMiss(DTLayer relationLayer);
+
+	public ErrorLayer validateNodeMiss(DTLayer relationLayer, OptionTolerance tolerance);
+
+	public ErrorLayer valildateLinearDisconnection(DTLayer relationLayer, OptionTolerance tolerance)
+			throws SchemaException;
+
+	public ErrorLayer validateOneAcre(DTLayer relationLayer, double tolerance);
+
+	public ErrorLayer validateOneStage(DTLayer relationLayer);
+
 }

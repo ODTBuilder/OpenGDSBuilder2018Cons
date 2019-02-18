@@ -23,6 +23,8 @@ import java.util.List;
 import com.git.gdsbuilder.type.dt.collection.DTLayerCollection;
 import com.git.gdsbuilder.type.dt.layer.DTLayer;
 import com.git.gdsbuilder.type.dt.layer.DTLayerList;
+import com.git.gdsbuilder.type.dt.layer.DTQuadLayer;
+import com.git.gdsbuilder.type.dt.layer.DTQuadLayerList;
 import com.git.gdsbuilder.type.validate.option.specific.OptionRelation;
 
 /**
@@ -80,6 +82,59 @@ public class QALayerTypeList extends ArrayList<QALayerType> {
 		return layers;
 	}
 
+	public DTQuadLayerList getTypeQuadLayers(String typeName, DTLayerCollection layerCollection) {
+		DTQuadLayerList layers = new DTQuadLayerList();
+		for (int j = 0; j < this.size(); j++) {
+			QALayerType type = this.get(j);
+			if (type.getName().equals(typeName)) {
+				List<String> names = type.getLayerIDList();
+				for (int i = 0; i < names.size(); i++) {
+					String name = names.get(i);
+					DTQuadLayer geoLayer = layerCollection.getQuadLayer(name);
+					if (geoLayer != null) {
+						layers.add(geoLayer);
+					} else {
+						continue;
+					}
+				}
+			}
+		}
+		return layers;
+	}
+
+	public DTLayerList getTypeLayers(String typeName, DTLayerList layerList) {
+
+		DTLayerList layers = new DTLayerList();
+		for (int j = 0; j < this.size(); j++) {
+			QALayerType type = this.get(j);
+			if (type.getName().equals(typeName)) {
+				List<String> names = type.getLayerIDList();
+				for (int i = 0; i < names.size(); i++) {
+					String name = names.get(i);
+					DTLayer layer = null;
+					for (int l = 0; l < layerList.size(); l++) {
+						DTLayer tmp = layerList.get(l);
+						if (tmp != null) {
+							String validateLayerName = tmp.getLayerID();
+							if (validateLayerName.equalsIgnoreCase(name)) {
+								layer = tmp;
+								break;
+							} else {
+								continue;
+							}
+						}
+					}
+					if (layer != null) {
+						layers.add(layer);
+					} else {
+						continue;
+					}
+				}
+			}
+		}
+		return layers;
+	}
+
 	/**
 	 * @author DY.Oh
 	 * @Date 2018. 3. 6. 오후 7:16:29
@@ -98,6 +153,53 @@ public class QALayerTypeList extends ArrayList<QALayerType> {
 					String name = names.get(i);
 					if (name.equals(code)) {
 						layer = layerCollection.getLayer(name);
+					}
+				}
+			}
+		}
+		return layer;
+	}
+
+	public DTQuadLayer getTypeQuadLayer(String typeName, String code, DTLayerCollection layerCollection) {
+
+		DTQuadLayer layer = null;
+		for (int j = 0; j < this.size(); j++) {
+			QALayerType type = this.get(j);
+			if (type.getName().equals(typeName)) {
+				List<String> names = type.getLayerIDList();
+				for (int i = 0; i < names.size(); i++) {
+					String name = names.get(i);
+					if (name.equals(code)) {
+						layer = layerCollection.getQuadLayer(name);
+					}
+				}
+			}
+		}
+		return layer;
+	}
+
+	public DTLayer getTypeLayer(String typeName, String code, DTLayerList layerList) {
+
+		DTLayer layer = null;
+		for (int j = 0; j < this.size(); j++) {
+			QALayerType type = this.get(j);
+			if (type.getName().equals(typeName)) {
+				List<String> names = type.getLayerIDList();
+				for (int i = 0; i < names.size(); i++) {
+					String name = names.get(i);
+					if (name.equals(code)) {
+						for (int l = 0; l < layerList.size(); l++) {
+							DTLayer tmp = layerList.get(l);
+							if (tmp != null) {
+								String validateLayerName = tmp.getLayerID();
+								if (validateLayerName.equalsIgnoreCase(name)) {
+									layer = tmp;
+									break;
+								} else {
+									continue;
+								}
+							}
+						}
 					}
 				}
 			}
