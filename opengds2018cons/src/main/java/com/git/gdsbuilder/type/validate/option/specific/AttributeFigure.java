@@ -20,9 +20,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AttributeFigure {
 
+	Long fIdx;
 	String key;
 	List<Object> values;
 	Double number;
 	String condition;
 	Double interval;
+
 }

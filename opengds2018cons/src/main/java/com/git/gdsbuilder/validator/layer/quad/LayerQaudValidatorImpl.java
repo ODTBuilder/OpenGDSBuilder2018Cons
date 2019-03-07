@@ -82,7 +82,7 @@ public class LayerQaudValidatorImpl extends LayerValidatorImpl implements LayerQ
 						}
 					}
 				}
-			}, new NullProgressListener());
+			}, null);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

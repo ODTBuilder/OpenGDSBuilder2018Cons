@@ -72,6 +72,7 @@ public class QALayerTypeList extends ArrayList<QALayerType> {
 					String name = names.get(i);
 					DTLayer geoLayer = layerCollection.getLayer(name);
 					if (geoLayer != null) {
+						geoLayer.setTypeName(typeName);
 						layers.add(geoLayer);
 					} else {
 						continue;

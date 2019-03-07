@@ -23,11 +23,21 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DTLayer {
 
+	String typeName;
 	String layerID;
 	String layerType;
 	SimpleFeatureCollection simpleFeatureCollection;
 	OptionFilter filter;
 	MapSystemRule mapRule; // 인접도엽 정보
+
+	public DTLayer(String layerID, String layerType, SimpleFeatureCollection simpleFeatureCollection,
+			OptionFilter filter, MapSystemRule mapRule) {
+		this.layerID = layerID;
+		this.layerType = layerType;
+		this.simpleFeatureCollection = simpleFeatureCollection;
+		this.filter = filter;
+		this.mapRule = mapRule;
+	}
 
 	/**
 	 * @author DY.Oh
@@ -38,4 +48,5 @@ public class DTLayer {
 	public void addFeature(SimpleFeature feature) {
 		((DefaultFeatureCollection) this.simpleFeatureCollection).add(feature);
 	}
+
 }

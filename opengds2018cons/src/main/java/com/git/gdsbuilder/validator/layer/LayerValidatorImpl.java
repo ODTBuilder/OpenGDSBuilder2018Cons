@@ -535,9 +535,6 @@ public class LayerValidatorImpl implements LayerValidator {
 				SimpleFeatureCollection reSfc = relationLayer.getSimpleFeatureCollection();
 				while (sfcIter.hasNext()) {
 					SimpleFeature sf = sfcIter.next();
-
-					System.out.println(sf.getID());
-
 					DTFeature feature = new DTFeature(layerID, sf, attrConditions);
 					SimpleFeatureIterator reSfcIter = reSfc.features();
 					while (reSfcIter.hasNext()) {

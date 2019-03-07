@@ -37,7 +37,7 @@ public class OptimalEnvelopsOp {
 		}
 		if (isOptimal) {
 			this.optimalLevel = level;
-			return envelopeList; 
+			return envelopeList;
 		} else {
 			return getOptimalEnvelops(level - 1);
 		}

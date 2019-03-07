@@ -594,8 +594,9 @@ public class FeatureAttributeValidatorImpl implements FeatureAttributeValidator 
 			}
 		}
 		if (equalsCount == attrIList.size() - 1) {
-			String featureID = sfI.getID();
+			// String featureID = sfI.getID();
 			Geometry geometryI = (Geometry) sfI.getDefaultGeometry();
+			String featureID = geometryI.toString();
 			Geometry errPt = null;
 			try {
 				errPt = geometryI.getInteriorPoint();

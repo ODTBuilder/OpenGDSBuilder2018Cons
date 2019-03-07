@@ -1,4 +1,4 @@
-package com.gitrnd.qaconsumer.qa;
+package com.git.gdsbuilder.validator.basic;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -24,6 +24,7 @@ import org.geotools.data.shapefile.ShapefileDataStoreFactory;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.data.simple.SimpleFeatureStore;
+import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.feature.SchemaException;
 import org.geotools.referencing.CRS;
 import org.json.simple.JSONArray;
@@ -41,36 +42,41 @@ import com.git.gdsbuilder.type.dt.collection.DTLayerCollection;
 import com.git.gdsbuilder.type.dt.layer.DTLayer;
 import com.git.gdsbuilder.type.dt.layer.DTLayerList;
 import com.git.gdsbuilder.type.validate.layer.QALayerTypeList;
-import com.git.gdsbuilder.validator.collection.QuadCollectionValidator;
 
 public class TEST {
 
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws Throwable {
 
 		// parse option
 		JSONParser parser = new JSONParser();
-		Object layerObj = parser.parse(new FileReader("D:\\새 폴더\\test\\layer.json"));
-		Object optionObj = parser.parse(new FileReader("D:\\새 폴더\\test\\option_con.json"));
+		Object layerObj = parser.parse(new FileReader("D:\\새 폴더\\옵션_수정중\\국가기본도_레이어.json"));
+		Object optionObj = parser.parse(new FileReader("D:\\새 폴더\\song2\\국가기본도_경계침범_option.json"));
 
 		JSONArray layerJson = (JSONArray) layerObj;
 		JSONObject optionJson = (JSONObject) optionObj;
 
 		JSONArray typeValidate = (JSONArray) optionJson.get("definition");
-		for (int j = 0; j < layerJson.size(); j++) {
+		int layerJsonSize = layerJson.size();
+		int typeValidateSize = typeValidate.size();
+
+		for (int j = 0; j < layerJsonSize; j++) {
 			JSONObject lyrItem = (JSONObject) layerJson.get(j);
+			String lyrItemName = (String) lyrItem.get("name");
+			JSONArray iyrItemArray = (JSONArray) lyrItem.get("layers");
 			Boolean isExist = false;
-			for (int i = 0; i < typeValidate.size(); i++) {
+			for (int i = 0; i < typeValidateSize; i++) {
 				JSONObject optItem = (JSONObject) typeValidate.get(i);
 				String typeName = (String) optItem.get("name");
-				if (typeName.equals((String) lyrItem.get("name"))) {
-					optItem.put("layers", (JSONArray) lyrItem.get("layers"));
+				if (typeName.equals(lyrItemName)) {
+					optItem.put("layers", iyrItemArray);
 					isExist = true;
 				}
 			}
 			if (!isExist) {
 				JSONObject obj = new JSONObject();
-				obj.put("name", (String) lyrItem.get("name"));
-				obj.put("layers", (JSONArray) lyrItem.get("layers"));
+				obj.put("name", lyrItemName);
+				obj.put("layers", iyrItemArray);
 				typeValidate.add(obj);
 			}
 		}
@@ -79,14 +85,14 @@ public class TEST {
 		QALayerTypeList qaTypeList = qaTypeParser.getValidateLayerTypeList();
 
 		// unzip file
-		String baseDir = "D:\\admin_shp\\south_sudan";
-		String zipFilePath = "D:\\admin_shp\\south_sudan\\TN_RLROAD_BNDRY.zip";
-		String crs = "EPSG:4326";
-		File zipFile = new File(zipFilePath);
-		String unZipPath = decompress(zipFile, baseDir);
+//		String baseDir = "D:\\국가기본도 테스트파일\\temp";
+//		String zipFilePath = "D:\\국가기본도 테스트파일\\data\\data.zip";
+//		String crs = "EPSG:4326";
+//		File zipFile = new File(zipFilePath);
+//		String unZipPath = decompress(zipFile, baseDir);
 
 		// read shp files, set DTLayerCollection
-		File unZipFolder = new File(unZipPath);
+		File unZipFolder = new File("D:\\새 폴더\\song2\\2차_1기가_원본");
 		File[] listOfFiles = unZipFolder.listFiles();
 		DTLayerList list = new DTLayerList();
 		for (File file : listOfFiles) {
@@ -96,39 +102,51 @@ public class TEST {
 					DTLayer dtLayer = new DTLayer();
 					int Idx = fileName.lastIndexOf(".");
 					String layerName = fileName.substring(0, Idx);
-					SimpleFeatureCollection sfc = getShpObject(crs, file, layerName);
-					SimpleFeatureType featureType = sfc.getSchema();
-					GeometryType geometryType = featureType.getGeometryDescriptor().getType();
-					String geomType = geometryType.getBinding().getSimpleName().toString();
-					dtLayer.setLayerType(geomType);
-					dtLayer.setSimpleFeatureCollection(sfc);
-					dtLayer.setLayerID(layerName);
-					list.add(dtLayer);
-//					int size = list.size();
-//					if (size > 0) {
-//						for (int i = 0; i < size; i++) {
-//							DTLayer tmp = list.get(i);
-//							String tmpId = tmp.getLayerID();
-//							if (layerName.endsWith("_E")) {
-//								if (layerName.contains(tmpId)) {
-//									DefaultFeatureCollection dfc = new DefaultFeatureCollection();
-//									SimpleFeatureCollection tmpSfc = tmp.getSimpleFeatureCollection();
-//									dfc.addAll(tmpSfc);
-//									dfc.addAll(sfc);
-//									tmp.setSimpleFeatureCollection(dfc);
-//									list.set(i, tmp);
-//								} else {
-//									dtLayer.setSimpleFeatureCollection(sfc);
-//									dtLayer.setLayerID(layerName);
-//									list.add(dtLayer);
-//								}
-//							}
-//						}
-//					} else {
-//						dtLayer.setSimpleFeatureCollection(sfc);
-//						dtLayer.setLayerID(layerName);
-//						list.add(dtLayer);
-//					}
+					SimpleFeatureCollection sfc = getShpObject("EGPS:5179", file, layerName);
+					if (sfc != null) {
+//						add geopack entr 보류
+//						DTFeatureEntry fe = createFeatureEntry(sfc.getSchema(), sfc.getBounds());
+//						geopkg.add(fe, sfc);
+
+						SimpleFeatureType featureType = sfc.getSchema();
+						GeometryType geometryType = featureType.getGeometryDescriptor().getType();
+						String geomType = geometryType.getBinding().getSimpleName().toString();
+						dtLayer.setLayerType(geomType);
+						int size = list.size();
+						if (size > 0) {
+							if (layerName.endsWith("_E")) {
+								boolean added = false;
+								String replaceStr = layerName.replace("_E", "");
+								for (int i = 0; i < size; i++) {
+									DTLayer tmp = list.get(i);
+									String tmpId = tmp.getLayerID();
+									if (replaceStr.equals(tmpId)) {
+										DefaultFeatureCollection dfc = new DefaultFeatureCollection();
+										SimpleFeatureCollection tmpSfc = tmp.getSimpleFeatureCollection();
+										dfc.addAll(tmpSfc);
+										dfc.addAll(sfc);
+										tmp.setSimpleFeatureCollection(dfc);
+										list.set(i, tmp);
+										added = true;
+									}
+								}
+								if (!added) {
+									dtLayer.setSimpleFeatureCollection(sfc);
+									dtLayer.setLayerID(replaceStr);
+									list.add(dtLayer);
+								}
+							} else {
+								dtLayer.setSimpleFeatureCollection(sfc);
+								dtLayer.setLayerID(layerName);
+								list.add(dtLayer);
+							}
+						} else {
+							String replaceStr = layerName.replace("_E", "");
+							dtLayer.setSimpleFeatureCollection(sfc);
+							dtLayer.setLayerID(replaceStr);
+							list.add(dtLayer);
+						}
+					}
 				}
 			}
 		}
