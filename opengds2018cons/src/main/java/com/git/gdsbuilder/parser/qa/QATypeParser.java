@@ -221,6 +221,7 @@ public class QATypeParser {
 			graphicMiss.setOption(optionName);
 			JSONObject optionValue = (JSONObject) grapOption.get(optionName);
 			Object filterObj = optionValue.get("filter");
+			Object figureObj = optionValue.get("figure");
 			Object relationObj = optionValue.get("relation");
 			Object toleranceObj = optionValue.get("tolerance"); // 그래픽검수
 			// filter
@@ -231,6 +232,15 @@ public class QATypeParser {
 				List<OptionFilter> optionConditions = parseFilter(filter);
 				graphicMiss.setFilter(optionConditions);
 			}
+			// figure
+			if (figureObj == null) {
+				graphicMiss.setFigure(null);
+			} else {
+				JSONArray figure = (JSONArray) figureObj;
+				List<OptionFigure> optionConditions = parseFigure(figure);
+				graphicMiss.setFigure(optionConditions);
+			}
+
 			// relation
 			if (relationObj == null) {
 				graphicMiss.setRetaion(null);
@@ -271,6 +281,8 @@ public class QATypeParser {
 			Object filterObj = optionValue.get("filter");
 			Object relationObj = optionValue.get("relation");
 			Object figureObj = optionValue.get("figure"); // 속성검수
+			Object toleranceObj = optionValue.get("tolerance"); 
+			
 			// filter
 			if (filterObj == null) {
 				attributeMiss.setFilter(null);
@@ -294,6 +306,14 @@ public class QATypeParser {
 				JSONArray figures = (JSONArray) figureObj;
 				List<OptionFigure> optionFigureList = parseFigure(figures);
 				attributeMiss.setFigure(optionFigureList);
+			}
+			// tolerance
+			if (toleranceObj == null) {
+				attributeMiss.setTolerance(null);
+			} else {
+				JSONArray tolerances = (JSONArray) toleranceObj;
+				List<OptionTolerance> optionsTolerances = parseTolerance(tolerances);
+				attributeMiss.setTolerance(optionsTolerances);
 			}
 			attributeMisses.add(attributeMiss);
 		}

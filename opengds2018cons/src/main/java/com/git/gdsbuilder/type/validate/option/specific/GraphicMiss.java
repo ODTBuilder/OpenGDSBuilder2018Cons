@@ -22,6 +22,7 @@ public class GraphicMiss {
 
 	String option;
 	List<OptionFilter> filter;
+	List<OptionFigure> figure;
 	List<OptionRelation> retaion;
 	List<OptionTolerance> tolerance;
 
@@ -32,6 +33,19 @@ public class GraphicMiss {
 				String code = layerFilter.getCode();
 				if (layerID.equals(code)) {
 					return layerFilter;
+				}
+			}
+		}
+		return null;
+	}
+
+	public OptionFigure getLayerFigure(String layerID) {
+
+		if (figure != null) {
+			for (OptionFigure layerFigure : figure) {
+				String code = layerFigure.getCode();
+				if (layerID.equals(code)) {
+					return layerFigure;
 				}
 			}
 		}

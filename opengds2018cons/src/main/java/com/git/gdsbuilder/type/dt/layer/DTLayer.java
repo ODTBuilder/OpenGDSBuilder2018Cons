@@ -5,6 +5,7 @@ import org.geotools.feature.DefaultFeatureCollection;
 import org.opengis.feature.simple.SimpleFeature;
 
 import com.git.gdsbuilder.type.dt.collection.MapSystemRule;
+import com.git.gdsbuilder.type.validate.option.specific.OptionFigure;
 import com.git.gdsbuilder.type.validate.option.specific.OptionFilter;
 
 import lombok.AllArgsConstructor;
@@ -28,6 +29,7 @@ public class DTLayer {
 	String layerType;
 	SimpleFeatureCollection simpleFeatureCollection;
 	OptionFilter filter;
+	OptionFigure figure;
 	MapSystemRule mapRule; // 인접도엽 정보
 
 	public DTLayer(String layerID, String layerType, SimpleFeatureCollection simpleFeatureCollection,

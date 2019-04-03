@@ -22,6 +22,7 @@ public class AttributeMiss {
 	List<OptionFilter> filter;
 	List<OptionRelation> retaion;
 	List<OptionFigure> figure;
+	List<OptionTolerance> tolerance;
 
 	public OptionFilter getLayerFilter(String layerID) {
 
@@ -43,6 +44,19 @@ public class AttributeMiss {
 				String code = layerFigure.getCode();
 				if (layerID.equals(code)) {
 					return layerFigure;
+				}
+			}
+		}
+		return null;
+	}
+
+	public OptionTolerance getLayerTolerance(String layerID) {
+
+		if (tolerance != null) {
+			for (OptionTolerance layerTolerance : tolerance) {
+				String code = layerTolerance.getCode();
+				if (code == null || layerID.equals(code)) {
+					return layerTolerance;
 				}
 			}
 		}

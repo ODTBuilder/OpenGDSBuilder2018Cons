@@ -27,18 +27,36 @@ public class OptionRelation {
 	List<OptionTolerance> tolerances;
 
 	public OptionFilter getFilter(String code) {
-		for (OptionFilter filter : filters) {
-			if (filter.getCode().equals(code)) {
-				return filter;
+
+		if (filters != null) {
+			for (OptionFilter filter : filters) {
+				if (filter.getCode().equals(code)) {
+					return filter;
+				}
 			}
 		}
 		return null;
 	}
 
 	public OptionFigure getFigure(String code) {
-		for (OptionFigure figure : figures) {
-			if (figure.getCode().equals(code)) {
-				return figure;
+
+		if (figures != null) {
+			for (OptionFigure figure : figures) {
+				if (figure.getCode().equals(code)) {
+					return figure;
+				}
+			}
+		}
+		return null;
+	}
+
+	public OptionTolerance getTolerance(String code) {
+
+		if (tolerances != null) {
+			for (OptionTolerance tolerance : tolerances) {
+				if (tolerance.getCode().equals(code)) {
+					return tolerance;
+				}
 			}
 		}
 		return null;

@@ -281,7 +281,7 @@ public class QAFileServiceImpl implements QAFileService {
 				JSONObject neatLineObj = (JSONObject) neatLine;
 				neatLineCode = (String) neatLineObj.get("code");
 			}
-
+            
 			// files
 			QAFileParser parser = new QAFileParser(epsg, cIdx, type, unZipFile, neatLineCode);
 			boolean parseTrue = parser.isTrue();
