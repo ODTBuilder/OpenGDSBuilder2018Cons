@@ -80,22 +80,21 @@ public class SimplificationImpl implements Simplification {
 		 * DTGeneralEAfLayer afLayer = new DTGeneralEAfLayer();
 		 * 
 		 * //Simplification 결과 -> DTGeneralEAfLayer 선언 및 초기화 DTGeneralReportNums
-		 * entityNums = new DTGeneralReportNums(0,0); DTGeneralReportNums
-		 * pointNums = new DTGeneralReportNums(0,0);
+		 * entityNums = new DTGeneralReportNums(0,0); DTGeneralReportNums pointNums =
+		 * new DTGeneralReportNums(0,0);
 		 * 
 		 * //결과레포트 생성 및 초기화 DTGeneralReport resultReport = new
 		 * DTGeneralReport(entityNums, pointNums);
 		 * 
 		 * //SimpleFeatureCollection 생성 및 초기화 -> 일반화 결과 SimpleFeatureCollection
-		 * DefaultFeatureCollection resultCollection = new
-		 * DefaultFeatureCollection();
+		 * DefaultFeatureCollection resultCollection = new DefaultFeatureCollection();
 		 * 
 		 * 
-		 * if(collection!=null&&option!=null){ SimpleFeatureIterator
-		 * featureIterator = collection.features();
+		 * if(collection!=null&&option!=null){ SimpleFeatureIterator featureIterator =
+		 * collection.features();
 		 * 
-		 * //Simplification Report Nums 결과 int entityPreNum = collection.size();
-		 * int entityAfNum = 0; int pointPreNum = 0; int pointAfNum = 0;
+		 * //Simplification Report Nums 결과 int entityPreNum = collection.size(); int
+		 * entityAfNum = 0; int pointPreNum = 0; int pointAfNum = 0;
 		 * 
 		 * int testNum = 0;
 		 * 
@@ -105,15 +104,15 @@ public class SimplificationImpl implements Simplification {
 		 * geom.getNumPoints();
 		 * 
 		 * Geometry newGeom = TopologyPreservingSimplifier.simplify(geom,
-		 * option.getOption()); System.out.println(testNum + "번째 일반화 되는중이다");
-		 * pointAfNum = pointAfNum + newGeom.getNumPoints();
+		 * option.getOption()); System.out.println(testNum + "번째 일반화 되는중이다"); pointAfNum
+		 * = pointAfNum + newGeom.getNumPoints();
 		 * 
 		 * feature.setDefaultGeometry(newGeom); resultCollection.add(feature);
 		 * 
 		 * testNum++; }
 		 * 
-		 * try { entityAfNum =resultCollection.getCount(); } catch (IOException
-		 * e) { // TODO Auto-generated catch block return null; } //객체, 포인트수 SET
+		 * try { entityAfNum =resultCollection.getCount(); } catch (IOException e) { //
+		 * TODO Auto-generated catch block return null; } //객체, 포인트수 SET
 		 * entityNums.setPreNum(entityPreNum); entityNums.setAfNum(entityAfNum);
 		 * pointNums.setPreNum(pointPreNum); pointNums.setAfNum(pointAfNum);
 		 * 
@@ -203,7 +202,6 @@ public class SimplificationImpl implements Simplification {
 							Coordinate start = coordinates[i];
 							Coordinate end = coordinates[i + 1];
 							try {
-
 								distance = JTS.orthodromicDistance(start, end, crs);
 							} catch (TransformException e) {
 								// TODO Auto-generated catch block

@@ -1,9 +1,10 @@
-package com.git.gdsbuilder.type.dt.layer;
+package com.gitrnd.qaconsumer.qa;
 
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.feature.DefaultFeatureCollection;
 import org.opengis.feature.simple.SimpleFeature;
 
+import com.git.gdsbuilder.quadtree.Quadtree;
 import com.git.gdsbuilder.type.dt.collection.MapSystemRule;
 import com.git.gdsbuilder.type.validate.option.specific.OptionFilter;
 
@@ -11,33 +12,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * @className DTLayer.java
- * @description DTLayer 정보를 저장하는 클래스
- * @author DY.Oh
- * @date 2018. 1. 30. 오후 2:03:42
- */
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DTLayer {
+public class TESTDTLayer {
 
-	String typeName;
 	String layerID;
 	String layerType;
 	SimpleFeatureCollection simpleFeatureCollection;
 	OptionFilter filter;
 	MapSystemRule mapRule; // 인접도엽 정보
-
-	public DTLayer(String layerID, String layerType, SimpleFeatureCollection simpleFeatureCollection,
-			OptionFilter filter, MapSystemRule mapRule) {
-		this.layerID = layerID;
-		this.layerType = layerType;
-		this.simpleFeatureCollection = simpleFeatureCollection;
-		this.filter = filter;
-		this.mapRule = mapRule;
-	}
+	Quadtree quadtree;
 
 	/**
 	 * @author DY.Oh

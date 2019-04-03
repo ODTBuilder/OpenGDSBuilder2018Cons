@@ -721,8 +721,12 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 				returnGeom = new GeometryFactory().createPoint(coors[0]);
 			}
 			if (returnGeom != null && !returnGeom.isEmpty()) {
-				String featureID = sf.getID();
-				String reFeatureID = reSf.getID();
+				// String featureID = sf.getID();
+				// String reFeatureID = reSf.getID();
+
+				String featureID = geometryI.toString();
+				String reFeatureID = geometryJ.toString();
+
 				// String osmId = sf.getAttribute("osm_id").toString();
 				// String reOmsId = reSf.getAttribute("osm_id").toString();
 				String reLayerId = reFeature.getLayerID();
@@ -1102,6 +1106,10 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 		SimpleFeature sfI = dtFeature.getSimefeature();
 		SimpleFeature sfJ = reFeature.getSimefeature();
 
+		if (sfI.getAttribute("NF_ID").toString().equals("BLD010000001FWVK1")) {
+			System.out.println("");
+		}
+
 		boolean isTrue = false;
 		List<AttributeFilter> filtersI = dtFeature.getFilter();
 		if (filtersI != null) {
@@ -1124,8 +1132,11 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 					FeatureAttributeValidator attributeValidator = new FeatureAttributeValidatorImpl();
 					return attributeValidator.validateEntityDuplicated(dtFeature, reFeature);
 				} else {
-					String featureID = sfI.getID();
-					String reFeatrueId = sfJ.getID();
+//					String featureID = sfI.getID();
+//					String reFeatrueId = sfJ.getID();
+
+					String featureID = geometryI.toString();
+					String reFeatrueId = geometryJ.toString();
 
 //					String osmId = sfI.getAttribute("osm_id").toString();
 //					String reOmsId = sfJ.getAttribute("osm_id").toString();
@@ -1517,9 +1528,10 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 		}
 		List<ErrorFeature> errFeatures = new ArrayList<ErrorFeature>();
 		if (isTrue) {
-			String featureID = sf.getID();
-			// String osmId = sf.getAttribute("osm_id").toString();
 			Geometry geometry = (Geometry) sf.getDefaultGeometry();
+//			String featureID = sf.getID();
+			String featureID = geometry.toString();
+			// String osmId = sf.getAttribute("osm_id").toString();
 			int numGeom = geometry.getNumGeometries();
 			for (int i = 0; i < numGeom; i++) {
 				Geometry singleGeom = geometry.getGeometryN(i);

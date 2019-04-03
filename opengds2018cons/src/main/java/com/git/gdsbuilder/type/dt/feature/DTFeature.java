@@ -25,8 +25,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DTFeature {
 
+	String typeName;
 	String layerID;
 	SimpleFeature simefeature;
 	List<AttributeFilter> filter;
+
+	public DTFeature(String layerID, SimpleFeature simefeature, List<AttributeFilter> filter) {
+
+		this.layerID = layerID;
+		this.simefeature = simefeature;
+		this.filter = filter;
+
+	}
 
 }

@@ -23,4 +23,30 @@ public class AttributeMiss {
 	List<OptionRelation> retaion;
 	List<OptionFigure> figure;
 
+	public OptionFilter getLayerFilter(String layerID) {
+
+		if (filter != null) {
+			for (OptionFilter layerFilter : filter) {
+				String code = layerFilter.getCode();
+				if (layerID.equals(code)) {
+					return layerFilter;
+				}
+			}
+		}
+		return null;
+	}
+
+	public OptionFigure getLayerFigure(String layerID) {
+
+		if (figure != null) {
+			for (OptionFigure layerFigure : figure) {
+				String code = layerFigure.getCode();
+				if (layerID.equals(code)) {
+					return layerFigure;
+				}
+			}
+		}
+		return null;
+	}
+
 }

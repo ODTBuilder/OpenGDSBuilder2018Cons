@@ -1,6 +1,5 @@
 package com.git.gdsbuilder.validator.collection;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,21 +8,10 @@ import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.factory.CommonFactoryFinder;
-import org.geotools.feature.DefaultFeatureCollection;
-import org.geotools.feature.SchemaException;
-import org.geotools.feature.simple.SimpleFeatureBuilder;
-import org.geotools.geometry.jts.JTS;
-import org.geotools.geometry.jts.JTSFactoryFinder;
-import org.geotools.referencing.CRS;
 import org.opengis.feature.simple.SimpleFeature;
-import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.Filter;
 import org.opengis.filter.FilterFactory2;
-import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
-import org.opengis.referencing.operation.MathTransform;
 
-import com.git.gdsbuilder.file.writer.SHPFileWriter;
 import com.git.gdsbuilder.type.dt.collection.MapSystemRule.MapSystemRuleType;
 import com.git.gdsbuilder.type.dt.layer.DTLayer;
 import com.git.gdsbuilder.type.validate.option.specific.OptionTolerance;
@@ -119,8 +107,6 @@ public class CloseLayerOp {
 				i++;
 			}
 		}
-
-		GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory();
 		FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2();
 
 		Coordinate[] boundaryCoors = null;
@@ -130,19 +116,19 @@ public class CloseLayerOp {
 
 		if (direction.equals(MapSystemRuleType.TOP.getTypeName())) {
 			boundaryCoors = new Coordinate[] { firstPoint, secondPoint };
-			boundary = geometryFactory.createLineString(boundaryCoors);
+			boundary = new GeometryFactory().createLineString(boundaryCoors);
 		}
 		if (direction.equals(MapSystemRuleType.BOTTOM.getTypeName())) {
 			boundaryCoors = new Coordinate[] { thirdPoint, fourthPoint };
-			boundary = geometryFactory.createLineString(boundaryCoors);
+			boundary = new GeometryFactory().createLineString(boundaryCoors);
 		}
 		if (direction.equals(MapSystemRuleType.LEFT.getTypeName())) {
 			boundaryCoors = new Coordinate[] { firstPoint, fourthPoint };
-			boundary = geometryFactory.createLineString(boundaryCoors);
+			boundary = new GeometryFactory().createLineString(boundaryCoors);
 		}
 		if (direction.equals(MapSystemRuleType.RIGHT.getTypeName())) {
 			boundaryCoors = new Coordinate[] { secondPoint, thirdPoint };
-			boundary = geometryFactory.createLineString(boundaryCoors);
+			boundary = new GeometryFactory().createLineString(boundaryCoors);
 		}
 
 		Polygon bufferPolygon = (Polygon) boundary.buffer(tolerance);
@@ -199,7 +185,6 @@ public class CloseLayerOp {
 		Coordinate thirdPoint = coordinateArray[2];
 		Coordinate fourthPoint = coordinateArray[3];
 
-		GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory();
 		FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2();
 
 		Coordinate[] boundaryCoors = null;
@@ -207,19 +192,19 @@ public class CloseLayerOp {
 		String direction = type.getTypeName();
 		if (direction.equals(MapSystemRuleType.TOP.getTypeName())) {
 			boundaryCoors = new Coordinate[] { firstPoint, secondPoint };
-			boundary = geometryFactory.createLineString(boundaryCoors);
+			boundary = new GeometryFactory().createLineString(boundaryCoors);
 		}
 		if (direction.equals(MapSystemRuleType.BOTTOM.getTypeName())) {
 			boundaryCoors = new Coordinate[] { thirdPoint, fourthPoint };
-			boundary = geometryFactory.createLineString(boundaryCoors);
+			boundary = new GeometryFactory().createLineString(boundaryCoors);
 		}
 		if (direction.equals(MapSystemRuleType.LEFT.getTypeName())) {
 			boundaryCoors = new Coordinate[] { firstPoint, fourthPoint };
-			boundary = geometryFactory.createLineString(boundaryCoors);
+			boundary = new GeometryFactory().createLineString(boundaryCoors);
 		}
 		if (direction.equals(MapSystemRuleType.RIGHT.getTypeName())) {
 			boundaryCoors = new Coordinate[] { secondPoint, thirdPoint };
-			boundary = geometryFactory.createLineString(boundaryCoors);
+			boundary = new GeometryFactory().createLineString(boundaryCoors);
 		}
 
 		Polygon bufferPolygon = (Polygon) boundary.buffer(tolerance);

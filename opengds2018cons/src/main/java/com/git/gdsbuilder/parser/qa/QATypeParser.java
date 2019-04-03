@@ -207,8 +207,7 @@ public class QATypeParser {
 	/**
 	 * @author DY.Oh
 	 * @Date 2018. 3. 19. 오전 10:32:11
-	 * @param grapOption
-	 *            void
+	 * @param grapOption void
 	 * @decription
 	 */
 	private List<GraphicMiss> parseGraphicOption(JSONObject grapOption) {
@@ -256,8 +255,7 @@ public class QATypeParser {
 	/**
 	 * @author DY.Oh
 	 * @Date 2018. 3. 19. 오전 10:32:09
-	 * @param attrOption
-	 *            void
+	 * @param attrOption void
 	 * @decription
 	 */
 	private List<AttributeMiss> parseAttributeOption(JSONObject attrOption) {
@@ -472,6 +470,14 @@ public class QATypeParser {
 				for (int a = 0; a < attribute.size(); a++) {
 					JSONObject attrJson = (JSONObject) attribute.get(a);
 					AttributeFigure attributeCondition = new AttributeFigure();
+					// filter index
+					Object fIdxObj = attrJson.get("fidx");
+					if (fIdxObj != null) {
+						Long fIdx = (Long) fIdxObj;
+						attributeCondition.setFIdx(fIdx);
+					} else {
+						attributeCondition.setFIdx(null);
+					}
 					// key
 					String key = (String) attrJson.get("key");
 					Object valuesObj = attrJson.get("values");
@@ -485,13 +491,13 @@ public class QATypeParser {
 					if (numberObj != null) {
 						Double number = Double.valueOf(numberObj.toString());
 						attributeCondition.setNumber(number);
-						Object conditionObj = attrJson.get("number");
+						Object conditionObj = attrJson.get("condition");
 						if (conditionObj != null) {
 							attributeCondition.setCondition(conditionObj.toString());
 						} else {
 							attributeCondition.setCondition(null);
 						}
-						Object intervalObj = attrJson.get("number");
+						Object intervalObj = attrJson.get("interval");
 						if (intervalObj != null) {
 							attributeCondition.setInterval(Double.valueOf(intervalObj.toString()));
 						} else {
@@ -548,6 +554,8 @@ public class QATypeParser {
 								values.add(valueArr.get(v));
 							}
 							fixedValue.setValues(values);
+							fixedValues.add(fixedValue);
+						} else {
 							fixedValues.add(fixedValue);
 						}
 					}

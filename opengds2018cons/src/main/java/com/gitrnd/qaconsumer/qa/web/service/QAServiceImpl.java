@@ -369,8 +369,10 @@ public class QAServiceImpl implements QAService {
 
 					String encodeName = URLEncoder.encode(ERR_OUTPUT_NAME, "UTF-8");
 					if (response.getStatusLine().getStatusCode() == 200) {
-						String errDir = "http://" + serverhost + ":" + port + contextPath + "/downloaderror.do?"
-								+ "time=" + cTimeStr + "&" + "file=" + encodeName + ".zip";
+//						String errDir = "http://" + serverhost + ":" + port + contextPath + "/downloaderror.do?"
+//								+ "time=" + cTimeStr + "&" + "file=" + encodeName + ".zip";
+
+						String errDir = "downloaderror.do?" + "time=" + cTimeStr + "&" + "file=" + encodeName + ".zip";
 						progress.setErrdirectory(errDir);
 						progress.setErrFileName(fname + ".zip");
 						qapgService.updateQAResponse(progress);

@@ -77,8 +77,8 @@ public class NGIFileFeatureParser {
 	}
 
 	/**
-	 * BufferedReader getter @author DY.Oh @Date 2017. 3. 11. 오전
-	 * 10:42:35 @return BufferedReader @throws
+	 * BufferedReader getter @author DY.Oh @Date 2017. 3. 11. 오전 10:42:35 @return
+	 * BufferedReader @throws
 	 */
 	public BufferedReader getNgiReader() {
 		return ngiReader;
@@ -93,8 +93,8 @@ public class NGIFileFeatureParser {
 	}
 
 	/**
-	 * BufferedReader getter @author DY.Oh @Date 2017. 3. 11. 오전
-	 * 10:43:41 @return BufferedReader @throws
+	 * BufferedReader getter @author DY.Oh @Date 2017. 3. 11. 오전 10:43:41 @return
+	 * BufferedReader @throws
 	 */
 	public BufferedReader getNdaReader() {
 		return ndaReader;
@@ -109,8 +109,8 @@ public class NGIFileFeatureParser {
 	}
 
 	/**
-	 * 문자열에서 특수문자 제거 @author DY.Oh @Date 2017. 3. 11. 오전 10:44:42 @param
-	 * str @return String @throws
+	 * 문자열에서 특수문자 제거 @author DY.Oh @Date 2017. 3. 11. 오전 10:44:42 @param str @return
+	 * String @throws
 	 */
 	private String StringReplace(String str) {
 		String match = "[^\uAC00-\uD7A3xfe0-9a-zA-Z\\s]";
@@ -211,16 +211,16 @@ public class NGIFileFeatureParser {
 	}
 
 	/**
-	 * ngi파일에서 객체의 포인트 갯수를 반환 @author DY.Oh @Date 2017. 3. 11. 오전
-	 * 11:16:00 @return String @throws IOException @throws
+	 * ngi파일에서 객체의 포인트 갯수를 반환 @author DY.Oh @Date 2017. 3. 11. 오전 11:16:00 @return
+	 * String @throws IOException @throws
 	 */
 	private String getCoordinateCount() throws IOException {
 		return ngiReader.readLine();
 	}
 
 	/**
-	 * ngi파일에서 객체의 그래픽 ID를 반환 @author DY.Oh @Date 2017. 3. 11. 오전
-	 * 11:16:02 @return String @throws IOException @throws
+	 * ngi파일에서 객체의 그래픽 ID를 반환 @author DY.Oh @Date 2017. 3. 11. 오전 11:16:02 @return
+	 * String @throws IOException @throws
 	 */
 	private String getGraphicID() throws IOException {
 		return ngiReader.readLine();

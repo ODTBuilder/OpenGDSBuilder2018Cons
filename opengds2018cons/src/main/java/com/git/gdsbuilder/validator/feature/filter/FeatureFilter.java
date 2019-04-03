@@ -52,14 +52,65 @@ public class FeatureFilter {
 		}
 		return isTrue;
 	}
+
+	public static boolean filter(SimpleFeature sf, AttributeFilter filter) {
+
+		boolean isTrue = false;
+		if (filter == null) {
+			isTrue = true;
+		} else {
+			String key = filter.getKey();
+			if (key != null) {
+				// filter
+				List<Object> values = filter.getValues();
+				if (values != null) {
+					Object attribute = sf.getAttribute(key);
+					for (Object value : values) {
+						if (attribute.toString().equals(value)) {
+							isTrue = true;
+						}
+					}
+				} else {
+					isTrue = true;
+				}
+			}
+		}
+		return isTrue;
+	}
+
+	public static Integer idxFilter(SimpleFeature sf, List<AttributeFilter> filters) {
+
+		Integer idx = null;
+
+		if (filters != null) {
+			for (AttributeFilter filter : filters) {
+				String key = filter.getKey();
+				if (key == null) {
+					continue;
+				}
+				// filter
+				List<Object> values = filter.getValues();
+				if (values != null) {
+					Object attribute = sf.getAttribute(key);
+					for (int i = 0; i < values.size(); i++) {
+						Object value = values.get(i);
+						if (attribute.toString().equals(value)) {
+							idx = i;
+						}
+					}
+				}
+			}
+		}
+		return idx;
+	}
+
 	// geom filter
 
 	/**
 	 * @author DY.Oh
 	 * @Date 2018. 3. 19. 오후 5:36:39
 	 * @param relationLayers
-	 * @param reTolerances
-	 *            void
+	 * @param reTolerances   void
 	 * @decription
 	 */
 	public static DefaultFeatureCollection filter(DTLayerList relationLayers, List<OptionTolerance> reTolerances) {
@@ -72,7 +123,7 @@ public class FeatureFilter {
 			DTLayer relationLayer = relationLayers.get(i);
 			String reLayerCode = relationLayer.getLayerID();
 			// tolerance
-			if(reTolerances != null) {
+			if (reTolerances != null) {
 				for (OptionTolerance reTolerance : reTolerances) {
 					if (!reLayerCode.equals(reTolerance.getCode())) {
 						continue;
@@ -115,7 +166,7 @@ public class FeatureFilter {
 					relationSfc.add(relationSf);
 				}
 			}
-		} 
+		}
 		return relationSfc;
 	}
 }

@@ -19,6 +19,8 @@ package com.git.gdsbuilder.type.dt.collection;
 
 import com.git.gdsbuilder.type.dt.layer.DTLayer;
 import com.git.gdsbuilder.type.dt.layer.DTLayerList;
+import com.git.gdsbuilder.type.dt.layer.DTQuadLayer;
+import com.git.gdsbuilder.type.dt.layer.DTQuadLayerList;
 
 /**
  * DTLayerCollection 정보를 저장하는 클래스
@@ -31,6 +33,7 @@ public class DTLayerCollection {
 	String collectionName; // 도엽번호
 	DTLayer neatLine; // 도곽
 	DTLayerList layers; // 레이어
+	DTQuadLayerList quadlyers; // 레이어
 	MapSystemRule mapRule; // 인접도엽 정보
 
 	public String getCollectionName() {
@@ -65,15 +68,13 @@ public class DTLayerCollection {
 		this.mapRule = mapRule;
 	}
 
-	/**
-	 * @author DY.Oh
-	 * @Date 2018. 1. 30. 오후 1:59:38
-	 * @param layer
-	 * @decription layers에 layer를 추가함
-	 */
-	// public void addLayer(DTLayer layer) {
-	// layers.add(layer);
-	// }
+	public DTQuadLayerList getQuadlyers() {
+		return quadlyers;
+	}
+
+	public void setQuadlyers(DTQuadLayerList quadlyers) {
+		this.quadlyers = quadlyers;
+	}
 
 	/**
 	 * @author DY.Oh
@@ -87,6 +88,24 @@ public class DTLayerCollection {
 		DTLayer layer = null;
 		for (int i = 0; i < layers.size(); i++) {
 			DTLayer tmp = layers.get(i);
+			if (tmp != null) {
+				String validateLayerName = tmp.getLayerID();
+				if (validateLayerName.equalsIgnoreCase(layerName)) {
+					layer = tmp;
+					break;
+				} else {
+					continue;
+				}
+			}
+		}
+		return layer;
+	}
+
+	public DTQuadLayer getQuadLayer(String layerName) {
+
+		DTQuadLayer layer = null;
+		for (int i = 0; i < quadlyers.size(); i++) {
+			DTQuadLayer tmp = quadlyers.get(i);
 			if (tmp != null) {
 				String validateLayerName = tmp.getLayerID();
 				if (validateLayerName.equalsIgnoreCase(layerName)) {

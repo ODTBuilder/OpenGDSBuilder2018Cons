@@ -30,4 +30,5 @@ public class QAOption {
 	List<AttributeMiss> attributeMissOptions;
 	List<GraphicMiss> graphicMissOptions;
 	List<CloseMiss> closeMissOptions;
+
 }
