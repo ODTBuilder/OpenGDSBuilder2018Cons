@@ -25,13 +25,23 @@ import com.git.gdsbuilder.validator.fileReader.ngi.parser.NGIFileLayerParser;
 import com.git.gdsbuilder.validator.fileReader.ngi.parser.NGIFileParser;
 
 /**
- * ngi/nda 파일을 QA20LayerCollection 객체로 파싱하는 클래스
+ * ngi/nda 파일을 {@link DTLayerCollection} 객체로 변환하는 클래스.
  * 
  * @author DY.Oh
- * @Date 2017. 5. 11. 오전 10:36:07
  */
 public class NGIFileReader {
 
+	/**
+	 * @param epsg     좌표계 (ex EPSG:4326)
+	 * @param filePath 파일 경로
+	 * @param fileName 파일 이름
+	 * @param neatLine 검수 영역 레이어 이름
+	 * @return ngi/nda 파일을 변환한 {@link DTLayerCollection}, ngi/nda 파일 내에 레이어가 존재하지
+	 *         않거나 올바르지 않은 형태이면 {@code null} 반환
+	 * @throws Exception
+	 * 
+	 * @author DY.Oh
+	 */
 	public DTLayerCollection read(String epsg, String filePath, String fileName, String neatLine) throws Exception {
 
 		NGIFileParser parser = new NGIFileParser();

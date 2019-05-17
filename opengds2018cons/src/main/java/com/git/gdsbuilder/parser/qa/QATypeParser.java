@@ -14,7 +14,6 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-
 package com.git.gdsbuilder.parser.qa;
 
 import java.util.ArrayList;
@@ -42,18 +41,32 @@ import com.git.gdsbuilder.type.validate.option.standard.FixedValue;
 import com.git.gdsbuilder.type.validate.option.standard.LayerFixMiss;
 
 /**
- * JSONArray를 ValidateLayerTypeList 객체로 파싱하는 클래스
+ * JSONArray 형태의 검수 옵션(검수 항목 및 검수 항목별 세부 설정)정보를
+ * {@link com.git.gdsbuilder.file.writer.SHPFileWriter} 형태로 변환하는 클래스
  * 
  * @author DY.Oh
- * @Date 2017. 4. 18. 오후 3:25:49
  */
 public class QATypeParser {
 
+	/**
+	 * 검수 옵션(검수 항목 및 검수 항목별 세부 설정)정보
+	 */
 	JSONArray validateTypeArray;
+	/**
+	 * {@link com.git.gdsbuilder.file.writer.SHPFileWriter}형태의 검수 옵션 정보
+	 */
 	QALayerTypeList validateLayerTypeList;
-
+	/**
+	 * 변환 시 발생하는 오류에 대한 설명
+	 */
 	String comment;
 
+	/**
+	 * JSONArray 형태의 검수 옵션(검수 항목 및 검수 항목별 세부 설정)정보를
+	 * {@link com.git.gdsbuilder.file.writer.SHPFileWriter} 형태로 변환을 위한 생성자
+	 * 
+	 * @param validateTypeArray 검수 옵션(검수 항목 및 검수 항목별 세부 설정)정보
+	 */
 	public QATypeParser(JSONArray validateTypeArray) {
 		this.validateTypeArray = validateTypeArray;
 		typeListParser();
@@ -75,6 +88,12 @@ public class QATypeParser {
 		this.comment = comment;
 	}
 
+	/**
+	 * JSONArray 형태의 검수 옵션(검수 항목 및 검수 항목별 세부 설정)정보를
+	 * {@link com.git.gdsbuilder.file.writer.SHPFileWriter} 형태로 변환
+	 * 
+	 * @author DY.Oh
+	 */
 	public void typeListParser() {
 
 		if (validateTypeArray == null || validateTypeArray.size() == 0) {
@@ -100,7 +119,7 @@ public class QATypeParser {
 		}
 	}
 
-	public QALayerType typeOptionParserT(JSONObject layerType) {
+	private QALayerType typeOptionParserT(JSONObject layerType) {
 
 		QALayerType type = new QALayerType();
 		QAOption qaOption = new QAOption();
@@ -147,13 +166,6 @@ public class QATypeParser {
 		return type;
 	}
 
-	/**
-	 * @author DY.Oh
-	 * @Date 2018. 3. 22. 오전 10:05:49
-	 * @param grapOption
-	 * @return List<CloseMiss>
-	 * @decription
-	 */
 	private List<CloseMiss> parseCloseOption(JSONObject closeOption) {
 
 		List<CloseMiss> closeMisses = new ArrayList<>();
@@ -204,12 +216,6 @@ public class QATypeParser {
 		return closeMisses;
 	}
 
-	/**
-	 * @author DY.Oh
-	 * @Date 2018. 3. 19. 오전 10:32:11
-	 * @param grapOption void
-	 * @decription
-	 */
 	private List<GraphicMiss> parseGraphicOption(JSONObject grapOption) {
 
 		List<GraphicMiss> graphicMisses = new ArrayList<>();
@@ -262,12 +268,6 @@ public class QATypeParser {
 		return graphicMisses;
 	}
 
-	/**
-	 * @author DY.Oh
-	 * @Date 2018. 3. 19. 오전 10:32:09
-	 * @param attrOption void
-	 * @decription
-	 */
 	private List<AttributeMiss> parseAttributeOption(JSONObject attrOption) {
 
 		List<AttributeMiss> attributeMisses = new ArrayList<>();
@@ -281,8 +281,8 @@ public class QATypeParser {
 			Object filterObj = optionValue.get("filter");
 			Object relationObj = optionValue.get("relation");
 			Object figureObj = optionValue.get("figure"); // 속성검수
-			Object toleranceObj = optionValue.get("tolerance"); 
-			
+			Object toleranceObj = optionValue.get("tolerance");
+
 			// filter
 			if (filterObj == null) {
 				attributeMiss.setFilter(null);
@@ -320,13 +320,6 @@ public class QATypeParser {
 		return attributeMisses;
 	}
 
-	/**
-	 * @author DY.Oh
-	 * @Date 2018. 3. 19. 오전 11:02:42
-	 * @param tolerances
-	 * @return List<OptionTolerance>
-	 * @decription
-	 */
 	private List<OptionTolerance> parseTolerance(JSONArray tolerances) {
 
 		List<OptionTolerance> optionsTolerances = new ArrayList<>();
@@ -334,7 +327,7 @@ public class QATypeParser {
 			OptionTolerance optionToleracne = new OptionTolerance();
 			JSONObject tolerance = (JSONObject) tolerances.get(j);
 			String code = (String) tolerance.get("code");
-			optionToleracne.setCode(code);
+			optionToleracne.setLayerID(code);
 
 			Double value;
 			if (tolerance.get("value") == null) {
@@ -358,13 +351,6 @@ public class QATypeParser {
 		return optionsTolerances;
 	}
 
-	/**
-	 * @author DY.Oh
-	 * @Date 2018. 3. 19. 오전 11:01:12
-	 * @param relation
-	 * @return List<OptionRelation>
-	 * @decription
-	 */
 	private List<OptionRelation> parseRelation(JSONArray relation) {
 
 		List<OptionRelation> optionRelations = new ArrayList<>();
@@ -406,25 +392,15 @@ public class QATypeParser {
 
 	}
 
-	/**
-	 * @author DY.Oh
-	 * @Date 2018. 3. 19. 오전 11:00:08
-	 * @param filter
-	 * @return List<OptionFilter>
-	 * @decription
-	 */
 	private List<OptionFilter> parseFilter(JSONArray filter) {
 
 		List<OptionFilter> optionConditions = new ArrayList<>();
 		for (int i = 0; i < filter.size(); i++) {
 			JSONObject attributeJson = (JSONObject) filter.get(i);
 			OptionFilter optionConditon = new OptionFilter();
-			// name
-			String name = (String) attributeJson.get("name");
-			optionConditon.setName(name);
 			// code
 			String code = (String) attributeJson.get("code");
-			optionConditon.setCode(code);
+			optionConditon.setLayerID(code);
 			// attribute
 			Object attrObj = attributeJson.get("attribute");
 			if (attrObj == null) {
@@ -440,13 +416,6 @@ public class QATypeParser {
 		return optionConditions;
 	}
 
-	/**
-	 * @author DY.Oh
-	 * @Date 2018. 3. 19. 오전 11:15:48
-	 * @param attribute
-	 * @return List<AttributeFilter>
-	 * @decription
-	 */
 	private List<AttributeFilter> parseAttribute(JSONArray attribute) {
 
 		List<AttributeFilter> filters = new ArrayList<>();
@@ -469,7 +438,7 @@ public class QATypeParser {
 		return filters;
 	}
 
-	public List<OptionFigure> parseFigure(JSONArray figures) {
+	private List<OptionFigure> parseFigure(JSONArray figures) {
 
 		List<OptionFigure> optionFigureList = new ArrayList<>();
 
@@ -478,7 +447,7 @@ public class QATypeParser {
 			JSONObject figure = (JSONObject) figures.get(f);
 			// code
 			String code = (String) figure.get("code");
-			optionFigure.setCode(code);
+			optionFigure.setLayerID(code);
 			// attribute
 			List<AttributeFigure> attributeConditions = new ArrayList<>();
 			Object attrObj = figure.get("attribute");
@@ -536,7 +505,7 @@ public class QATypeParser {
 		return optionFigureList;
 	}
 
-	public Map<String, Object> parseLayerFix(JSONArray typeLayers) {
+	private Map<String, Object> parseLayerFix(JSONArray typeLayers) {
 
 		try {
 			Map<String, Object> returnMap = new HashMap<>();
@@ -550,7 +519,7 @@ public class QATypeParser {
 
 				LayerFixMiss fix = new LayerFixMiss();
 				fix.setOption("LayerFixMiss");
-				fix.setCode(code);
+				fix.setLayerID(code);
 				fix.setGeometry((String) layer.get("geometry"));
 
 				// attrFix
@@ -561,7 +530,7 @@ public class QATypeParser {
 					for (int j = 0; j < fixArr.size(); j++) {
 						FixedValue fixedValue = new FixedValue();
 						JSONObject fixJson = (JSONObject) fixArr.get(j);
-						fixedValue.setName((String) fixJson.get("name"));
+						fixedValue.setKey((String) fixJson.get("name"));
 						fixedValue.setType((String) fixJson.get("type"));
 						fixedValue.setIsnull((Boolean) fixJson.get("isnull"));
 						fixedValue.setLength((Long) fixJson.get("length"));

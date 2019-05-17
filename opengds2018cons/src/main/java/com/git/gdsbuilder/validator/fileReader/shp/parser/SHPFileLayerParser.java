@@ -15,6 +15,12 @@ import org.opengis.filter.Filter;
 
 import com.git.gdsbuilder.type.dt.layer.DTLayer;
 
+/**
+ * 
+ * 
+ * @author DY.Oh
+ *
+ */
 public class SHPFileLayerParser {
 
 	public DTLayer parseDTLayer(String epsg, File file) throws Exception {

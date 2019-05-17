@@ -18,39 +18,46 @@
 package com.git.gdsbuilder.validator.fileReader.ngi.header;
 
 /**
- * @className NDAField.java
- * @description NGIField 정보를 담고있는 클래스
+ * NDA 파일 내에 존재하는 Layer의 Header 정보 중 속성 컬럼에 대한 정보를 저장하는 클래스.
+ *
  * @author DY.Oh
- * @date 2018. 1. 30. 오후 2:18:15
+ *
  */
 public class NDAField {
 
+	/**
+	 * 속성 컬럼명
+	 */
 	String originFieldName;
+	/**
+	 * 속성 컬럼명
+	 */
 	String fieldName;
+	/**
+	 * 속성 타입
+	 */
 	String type;
+	/**
+	 * 속성 문자열 길이
+	 */
 	String size;
+	/**
+	 * 
+	 */
 	String decimal;
+	/**
+	 * Unique 허용
+	 */
 	boolean isUnique;
+	/**
+	 * Null 허용
+	 */
 	boolean isNotNull;
 
-	/**
-	 * constructors
-	 */
 	public NDAField() {
 		super();
 	}
 
-	/**
-	 * constructors
-	 * 
-	 * @param originFieldName
-	 * @param fieldName
-	 * @param type
-	 * @param size
-	 * @param decimal
-	 * @param isUnique
-	 * @param isNotNull
-	 */
 	public NDAField(String originFieldName, String fieldName, String type, String size, String decimal,
 			boolean isUnique, boolean isNotNull) {
 		super();
@@ -63,16 +70,6 @@ public class NDAField {
 		this.isNotNull = isNotNull;
 	}
 
-	/**
-	 * constructors
-	 * 
-	 * @param fieldName
-	 * @param type
-	 * @param size
-	 * @param decimal
-	 * @param isUnique
-	 * @param isNotNull
-	 */
 	public NDAField(String fieldName, String type, String size, String decimal, boolean isUnique, boolean isNotNull) {
 		super();
 		this.fieldName = fieldName;
@@ -83,15 +80,6 @@ public class NDAField {
 		this.isNotNull = isNotNull;
 	}
 
-	/**
-	 * constructors
-	 * 
-	 * @param fieldName
-	 * @param type
-	 * @param size
-	 * @param decimal
-	 * @param isUnique
-	 */
 	public NDAField(String fieldName, String type, String size, String decimal, boolean isUnique) {
 		super();
 		this.fieldName = fieldName;
@@ -133,10 +121,6 @@ public class NDAField {
 		this.size = size;
 	}
 
-	/**
-	 * decimal getter @author DY.Oh @Date 2017. 3. 11. 오후 2:40:08 @return
-	 * String @throws
-	 */
 	public String getDecimal() {
 		return decimal;
 	}

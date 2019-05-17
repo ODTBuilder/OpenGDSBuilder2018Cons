@@ -73,39 +73,48 @@ import com.git.gdsbuilder.validator.layer.LayerValidator;
 import com.git.gdsbuilder.validator.layer.LayerValidatorImpl;
 
 /**
- * ValidateLayerCollectionList를 검수하는 클래스
+ * {@link DTLayerCollection}의 위상관계, 속성, 인접(인접영역 레이어 간의 위상관계, 속성) 등의 검수를 수행하는
+ * 클래스.
+ * <p>
+ * {@link DTLayerCollection}은 다수의 {@link DTLayer}를 의미하며 각각의 {@link DTLayer} 또는
+ * 2개 이상의 {@link DTLayer}간의 검수 등을 수행함.
+ * <p>
+ * {@link QALayerTypeList}에 정의된 검수 항목 및 세부 사항에 따라 {@link DTLayerCollection}에 포함된
+ * {@link DTLayer}검수를 진행하며 검수 결과로 1개의 {@link ErrorLayer}가 생성됨.
+ * <p>
+ * {@link DTLayerCollection}은 검수 영역 {@link DTLayer}를 기준으로 상, 하, 좌, 우 각각의
+ * {@link DTLayerCollection}로 구성된 인접 영역 {@link DTLayerCollectionList}을 가지나 데이터
+ * 종류에 따라 인접 영역이 존재하지 않을 수도 있음.
  * 
  * @author DY.Oh
- * @Date 2017. 4. 18. 오후 3:30:17
+ *
  */
 public class CollectionValidator {
 
-	ErrorLayer errLayer;
-	DTLayerCollection collection;
-	DTLayerCollectionList closeCollections;
-	QALayerTypeList types;
-	Map<String, Object> progress;
-	String collectionType;
-
 	/**
-	 * CollectionValidator 생성자
-	 * 
-	 * @param closeCollections
-	 * 
-	 * @param validateLayerCollectionList
-	 * @throws NoSuchAuthorityCodeException
-	 * @throws SchemaException
-	 * @throws FactoryException
-	 * @throws TransformException
-	 * @throws IOException
+	 * 검수 대상 {@link DTLayerCollection}
 	 */
+	DTLayerCollection collection;
+	/**
+	 * 검수 항목 및 세부 사항
+	 */
+	QALayerTypeList types;
+	/**
+	 * 검수 결과 오류 레이어
+	 */
+	ErrorLayer errLayer;
+	/**
+	 * 검수 대상 {@link DTLayerCollection}와 인접 영역에 존재하는 {@link DTLayerCollectionList} 상,
+	 * 하, 좌, 우 각각의 {@link DTLayerCollection}로 구성됨
+	 */
+	DTLayerCollectionList closeCollections;
+
 	public CollectionValidator(DTLayerCollection collection, DTLayerCollectionList closeCollections,
 			QALayerTypeList types) {
 		this.collection = collection;
 		this.types = types;
 		this.closeCollections = closeCollections;
 		this.errLayer = new ErrorLayer();
-		this.progress = new HashMap<String, Object>();
 		collectionValidate();
 	}
 
@@ -141,23 +150,7 @@ public class CollectionValidator {
 		this.types = types;
 	}
 
-	public Map<String, Object> getProgress() {
-		return progress;
-	}
-
-	public void setProgress(Map<String, Object> progress) {
-		this.progress = progress;
-	}
-
-	public String getCollectionType() {
-		return collectionType;
-	}
-
-	public void setCollectionType(String collectionType) {
-		this.collectionType = collectionType;
-	}
-
-	public void collectionValidate() {
+	private void collectionValidate() {
 
 		DTLayerCollection collection = this.collection;
 		QALayerTypeList types = this.types;
@@ -165,7 +158,6 @@ public class CollectionValidator {
 		try {
 			this.errLayer = new ErrorLayer();
 			errLayer.setCollectionName(collection.getCollectionName());
-			errLayer.setCollectionType(this.collectionType);
 
 			int layerCount = collection.getLayers().size();
 			int featureCount = getTotalFeatureCount(collection);
@@ -186,10 +178,8 @@ public class CollectionValidator {
 			if (closeCollections != null) {
 				closeCollectionValidate(types, collection, closeCollections);
 			}
-			progress.put(collection.getCollectionName(), 2);
 		} catch (Exception e) {
 			e.printStackTrace();
-			progress.put(collection.getCollectionName(), 3);
 		}
 	}
 
@@ -276,7 +266,7 @@ public class CollectionValidator {
 							List<OptionFilter> filters = closeMisse.getFilter();
 							if (filters != null) {
 								for (OptionFilter filter : filters) {
-									String code = filter.getCode();
+									String code = filter.getLayerID();
 									if (code.equals(layerID)) {
 										typeLayer.setFilter(filter);
 									}
@@ -288,15 +278,14 @@ public class CollectionValidator {
 							List<OptionTolerance> tolerances = closeMisse.getTolerance();
 							// option
 							String option = closeMisse.getOption();
-							System.out.println(option + " : 검수 중");
 							if (option.equals("RefAttributeMiss")) {
 								for (OptionFigure figure : figures) {
-									String fCode = figure.getCode();
+									String fCode = figure.getLayerID();
 									if (fCode != null && !fCode.equals(layerID)) {
 										continue;
 									}
 									for (OptionTolerance tolerance : tolerances) {
-										String tCode = tolerance.getCode();
+										String tCode = tolerance.getLayerID();
 										DTLayer closeLayer = null;
 										CloseLayerOp layerOp = new CloseLayerOp();
 										if (cate == 1 || cate == 2) {
@@ -315,8 +304,7 @@ public class CollectionValidator {
 												closeLayer = collection.getLayer(tCode);
 											}
 											if (closeLayer != null) {
-												layerOp.closeLayerOpF2(type, neatLine, typeLayer, closeLayer,
-														tolerance);
+												layerOp.closeLayerOpF(type, neatLine, typeLayer, closeLayer, tolerance);
 											}
 										}
 										if (closeLayer != null) {
@@ -330,7 +318,7 @@ public class CollectionValidator {
 											if (filters != null) {
 												String closeLayerId = closeLayer.getLayerID();
 												for (OptionFilter filter : filters) {
-													String code = filter.getCode();
+													String code = filter.getLayerID();
 													if (code.equals(closeLayerId)) {
 														closeLayer.setFilter(filter);
 													}
@@ -347,7 +335,7 @@ public class CollectionValidator {
 							}
 							if (option.equals("FRefEntityNone")) {
 								for (OptionTolerance tolerance : tolerances) {
-									String tCode = tolerance.getCode();
+									String tCode = tolerance.getLayerID();
 									DTLayer closeLayer = null;
 									CloseLayerOp layerOp = new CloseLayerOp();
 									if (cate == 1 || cate == 2) {
@@ -366,7 +354,7 @@ public class CollectionValidator {
 											closeLayer = collection.getLayer(tCode);
 										}
 										if (closeLayer != null) {
-											layerOp.closeLayerOpF2(type, neatLine, typeLayer, closeLayer, tolerance);
+											layerOp.closeLayerOpF(type, neatLine, typeLayer, closeLayer, tolerance);
 										}
 									}
 									if (closeLayer != null) {
@@ -380,7 +368,7 @@ public class CollectionValidator {
 										if (filters != null) {
 											String closeLayerId = closeLayer.getLayerID();
 											for (OptionFilter filter : filters) {
-												String code = filter.getCode();
+												String code = filter.getLayerID();
 												if (code.equals(closeLayerId)) {
 													closeLayer.setFilter(filter);
 												}
@@ -396,7 +384,7 @@ public class CollectionValidator {
 							}
 							if (option.equals("DRefEntityNone")) {
 								for (OptionTolerance tolerance : tolerances) {
-									String tCode = tolerance.getCode();
+									String tCode = tolerance.getLayerID();
 									DTLayer closeLayer = null;
 									CloseLayerOp layerOp = new CloseLayerOp();
 									if (cate == 1 || cate == 2) {
@@ -415,7 +403,7 @@ public class CollectionValidator {
 											closeLayer = collection.getLayer(tCode);
 										}
 										if (closeLayer != null) {
-											layerOp.closeLayerOpF2(type, neatLine, typeLayer, closeLayer, tolerance);
+											layerOp.closeLayerOpF(type, neatLine, typeLayer, closeLayer, tolerance);
 										}
 									}
 									if (closeLayer != null) {
@@ -429,7 +417,7 @@ public class CollectionValidator {
 										if (filters != null) {
 											String closeLayerId = closeLayer.getLayerID();
 											for (OptionFilter filter : filters) {
-												String code = filter.getCode();
+												String code = filter.getLayerID();
 												if (code.equals(closeLayerId)) {
 													closeLayer.setFilter(filter);
 												}
@@ -445,9 +433,9 @@ public class CollectionValidator {
 							}
 							if (option.equals("RefZValueMiss")) {
 								for (OptionFigure figure : figures) {
-									String fCode = figure.getCode();
+									String fCode = figure.getLayerID();
 									for (OptionTolerance tolerance : tolerances) {
-										String tCode = tolerance.getCode();
+										String tCode = tolerance.getLayerID();
 										if (fCode != null && !fCode.equals(layerID)) {
 											continue;
 										}
@@ -474,7 +462,7 @@ public class CollectionValidator {
 													closeLayer = collection.getLayer(tCode);
 												}
 												if (closeLayer != null) {
-													layerOp.closeLayerOpF2(type, neatLine, typeLayer, closeLayer,
+													layerOp.closeLayerOpF(type, neatLine, typeLayer, closeLayer,
 															tolerance);
 												}
 											}
@@ -488,7 +476,7 @@ public class CollectionValidator {
 											if (filters != null) {
 												String closeLayerId = closeLayer.getLayerID();
 												for (OptionFilter filter : filters) {
-													String code = filter.getCode();
+													String code = filter.getLayerID();
 													if (code.equals(closeLayerId)) {
 														closeLayer.setFilter(filter);
 													}
@@ -584,7 +572,7 @@ public class CollectionValidator {
 						List<OptionFilter> filters = attributeMiss.getFilter();
 						if (filters != null) {
 							for (OptionFilter filter : filters) {
-								String code = filter.getCode();
+								String code = filter.getLayerID();
 								if (code.equals(layerID)) {
 									typeLayer.setFilter(filter);
 								}
@@ -607,7 +595,7 @@ public class CollectionValidator {
 									List<OptionFilter> reFilters = relation.getFilters();
 									if (reFilters != null) {
 										for (OptionFilter filter : reFilters) {
-											String filterCode = filter.getCode();
+											String filterCode = filter.getLayerID();
 											DTLayer relationLayer = types.getTypeLayer(relationName, filterCode,
 													layerCollection);
 											relationLayer.setFilter(filter);
@@ -638,7 +626,7 @@ public class CollectionValidator {
 									List<OptionFilter> reFilters = relation.getFilters();
 									if (reFilters != null) {
 										for (OptionFilter filter : reFilters) {
-											String filterCode = filter.getCode();
+											String filterCode = filter.getLayerID();
 											DTLayer relationLayer = types.getTypeLayer(relationName, filterCode,
 													layerCollection);
 											relationLayer.setFilter(filter);
@@ -708,7 +696,7 @@ public class CollectionValidator {
 						if (option.equals("ZValueAmbiguous")) {
 							if (figures != null) {
 								for (OptionFigure figure : figures) {
-									String code = figure.getCode();
+									String code = figure.getLayerID();
 									if (layerID.equals(code)) {
 										typeErrorLayer = layerValidator.validateZValueAmbiguous(figure);
 										if (typeErrorLayer != null) {
@@ -720,7 +708,7 @@ public class CollectionValidator {
 						}
 						if (option.equals("BridgeName")) {
 							for (OptionFigure figure : figures) {
-								String code = figure.getCode();
+								String code = figure.getLayerID();
 								if (layerID.equals(code)) {
 									List<OptionRelation> relations = attributeMiss.getRetaion();
 									DTLayerList relationLayers = null;
@@ -731,7 +719,7 @@ public class CollectionValidator {
 											List<OptionFilter> reFilters = relation.getFilters();
 											if (reFilters != null) {
 												for (OptionFilter filter : reFilters) {
-													String filterCode = filter.getCode();
+													String filterCode = filter.getLayerID();
 													DTLayer relationLayer = types.getTypeLayer(relationName, filterCode,
 															layerCollection);
 													relationLayer.setFilter(filter);
@@ -766,7 +754,7 @@ public class CollectionValidator {
 						if (option.equals("NumericalValue")) {
 							if (figures != null) {
 								for (OptionFigure figure : figures) {
-									String code = figure.getCode();
+									String code = figure.getLayerID();
 									if (code == null) {
 										typeErrorLayer = layerValidator.validateNumericalValue(figure);
 									} else {
@@ -792,7 +780,7 @@ public class CollectionValidator {
 											List<OptionFilter> reFilters = relation.getFilters();
 											if (reFilters != null) {
 												for (OptionFilter filter : reFilters) {
-													String filterCode = filter.getCode();
+													String filterCode = filter.getLayerID();
 													DTLayer relationLayer = types.getTypeLayer(relationName, filterCode,
 															layerCollection);
 													relationLayer.setFilter(filter);
@@ -890,7 +878,7 @@ public class CollectionValidator {
 						List<OptionFilter> filters = geometricMiss.getFilter();
 						if (filters != null) {
 							for (OptionFilter filter : filters) {
-								String code = filter.getCode();
+								String code = filter.getLayerID();
 								if (code.equals(layerID)) {
 									typeLayer.setFilter(filter);
 								}
@@ -918,7 +906,7 @@ public class CollectionValidator {
 									List<OptionFilter> reFilters = relation.getFilters();
 									if (reFilters != null) {
 										for (OptionFilter filter : reFilters) {
-											String filterCode = filter.getCode();
+											String filterCode = filter.getLayerID();
 											DTLayer relationLayer = types.getTypeLayer(relationName, filterCode,
 													layerCollection);
 											relationLayer.setFilter(filter);
@@ -974,7 +962,7 @@ public class CollectionValidator {
 									List<OptionFilter> reFilters = relation.getFilters();
 									if (reFilters != null) {
 										for (OptionFilter filter : reFilters) {
-											String filterCode = filter.getCode();
+											String filterCode = filter.getLayerID();
 											DTLayer relationLayer = types.getTypeLayer(relationName, filterCode,
 													layerCollection);
 											relationLayer.setFilter(filter);
@@ -1002,7 +990,7 @@ public class CollectionValidator {
 									List<OptionFilter> reFilters = relation.getFilters();
 									if (reFilters != null) {
 										for (OptionFilter filter : reFilters) {
-											String filterCode = filter.getCode();
+											String filterCode = filter.getLayerID();
 											DTLayer relationLayer = types.getTypeLayer(relationName, filterCode,
 													layerCollection);
 											relationLayer.setFilter(filter);
@@ -1030,7 +1018,7 @@ public class CollectionValidator {
 									List<OptionFilter> reFilters = relation.getFilters();
 									if (reFilters != null) {
 										for (OptionFilter filter : reFilters) {
-											String filterCode = filter.getCode();
+											String filterCode = filter.getLayerID();
 											DTLayer relationLayer = types.getTypeLayer(relationName, filterCode,
 													layerCollection);
 											relationLayer.setFilter(filter);
@@ -1064,7 +1052,7 @@ public class CollectionValidator {
 									List<OptionFilter> reFilters = relation.getFilters();
 									if (reFilters != null) {
 										for (OptionFilter filter : reFilters) {
-											String filterCode = filter.getCode();
+											String filterCode = filter.getLayerID();
 											DTLayer relationLayer = types.getTypeLayer(relationName, filterCode,
 													layerCollection);
 											relationLayer.setFilter(filter);
@@ -1094,7 +1082,7 @@ public class CollectionValidator {
 									List<OptionFilter> reFilters = relation.getFilters();
 									if (reFilters != null) {
 										for (OptionFilter filter : reFilters) {
-											String filterCode = filter.getCode();
+											String filterCode = filter.getLayerID();
 											DTLayer relationLayer = types.getTypeLayer(relationName, filterCode,
 													layerCollection);
 											relationLayer.setFilter(filter);
@@ -1120,7 +1108,7 @@ public class CollectionValidator {
 						}
 						if (option.equals("SmallArea")) {
 							for (OptionTolerance tole : tolerance) {
-								String code = tole.getCode();
+								String code = tole.getLayerID();
 								if (code != null) {
 									if (!code.equals(layerID)) {
 										continue;
@@ -1137,7 +1125,7 @@ public class CollectionValidator {
 							List<OptionRelation> relations = geometricMiss.getRetaion();
 							if (tolerance != null) {
 								for (OptionTolerance tole : tolerance) {
-									String code = tole.getCode();
+									String code = tole.getLayerID();
 									if (code != null) {
 										if (!code.equals(layerID)) {
 											continue;
@@ -1152,7 +1140,7 @@ public class CollectionValidator {
 											List<OptionFilter> reFilters = relation.getFilters();
 											if (reFilters != null) {
 												for (OptionFilter filter : reFilters) {
-													String filterCode = filter.getCode();
+													String filterCode = filter.getLayerID();
 													DTLayer relationLayer = types.getTypeLayer(relationName, filterCode,
 															layerCollection);
 													relationLayer.setFilter(filter);
@@ -1188,7 +1176,7 @@ public class CollectionValidator {
 						}
 						if (option.equals("LinearDisconnection")) {
 							for (OptionTolerance tole : tolerance) {
-								String code = tole.getCode();
+								String code = tole.getLayerID();
 								if (code != null) {
 									if (!code.equals(layerID)) {
 										continue;
@@ -1202,7 +1190,7 @@ public class CollectionValidator {
 									List<OptionFilter> reFilters = relation.getFilters();
 									if (reFilters != null) {
 										for (OptionFilter filter : reFilters) {
-											String filterCode = filter.getCode();
+											String filterCode = filter.getLayerID();
 											DTLayer relationLayer = types.getTypeLayer(relationName, filterCode,
 													layerCollection);
 											relationLayer.setFilter(filter);
@@ -1229,7 +1217,7 @@ public class CollectionValidator {
 									List<OptionFilter> reFilters = relation.getFilters();
 									if (reFilters != null) {
 										for (OptionFilter filter : reFilters) {
-											String filterCode = filter.getCode();
+											String filterCode = filter.getLayerID();
 											DTLayer relationLayer = types.getTypeLayer(relationName, filterCode,
 													layerCollection);
 											relationLayer.setFilter(filter);
@@ -1263,7 +1251,7 @@ public class CollectionValidator {
 									List<OptionFilter> reFilters = relation.getFilters();
 									if (reFilters != null) {
 										for (OptionFilter filter : reFilters) {
-											String filterCode = filter.getCode();
+											String filterCode = filter.getLayerID();
 											DTLayer relationLayer = types.getTypeLayer(relationName, filterCode,
 													layerCollection);
 											relationLayer.setFilter(filter);
@@ -1290,7 +1278,7 @@ public class CollectionValidator {
 									List<OptionFilter> reFilters = relation.getFilters();
 									if (reFilters != null) {
 										for (OptionFilter filter : reFilters) {
-											String filterCode = filter.getCode();
+											String filterCode = filter.getLayerID();
 											DTLayer relationLayer = types.getTypeLayer(relationName, filterCode,
 													layerCollection);
 											relationLayer.setFilter(filter);
@@ -1317,7 +1305,7 @@ public class CollectionValidator {
 									List<OptionFilter> reFilters = relation.getFilters();
 									if (reFilters != null) {
 										for (OptionFilter filter : reFilters) {
-											String filterCode = filter.getCode();
+											String filterCode = filter.getLayerID();
 											DTLayer relationLayer = types.getTypeLayer(relationName, filterCode,
 													layerCollection);
 											relationLayer.setFilter(filter);
@@ -1344,7 +1332,7 @@ public class CollectionValidator {
 									List<OptionFilter> reFilters = relation.getFilters();
 									if (reFilters != null) {
 										for (OptionFilter filter : reFilters) {
-											String filterCode = filter.getCode();
+											String filterCode = filter.getLayerID();
 											DTLayer relationLayer = types.getTypeLayer(relationName, filterCode,
 													layerCollection);
 											relationLayer.setFilter(filter);
@@ -1370,7 +1358,7 @@ public class CollectionValidator {
 						}
 						if (option.equals("OutBoundary")) {
 							for (OptionTolerance tole : tolerance) {
-								String code = tole.getCode();
+								String code = tole.getLayerID();
 								if (code != null) {
 									if (!code.equals(layerID)) {
 										continue;
@@ -1384,7 +1372,7 @@ public class CollectionValidator {
 									List<OptionFilter> reFilters = relation.getFilters();
 									if (reFilters != null) {
 										for (OptionFilter filter : reFilters) {
-											String filterCode = filter.getCode();
+											String filterCode = filter.getLayerID();
 											DTLayer relationLayer = types.getTypeLayer(relationName, filterCode,
 													layerCollection);
 											relationLayer.setFilter(filter);
@@ -1404,7 +1392,7 @@ public class CollectionValidator {
 						if (option.equals("ConBreak")) {
 							for (OptionTolerance tole : tolerance) {
 
-								String code = tole.getCode();
+								String code = tole.getLayerID();
 
 								if (code != null) {
 
@@ -1431,7 +1419,7 @@ public class CollectionValidator {
 
 											for (OptionFilter filter : reFilters) {
 
-												String filterCode = filter.getCode();
+												String filterCode = filter.getLayerID();
 												DTLayer relationLayer = types.getTypeLayer(relationName, filterCode,
 														layerCollection);
 												relationLayer.setFilter(filter);
@@ -1460,7 +1448,7 @@ public class CollectionValidator {
 						}
 						if (option.equals("ConOverDegree")) {
 							for (OptionTolerance tole : tolerance) {
-								String code = tole.getCode();
+								String code = tole.getLayerID();
 								if (code != null) {
 									if (!code.equals(layerID)) {
 										continue;
@@ -1482,7 +1470,7 @@ public class CollectionValidator {
 						}
 						if (option.equals("SmallLength")) {
 							for (OptionTolerance tole : tolerance) {
-								String code = tole.getCode();
+								String code = tole.getLayerID();
 								if (code != null) {
 									if (!code.equals(layerID)) {
 										continue;
@@ -1497,7 +1485,7 @@ public class CollectionValidator {
 						}
 						if (option.equals("OverShoot")) {
 							for (OptionTolerance tole : tolerance) {
-								String code = tole.getCode();
+								String code = tole.getLayerID();
 								if (code != null) {
 									if (!code.equals(layerID)) {
 										continue;
@@ -1518,7 +1506,7 @@ public class CollectionValidator {
 										List<OptionFilter> reFilters = relation.getFilters();
 										if (reFilters != null) {
 											for (OptionFilter filter : reFilters) {
-												String filterCode = filter.getCode();
+												String filterCode = filter.getLayerID();
 												DTLayer relationLayer = types.getTypeLayer(relationName, filterCode,
 														layerCollection);
 												relationLayer.setFilter(filter);
@@ -1533,7 +1521,7 @@ public class CollectionValidator {
 						}
 						if (option.equals("EntityOpenMiss")) {
 							for (OptionTolerance tole : tolerance) {
-								String code = tole.getCode();
+								String code = tole.getLayerID();
 								if (code != null) {
 									if (!code.equals(layerID)) {
 										continue;
@@ -1549,7 +1537,7 @@ public class CollectionValidator {
 										List<OptionFilter> reFilters = relation.getFilters();
 										if (reFilters != null) {
 											for (OptionFilter filter : reFilters) {
-												String filterCode = filter.getCode();
+												String filterCode = filter.getLayerID();
 												DTLayer relationLayer = types.getTypeLayer(relationName, filterCode,
 														layerCollection);
 												relationLayer.setFilter(filter);
@@ -1577,7 +1565,7 @@ public class CollectionValidator {
 						}
 						if (option.equals("NodeMiss")) {
 							for (OptionTolerance tole : tolerance) {
-								String code = tole.getCode();
+								String code = tole.getLayerID();
 								if (code != null) {
 									if (!code.equals(layerID)) {
 										continue;
@@ -1593,7 +1581,7 @@ public class CollectionValidator {
 										List<OptionFilter> reFilters = relation.getFilters();
 										if (reFilters != null) {
 											for (OptionFilter filter : reFilters) {
-												String filterCode = filter.getCode();
+												String filterCode = filter.getLayerID();
 												DTLayer relationLayer = types.getTypeLayer(relationName, filterCode,
 														layerCollection);
 												relationLayer.setFilter(filter);
@@ -1636,7 +1624,7 @@ public class CollectionValidator {
 
 										for (OptionFilter filter : reFilters) {
 
-											String filterCode = filter.getCode();
+											String filterCode = filter.getLayerID();
 											DTLayer relationLayer = types.getTypeLayer(relationName, filterCode,
 													layerCollection);
 											relationLayer.setFilter(filter);
@@ -1647,7 +1635,7 @@ public class CollectionValidator {
 										relationLayers = types.getTypeLayers(relationName, layerCollection);
 									}
 									LayerValidator layerValidator = new LayerValidatorImpl(typeLayer);
-									typeErrorLayer = layerValidator.validateOneAcre(relationLayers, 0.0);
+									typeErrorLayer = layerValidator.validateOneAcre(relationLayers);
 
 									if (typeErrorLayer != null) {
 										geometricResult.mergeErrorLayer(typeErrorLayer);
@@ -1706,9 +1694,8 @@ public class CollectionValidator {
 				ErrorLayer typeErrorLayer = null;
 				List<LayerFixMiss> layerFixMissArr = options.getLayerMissOptions();
 				for (LayerFixMiss layerFixMiss : layerFixMissArr) {
-					String code = layerFixMiss.getCode();
+					String code = layerFixMiss.getLayerID();
 					String option = layerFixMiss.getOption();
-					System.out.println(option + " : 검수 중");
 					DTLayer codeLayer = layerCollection.getLayer(code);
 					if (codeLayer == null) {
 						continue;

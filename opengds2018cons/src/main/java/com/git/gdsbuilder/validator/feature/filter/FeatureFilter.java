@@ -1,5 +1,18 @@
-/**
- * 
+/*
+ *    OpenGDS/Builder
+ *    http://git.co.kr
+ *
+ *    (C) 2014-2017, GeoSpatial Information Technology(GIT)
+ *    
+ *    This library is free software; you can redistribute it and/or
+ *    modify it under the terms of the GNU Lesser General Public
+ *    License as published by the Free Software Foundation;
+ *    version 3 of the License.
+ *
+ *    This library is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *    Lesser General Public License for more details.
  */
 package com.git.gdsbuilder.validator.feature.filter;
 
@@ -17,14 +30,27 @@ import com.git.gdsbuilder.type.validate.option.specific.OptionFilter;
 import com.git.gdsbuilder.type.validate.option.specific.OptionTolerance;
 
 /**
- * @className FeatureFilter.java
- * @description
+ * {@link SimpleFeature}의 Attribute 중 {@link AttributeFilter}에 해당하는 속성이 존재하는지
+ * 확인하는 클래스.
+ * <p>
+ * {@link AttributeFilter}가 {@link List} 형태인 경우 OR 조건으로 {@link SimpleFeature}의
+ * Attribute가 최소 1개 이상의 {@link AttributeFilter} 조건과 일치하면 {@code true}를 반환함.
+ * 
  * @author DY.Oh
- * @date 2018. 3. 19. 오후 2:58:26
+ *
  */
 public class FeatureFilter {
 
-	// attr filter
+	/**
+	 * {@link SimpleFeature}의 Attribute 중 {@link AttributeFilter}에 해당하는 속성이 존재하는지 확인
+	 * 
+	 * @param sf      속성 필터 대상 {@link SimpleFeature}
+	 * @param filters 속성 필터 OR 조건
+	 * @return boolean 대상 {@link SimpleFeature}의 Attribute가 최소 1개 이상의
+	 *         {@link AttributeFilter} 조건과 일치하면 {@code true}를 반환
+	 * 
+	 * @author DY.Oh
+	 */
 	public static boolean filter(SimpleFeature sf, List<AttributeFilter> filters) {
 
 		boolean isTrue = false;
@@ -53,6 +79,16 @@ public class FeatureFilter {
 		return isTrue;
 	}
 
+	/**
+	 * {@link SimpleFeature}의 Attribute 중 {@link AttributeFilter}에 해당하는 속성이 존재하는지 확인
+	 * 
+	 * @param sf     속성 필터 대상 {@link SimpleFeature}
+	 * @param filter 속성 필터 조건
+	 * @return boolean 대상 {@link SimpleFeature}의 Attribute가 {@link AttributeFilter}
+	 *         조건과 일치하면 {@code true}를 반환
+	 * 
+	 * @author DY.Oh
+	 */
 	public static boolean filter(SimpleFeature sf, AttributeFilter filter) {
 
 		boolean isTrue = false;
@@ -78,40 +114,17 @@ public class FeatureFilter {
 		return isTrue;
 	}
 
-	public static Integer idxFilter(SimpleFeature sf, List<AttributeFilter> filters) {
-
-		Integer idx = null;
-
-		if (filters != null) {
-			for (AttributeFilter filter : filters) {
-				String key = filter.getKey();
-				if (key == null) {
-					continue;
-				}
-				// filter
-				List<Object> values = filter.getValues();
-				if (values != null) {
-					Object attribute = sf.getAttribute(key);
-					for (int i = 0; i < values.size(); i++) {
-						Object value = values.get(i);
-						if (attribute.toString().equals(value)) {
-							idx = i;
-						}
-					}
-				}
-			}
-		}
-		return idx;
-	}
-
-	// geom filter
-
 	/**
+	 * {@link DTLayerList}의 레이어 객체 중 각 레이어의 {@link AttributeFilter} 조건을 만족한 객체만
+	 * {@link DefaultFeatureCollection}에 추가하여 반환함.
+	 * 
+	 * @param relationLayers {@link AttributeFilter} 조건 검사 대상 {@link DTLayerList}
+	 * @param reTolerances   {@link AttributeFilter} 조건 검사 대상 여부를 확인. reTolerances에
+	 *                       저장되어 있는 {@link DTLayer}만 조건 검사를 수행함.
+	 * @return DefaultFeatureCollection {@link AttributeFilter} 조건을 만족한 객체
+	 *         Collection
+	 * 
 	 * @author DY.Oh
-	 * @Date 2018. 3. 19. 오후 5:36:39
-	 * @param relationLayers
-	 * @param reTolerances   void
-	 * @decription
 	 */
 	public static DefaultFeatureCollection filter(DTLayerList relationLayers, List<OptionTolerance> reTolerances) {
 
@@ -125,13 +138,13 @@ public class FeatureFilter {
 			// tolerance
 			if (reTolerances != null) {
 				for (OptionTolerance reTolerance : reTolerances) {
-					if (!reLayerCode.equals(reTolerance.getCode())) {
+					if (!reLayerCode.equals(reTolerance.getLayerID())) {
 						continue;
 					}
 					// filter
 					OptionFilter filters = relationLayer.getFilter();
 					if (filters != null) {
-						String code = filters.getCode();
+						String code = filters.getLayerID();
 						if (!reLayerCode.equals(code)) {
 							continue;
 						} else {
@@ -140,7 +153,6 @@ public class FeatureFilter {
 							tempIterator = tempSfc.features();
 							while (tempIterator.hasNext()) {
 								SimpleFeature relationSf = tempIterator.next();
-
 								if (attrFilters != null) {
 									// filter
 									if (FeatureFilter.filter(relationSf, attrFilters)) {

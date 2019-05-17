@@ -11,8 +11,33 @@ import org.opengis.feature.simple.SimpleFeature;
 import com.git.gdsbuilder.type.dt.layer.DTLayer;
 import com.git.gdsbuilder.type.dt.layer.DTLayerList;
 
+/**
+ * {@link DXFLayer}를 {@link DTLayerList}로 변환하는 클래스.
+ * 
+ * @author DY.Oh
+ *
+ */
 public class DXFFileLayerParser {
 
+	/**
+	 * DXF Entity 레이어를 호환 가능한 {@link Point}/{@link LineString}/{@link Polygon} 타입의
+	 * {@link DTLayer}로 변환.
+	 * <p>
+	 * 변환은 DXF Entity 타입 중 LINE, POLYLINE, LWPOLYLINE, INSERT, TEXT, SOLID, CIRCLE,
+	 * ARC 총 8가지 타입만 지원함. 이외 타입의 DXF Entity 타입은 변환되지 않음.
+	 * <p>
+	 * DXF 레이어는 1개의 레이어가 여러가지 타입의 Entity를 가질 수 있으나 {@link DTLayer}는 타입이 1가지이므로 변환 시
+	 * Entity 타입 만큼의 {@link DTLayer}가 생성되고 {@link DTLayerList}가 반환됨.
+	 * <p>
+	 * DXF Entity는 각각의 타입별로 분류되어
+	 * 
+	 * @param epsg     좌표계 (ex EPSG:4326)
+	 * @param dxfLayer DXF Entity 레이어
+	 * @return DTLayerList n개(DXF Entity 타입 갯수)의 {@link DTLayer}
+	 * @throws Exception
+	 * 
+	 * @author DY.Oh
+	 */
 	public static DTLayerList parseDTLayer(String epsg, DXFLayer dxfLayer) throws Exception {
 
 		DTLayerList dtlayers = new DTLayerList();

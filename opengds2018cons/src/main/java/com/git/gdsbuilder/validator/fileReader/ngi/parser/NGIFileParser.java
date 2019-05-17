@@ -53,17 +53,22 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import com.git.gdsbuilder.validator.fileReader.ngi.NGIDataStore;
 
 /**
- * ngi/nda 파일을 QA20DataStore로 파싱하는 클래스
+ * ngi/nda 파일을 {@link NGIDataStore}로 변환는 클래스
  * 
  * @author DY.Oh
- * @Date 2017. 3. 11. 오전 11:33:11
  */
 public class NGIFileParser extends NGIDataStoreFactory {
 
 	/**
-	 * ngi/nda 파일을 QA20DataStore로 파싱하여 반환 @author DY.Oh @Date 2017. 3. 11. 오전
-	 * 11:42:42 @param ngiFilePath @param srs @param charset @return
-	 * QA20DataStore @throws IOException @throws
+	 * ngi/nda 파일을 {@link NGIDataStore}로 변환하여 반환
+	 * 
+	 * @param ngiFilePath 파일 경로
+	 * @param srs         좌표계 (ex. EPSG:4326)
+	 * @param charset     인고딩 타입 (ex. EUC-KR)
+	 * @return NGIDataStore
+	 * @throws IOException
+	 * 
+	 * @author DY.Oh
 	 */
 	public NGIDataStore parse(String ngiFilePath, String srs, String charset) throws IOException {
 
@@ -77,10 +82,6 @@ public class NGIFileParser extends NGIDataStoreFactory {
 
 	}
 
-	/**
-	 * ngi/nda 파일을 QA20DataStore로 파싱하여 반환 @author DY.Oh @Date 2017. 3. 11. 오전
-	 * 11:43:01 @param params @return QA20DataStore @throws IOException @throws
-	 */
 	private NGIDataStore createDTDataStore(Map<String, Serializable> params) throws IOException {
 
 		URL url = (URL) PARAM_FILE.lookUp(params);

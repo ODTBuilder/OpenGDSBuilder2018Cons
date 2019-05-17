@@ -65,7 +65,7 @@ public class LayerQaudValidatorImpl extends LayerValidatorImpl implements LayerQ
 
 	public LayerQaudValidatorImpl(DTLayer validatorLayer, int maxFeatureCount) {
 		super(validatorLayer);
-		// 쿼드트리를 만들어
+
 		SimpleFeatureCollection sfc = validatorLayer.getSimpleFeatureCollection();
 		Quadtree quadtree = new Quadtree();
 		try {
@@ -98,8 +98,6 @@ public class LayerQaudValidatorImpl extends LayerValidatorImpl implements LayerQ
 	public ErrorLayer validateSelfEntity(DTLayerList relationLayers, OptionTolerance tolerance)
 			throws SchemaException, IOException {
 
-		int tmp = 1;
-		int s = this.envelops.size();
 		ErrorLayer errorLayer = new ErrorLayer();
 		for (Object result : this.envelops) {
 			Envelope envelope = (Envelope) result;
@@ -129,11 +127,9 @@ public class LayerQaudValidatorImpl extends LayerValidatorImpl implements LayerQ
 					errorLayer.mergeErrorLayer(err);
 				}
 			}
-			System.out.println(s + " 중 " + tmp + " 완료");
-			tmp++;
 		}
 		if (errorLayer.getErrFeatureList().size() > 0) {
-			errorLayer.setLayerName(super.getValidatorLayer().getLayerID());
+			errorLayer.setLayerID(super.getValidatorLayer().getLayerID());
 			return errorLayer;
 		} else {
 			return null;
@@ -165,44 +161,7 @@ public class LayerQaudValidatorImpl extends LayerValidatorImpl implements LayerQ
 			}
 		}
 		if (errorLayer.getErrFeatureList().size() > 0) {
-			errorLayer.setLayerName(super.getValidatorLayer().getLayerID());
-			return errorLayer;
-		} else {
-			return null;
-		}
-	}
-
-	@Override
-	public ErrorLayer validateOutBoundary(DTLayerList relationLayers, OptionTolerance tolerance)
-			throws SchemaException {
-
-		ErrorLayer errorLayer = new ErrorLayer();
-		for (Object result : this.envelops) {
-			Envelope envelope = (Envelope) result;
-			List items = quadtree.query(envelope);
-			DefaultFeatureCollection dfc = new DefaultFeatureCollection();
-			int size = items.size();
-			for (int i = 0; i < size; i++) {
-				SimpleFeature f = (SimpleFeature) items.get(i);
-				if (isContains(envelope, f)) {
-					dfc.add(f);
-				}
-			}
-			DTLayer layer = super.getValidatorLayer();
-			layer.setSimpleFeatureCollection(dfc);
-			super.setValidatorLayer(layer);
-			if (relationLayers != null) {
-				for (DTLayer relationLayer : relationLayers) {
-					DTLayer reQuadLayer = getQuadRelationLayer(relationLayer, envelope);
-					ErrorLayer err = super.validateOutBoundary(reQuadLayer, tolerance);
-					if (err != null) {
-						errorLayer.mergeErrorLayer(err);
-					}
-				}
-			}
-		}
-		if (errorLayer.getErrFeatureList().size() > 0) {
-			errorLayer.setLayerName(super.getValidatorLayer().getLayerID());
+			errorLayer.setLayerID(super.getValidatorLayer().getLayerID());
 			return errorLayer;
 		} else {
 			return null;
@@ -233,7 +192,7 @@ public class LayerQaudValidatorImpl extends LayerValidatorImpl implements LayerQ
 			}
 		}
 		if (errorLayer.getErrFeatureList().size() > 0) {
-			errorLayer.setLayerName(super.getValidatorLayer().getLayerID());
+			errorLayer.setLayerID(super.getValidatorLayer().getLayerID());
 			return errorLayer;
 		} else {
 			return null;
@@ -269,7 +228,7 @@ public class LayerQaudValidatorImpl extends LayerValidatorImpl implements LayerQ
 			}
 		}
 		if (errorLayer.getErrFeatureList().size() > 0) {
-			errorLayer.setLayerName(super.getValidatorLayer().getLayerID());
+			errorLayer.setLayerID(super.getValidatorLayer().getLayerID());
 			return errorLayer;
 		} else {
 			return null;
@@ -297,7 +256,7 @@ public class LayerQaudValidatorImpl extends LayerValidatorImpl implements LayerQ
 			if (relationLayers != null) {
 				for (DTLayer relationLayer : relationLayers) {
 					DTLayer reQuadLayer = getQuadRelationLayer(relationLayer, envelope);
-					ErrorLayer err = super.validateOneAcre(reQuadLayer, tolerance);
+					ErrorLayer err = super.validateOneAcre(reQuadLayer);
 					if (err != null) {
 						errorLayer.mergeErrorLayer(err);
 					}
@@ -305,7 +264,7 @@ public class LayerQaudValidatorImpl extends LayerValidatorImpl implements LayerQ
 			}
 		}
 		if (errorLayer.getErrFeatureList().size() > 0) {
-			errorLayer.setLayerName(super.getValidatorLayer().getLayerID());
+			errorLayer.setLayerID(super.getValidatorLayer().getLayerID());
 			return errorLayer;
 		} else {
 			return null;
@@ -341,7 +300,7 @@ public class LayerQaudValidatorImpl extends LayerValidatorImpl implements LayerQ
 			}
 		}
 		if (errorLayer.getErrFeatureList().size() > 0) {
-			errorLayer.setLayerName(super.getValidatorLayer().getLayerID());
+			errorLayer.setLayerID(super.getValidatorLayer().getLayerID());
 			return errorLayer;
 		} else {
 			return null;
@@ -377,7 +336,7 @@ public class LayerQaudValidatorImpl extends LayerValidatorImpl implements LayerQ
 			}
 		}
 		if (errorLayer.getErrFeatureList().size() > 0) {
-			errorLayer.setLayerName(super.getValidatorLayer().getLayerID());
+			errorLayer.setLayerID(super.getValidatorLayer().getLayerID());
 			return errorLayer;
 		} else {
 			return null;
@@ -413,7 +372,7 @@ public class LayerQaudValidatorImpl extends LayerValidatorImpl implements LayerQ
 			}
 		}
 		if (errorLayer.getErrFeatureList().size() > 0) {
-			errorLayer.setLayerName(super.getValidatorLayer().getLayerID());
+			errorLayer.setLayerID(super.getValidatorLayer().getLayerID());
 			return errorLayer;
 		} else {
 			return null;
@@ -444,7 +403,7 @@ public class LayerQaudValidatorImpl extends LayerValidatorImpl implements LayerQ
 			}
 		}
 		if (errorLayer.getErrFeatureList().size() > 0) {
-			errorLayer.setLayerName(super.getValidatorLayer().getLayerID());
+			errorLayer.setLayerID(super.getValidatorLayer().getLayerID());
 			return errorLayer;
 		} else {
 			return null;
@@ -481,7 +440,7 @@ public class LayerQaudValidatorImpl extends LayerValidatorImpl implements LayerQ
 			}
 		}
 		if (errorLayer.getErrFeatureList().size() > 0) {
-			errorLayer.setLayerName(super.getValidatorLayer().getLayerID());
+			errorLayer.setLayerID(super.getValidatorLayer().getLayerID());
 			return errorLayer;
 		} else {
 			return null;

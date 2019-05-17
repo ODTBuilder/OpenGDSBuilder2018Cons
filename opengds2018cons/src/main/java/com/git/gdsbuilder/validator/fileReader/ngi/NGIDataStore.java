@@ -30,34 +30,31 @@ import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 /**
- * ngi/nda 파일을 각각 BufferedReader 객체로 변환하는 클래스
+ * ngi/nda 파일을 각각 {@link BufferedReader} 객체로 변환하는 클래스
  * 
  * @author DY.Oh
- * @Date 2017. 3. 11. 오전 11:35:53
  */
 public class NGIDataStore {
 
+	/**
+	 * ngiReader
+	 */
 	private BufferedReader ngiReader;
+	/**
+	 * ndaReader
+	 */
 	private BufferedReader ndaReader;
+	/**
+	 * nda 파일 유무
+	 */
 	private boolean isNDA = false;
 
 	Map<String, SimpleFeatureType> schemas;
 
-	/**
-	 * constructors
-	 */
 	public NGIDataStore() {
 		super();
 	}
 
-	/**
-	 * constructors
-	 * 
-	 * @param ngiFile
-	 * @param charset
-	 * @param crs
-	 * @throws IOException
-	 */
 	public NGIDataStore(File ngiFile, Charset charset, CoordinateReferenceSystem crs) throws IOException {
 
 		// Linux

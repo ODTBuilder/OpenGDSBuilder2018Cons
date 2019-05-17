@@ -20,10 +20,12 @@ package com.git.gdsbuilder.type.dt.layer;
 import java.util.ArrayList;
 
 /**
- * LayerList 정보를 저장하는 클래스
+ * {@link com.git.gdsbuilder.type.dt.layer.DTQuadLayerList}정보를 저장하는 클래스.
+ * <p>
+ * 다수의{@link com.git.gdsbuilder.type.dt.layer.DTQuadLayer}을
+ * {@link java.util.ArrayList} 형태로 저장
  * 
  * @author DY.Oh
- * @Date 2017. 3. 11. 오후 1:32:25
  */
 public class DTQuadLayerList extends ArrayList<DTQuadLayer> {
 

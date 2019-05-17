@@ -23,26 +23,52 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
- * ErrorFeature 정보를 담고 있는 클래스
+ * {@link com.git.gdsbuilder.type.validate.error.ErrorFeature} 정보를 담고 있는 클래스
+ * <p>
+ * 검수 후 오류가 있는 객체에 대해 ID, 오류 종류, 세부 정보, 오류 위치 등을 저장함.
  * 
  * @author DY.Oh
- * @Date 2017. 3. 11. 오후 2:57:39
  */
 
 @Data
 @AllArgsConstructor
 public class ErrorFeature {
 
+	/**
+	 * 오류 객체가 포함된 레이어 ID
+	 */
 	String layerID;
+	/**
+	 * 오류 객체 ID
+	 */
 	String featureID;
-
+	/**
+	 * 관계 레이어 ID
+	 */
 	String refLayerId;
+	/**
+	 * 관계 객체 ID
+	 */
 	String refFeatureId;
-
+	/**
+	 * 오류 코드
+	 */
 	String errCode;
+	/**
+	 * 오류 타입(LayerFixMiss or GraphicMiss or AttributeMiss)
+	 */
 	String errType;
+	/**
+	 * 오류명
+	 */
 	String errName;
+	/**
+	 * 오류 세부 정보
+	 */
 	String comment;
+	/**
+	 * 오류 위치점
+	 */
 	Geometry errPoint;
 
 	public ErrorFeature(String featureID, String errCode, String errType, String errName, String comment,

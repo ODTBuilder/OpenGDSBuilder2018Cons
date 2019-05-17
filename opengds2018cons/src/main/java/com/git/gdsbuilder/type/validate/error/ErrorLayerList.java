@@ -20,10 +20,13 @@ package com.git.gdsbuilder.type.validate.error;
 import java.util.ArrayList;
 
 /**
- * ErrorLayerList 정보를 담고 있는 클래스
+ * {@link com.git.gdsbuilder.type.validate.error.ErrorLayerList}정보를 저장하는 클래스.
+ * <p>
+ * 다수의{@link com.git.gdsbuilder.type.validate.error.ErrorLayer}을
+ * {@link java.util.ArrayList} 형태로 저장
+ * 
  * @author DY.Oh
- * @Date 2017. 3. 11. 오후 3:02:40
- * */
+ */
 public class ErrorLayerList extends ArrayList<ErrorLayer> {
 
 }

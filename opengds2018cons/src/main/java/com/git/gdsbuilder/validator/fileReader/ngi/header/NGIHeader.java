@@ -21,25 +21,49 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @className NGIHeader.java
- * @description NGIHeader 정보를 담고있는 클래스
+ * NGI 파일 내에 존재하는 Layer의 Header 정보를 저장하는 클래스.
+ * <p>
+ * NGI 파일 Import 할 때 파일 내의 각 레이어 마다 Header 정보를 저장한 후 다시 NGI 포맷으로 Export 할 때 해당
+ * 정보를 포함하여 Export 함.
+ * 
  * @author DY.Oh
- * @date 2018. 1. 30. 오후 2:20:59
+ *
  */
 public class NGIHeader {
 
+	/**
+	 * NGI 레이어 버전
+	 */
 	private String version;
+	/**
+	 * NGI 레이어 메타데이터
+	 */
 	private String geometric_metadata;
+	/**
+	 * NGI 레이어 Geometry 차원 (DIM(2) or DIM(3))
+	 */
 	private String dim;
+	/**
+	 * NGI 레이어 Envelop
+	 */
 	private String bound;
+	/**
+	 * NGI Point 레이어 스타일
+	 */
 	private List<String> point_represent;
+	/**
+	 * NGI LineString 레이어 스타일
+	 */
 	private List<String> line_represent;
+	/**
+	 * NGI Polygon 레이어 스타일
+	 */
 	private List<String> region_represent;
+	/**
+	 * NGI Text 레이어 스타일
+	 */
 	private List<String> text_represent;
 
-	/**
-	 * constructors
-	 */
 	public NGIHeader() {
 		this.version = "";
 		this.geometric_metadata = "";
@@ -51,18 +75,6 @@ public class NGIHeader {
 		this.text_represent = new ArrayList<String>();
 	}
 
-	/**
-	 * constructors
-	 * 
-	 * @param version
-	 * @param geometric_metadata
-	 * @param dim
-	 * @param bound
-	 * @param point_represent
-	 * @param line_represent
-	 * @param region_represent
-	 * @param text_represent
-	 */
 	public NGIHeader(String version, String geometric_metadata, String dim, String bound, List<String> point_represent,
 			List<String> line_represent, List<String> region_represent, List<String> text_represent) {
 		super();

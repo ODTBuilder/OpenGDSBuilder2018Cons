@@ -1,14 +1,32 @@
+/*
+ *    OpenGDS/Builder
+ *    http://git.co.kr
+ *
+ *    (C) 2014-2017, GeoSpatial Information Technology(GIT)
+ *    
+ *    This library is free software; you can redistribute it and/or
+ *    modify it under the terms of the GNU Lesser General Public
+ *    License as published by the Free Software Foundation;
+ *    version 3 of the License.
+ *
+ *    This library is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *    Lesser General Public License for more details.
+ */
 package com.git.gdsbuilder.type.dt.collection;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.git.gdsbuilder.type.dt.layer.DTLayer;
-import com.git.gdsbuilder.type.validate.layer.QALayerType;
-
 /**
- * @className MapSystemRule.java
- * @description DTLayerCollection의 인접 DTLayerCollection의 정보를 담고 있는 클래스
+ * 검수 대상 {@link com.git.gdsbuilder.type.dt.collection.DTLayerCollection}의
+ * 인접도엽(상, 하, 좌, 우)
+ * {@link com.git.gdsbuilder.type.dt.collection.DTLayerCollectionList}의 ID를 담고
+ * 있는 클래스
+ * <p>
+ * 인접도엽 ID는 검수 대상
+ * {@link com.git.gdsbuilder.type.dt.collection.DTLayerCollection}의 ID가 숫자인 경우
+ * 해당 {@link com.git.gdsbuilder.type.dt.collection.DTLayerCollection}의 ID를 기준으로
+ * 기준으로 상(ID-10), 하(ID+10), 좌(ID-1), 우(ID+1) ID 값을 가짐.
+ * 
  * @author DY.Oh
  * @date 2018. 1. 30. 오후 2:02:11
  */
@@ -19,12 +37,6 @@ public class MapSystemRule {
 	private Integer left = 0;
 	private Integer right = 0;
 
-	/**
-	 * @className MapSystemRule.java
-	 * @description MapSystemRule의 Type
-	 * @author DY.Oh
-	 * @date 2018. 1. 30. 오후 2:02:56
-	 */
 	public enum MapSystemRuleType {
 		BOTTOM("BOTTOM"), LEFT("LEFT"), RIGHT("RIGHT"), TOP("TOP"), UNKNOWN(null);
 		private String typeName;
@@ -48,6 +60,49 @@ public class MapSystemRule {
 		}
 	};
 
+	public Integer getBottom() {
+		return bottom;
+	}
+
+	public void setBottom(Integer bottom) {
+		this.bottom = bottom;
+	}
+
+	public Integer getTop() {
+		return top;
+	}
+
+	public void setTop(Integer top) {
+		this.top = top;
+	}
+
+	public Integer getLeft() {
+		return left;
+	}
+
+	public void setLeft(Integer left) {
+		this.left = left;
+	}
+
+	public Integer getRight() {
+		return right;
+	}
+
+	public void setRight(Integer right) {
+		this.right = right;
+	}
+
+	/**
+	 * 검수 대상 {@link com.git.gdsbuilder.type.dt.collection.DTLayerCollection}
+	 * collectionName에 해당하는 인접도엽(상, 하, 좌, 우)ID를 계산하여 left, right, top, bottom값을 설정
+	 * 
+	 * @param collectionName 검수 대상
+	 *                       {@link com.git.gdsbuilder.type.dt.collection.DTLayerCollection}
+	 *                       collectionName
+	 * @return MapSystemRule
+	 * 
+	 * @author DY.Oh
+	 */
 	public MapSystemRule setMapSystemRule(String collectionName) {
 
 		if (collectionName.matches("^[0-9]*$")) {
@@ -94,100 +149,6 @@ public class MapSystemRule {
 
 			}
 			return this;
-		} else {
-			return null;
-		}
-	}
-
-	/**
-	 * @author DY.Oh
-	 * @Date 2018. 1. 30. 오후 2:03:13
-	 * @param ruleType
-	 * @return int
-	 * @decription ruleType에 해당하는 인접도엽 정보를 반환
-	 */
-	public int getMapSystemlRule(MapSystemRuleType ruleType) {
-		int value = 0;
-		if (ruleType != null) {
-			if (ruleType == MapSystemRuleType.BOTTOM) {
-				value = this.bottom;
-			} else if (ruleType == MapSystemRuleType.LEFT) {
-				value = this.left;
-			} else if (ruleType == MapSystemRuleType.RIGHT) {
-				value = this.right;
-			} else if (ruleType == MapSystemRuleType.TOP) {
-				value = this.top;
-			}
-		}
-		return value;
-	}
-
-	public Integer getBottom() {
-		return bottom;
-	}
-
-	public void setBottom(Integer bottom) {
-		this.bottom = bottom;
-	}
-
-	public Integer getTop() {
-		return top;
-	}
-
-	public void setTop(Integer top) {
-		this.top = top;
-	}
-
-	public Integer getLeft() {
-		return left;
-	}
-
-	public void setLeft(Integer left) {
-		this.left = left;
-	}
-
-	public Integer getRight() {
-		return right;
-	}
-
-	public void setRight(Integer right) {
-		this.right = right;
-	}
-
-	/**
-	 * @author DY.Oh
-	 * @param types
-	 * @Date 2018. 3. 30. 오후 1:29:44
-	 * @return MapSystemRule
-	 * @decription
-	 */
-	public Map<String, DTLayer> getMapSystemRuleMap(QALayerType type, DTLayerCollection colleciton) {
-
-		Map<String, DTLayer> ruleMap = new HashMap<>();
-
-		boolean isTrue = false;
-		if (this.top != null) {
-			DTLayer topLayer = type.getTypeLayer(this.top.toString(), colleciton);
-			ruleMap.put("top", topLayer);
-			isTrue = true;
-		}
-		if (this.bottom != null) {
-			DTLayer bottomLayer = type.getTypeLayer(this.bottom.toString(), colleciton);
-			ruleMap.put("bottom", bottomLayer);
-			isTrue = true;
-		}
-		if (this.left != null) {
-			DTLayer leftLayer = type.getTypeLayer(this.left.toString(), colleciton);
-			ruleMap.put("left", leftLayer);
-			isTrue = true;
-		}
-		if (this.right != null) {
-			DTLayer rightLayer = type.getTypeLayer(this.right.toString(), colleciton);
-			ruleMap.put("right", rightLayer);
-			isTrue = true;
-		}
-		if (isTrue) {
-			return ruleMap;
 		} else {
 			return null;
 		}

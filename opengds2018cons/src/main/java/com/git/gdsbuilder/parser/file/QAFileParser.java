@@ -1,5 +1,18 @@
-/**
- * 
+/*
+ *    OpenGDS/Builder
+ *    http://git.co.kr
+ *
+ *    (C) 2014-2017, GeoSpatial Information Technology(GIT)
+ *    
+ *    This library is free software; you can redistribute it and/or
+ *    modify it under the terms of the GNU Lesser General Public
+ *    License as published by the Free Software Foundation;
+ *    version 3 of the License.
+ *
+ *    This library is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *    Lesser General Public License for more details.
  */
 package com.git.gdsbuilder.parser.file;
 
@@ -27,27 +40,65 @@ import com.git.gdsbuilder.validator.fileReader.shp.parser.SHPFileLayerParser;
 import lombok.Data;
 
 /**
- * @className QAFileParser.java
- * @description
- * @author DY.Oh
- * @date 2018. 3. 29. 오후 3:05:10
+ * 
+ * zip 파일 또는 Geoserver SHP Layer 파일을 {@link DTLayerCollectionList} 타입으로 변환하는 클래스
+ * 
+ * @author DY.OH
+ *
  */
 @Data
 public class QAFileParser {
 
-	private String status = "";
-	private String brTag = "<br>";
-
+	String brTag = "<br>";
+	/**
+	 * 파일 변환 시 발생하는 오류에 대한 설명
+	 */
+	String status = "";
+	/**
+	 * 검수 종류 ID
+	 */
 	Integer cIdx;
+	/**
+	 * 검수 종류 별 지원 파일 포맷
+	 */
 	String support;
-	UnZipFile unZipFile; // file
-	File geoLayersPath; // geoserver
+	/**
+	 * zip 파일 압축 해제 경로 및 압축 해제된 파일 정보
+	 */
+	UnZipFile unZipFile;
+	/**
+	 * Geoserver SHP Layer 파일
+	 */
+	File geoLayersPath;
+	/**
+	 * 검수영역 레이어 파일명
+	 */
 	String neatLine;
+	/**
+	 * 파일 좌표계 ex) EPSG:4326
+	 */
 	String epsg;
-
-	boolean isTrue;
+	/**
+	 * 변환된 DTLayerCollectionList, 검수 대상 파일 및 검수에 필요한 정보를 List 형태로 저장
+	 */
 	DTLayerCollectionList collectionList;
 
+	/**
+	 * 변환 성공 여부
+	 */
+	boolean isTrue;
+
+	/**
+	 * zip 파일을 DTLayerCollectionList 타입으로 변환하기 위한 클래스 생성자
+	 * 
+	 * @param epsg      파일 좌표계 ex) EPSG:4326
+	 * @param cIdx      검수 종류 ID 수치지도 1.0 : 1, 수치지도 2.0 : 2, 지하시설물 1.0 : 3, 지하시설물
+	 *                  2.0 : 4, 임상도 : 5
+	 * @param support   검수 종류 별 지원 파일 포맷
+	 * @param unZipFile zip 파일 압축 해제 경로 및 압축 해제된 파일 정보
+	 * @param neatLine  검수영역 레이어 파일명
+	 * @author DY.OH
+	 */
 	public QAFileParser(String epsg, int cIdx, String support, UnZipFile unZipFile, String neatLine) {
 
 		this.cIdx = cIdx;
@@ -80,6 +131,17 @@ public class QAFileParser {
 		}
 	}
 
+	/**
+	 * Geoserver SHP Layer 파일을 DTLayerCollectionList 타입으로 변환하기 위한 클래스 생성자
+	 * 
+	 * @param epsg          파일 좌표계 ex) EPSG:4326
+	 * @param cIdx          검수 종류 ID (SHP 포맷의 검수 종류만 지원 가능) 수치지도 2.0 : 2, 지하시설물 2.0
+	 *                      : 4, 임상도 : 5
+	 * @param geoLayersPath Geoserver SHP Layer 파일
+	 * @param fname         Geoserver 작업공간 이름
+	 * @param neatLine      검수영역 레이어 파일명
+	 * @author DY.OH
+	 */
 	public QAFileParser(String epsg, int cIdx, File geoLayersPath, String fname, String neatLine) {
 
 		this.cIdx = cIdx;
@@ -298,11 +360,6 @@ public class QAFileParser {
 		}
 	}
 
-	/**
-	 * @author DY.Oh
-	 * @Date 2018. 3. 29. 오후 6:13:52 void
-	 * @decription
-	 */
 	private void parseUndergroundQA20File() {
 
 		if (this.unZipFile.isFiles()) {

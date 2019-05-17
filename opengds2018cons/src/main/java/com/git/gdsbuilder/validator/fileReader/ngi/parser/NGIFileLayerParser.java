@@ -33,10 +33,25 @@ import com.git.gdsbuilder.validator.fileReader.ngi.header.NDAField;
 import com.git.gdsbuilder.validator.fileReader.ngi.header.NDAHeader;
 import com.git.gdsbuilder.validator.fileReader.ngi.header.NGIHeader;
 
+/**
+ * ngi/nda 파일의 Layer를 {@link DTLayerList} 객체로 파싱하는 클래스
+ * 
+ * @author DY.Oh
+ *
+ */
 public class NGIFileLayerParser {
 
+	/**
+	 * ngiReader
+	 */
 	BufferedReader ngiReader;
+	/**
+	 * ndaReader
+	 */
 	BufferedReader ndaReader;
+	/**
+	 * 좌표계 (ex. EPSG:4326)
+	 */
 	String epsg;
 
 	public NGIFileLayerParser(String epsg, BufferedReader ngiReader) {
@@ -50,6 +65,18 @@ public class NGIFileLayerParser {
 		this.epsg = epsg;
 	}
 
+	/**
+	 * 속성이 존재하는 ngi 레이어를 {@link DTLayerList} 객체로 변환.
+	 * <p>
+	 * ngi 파일과 동일 경로에 nda 파일이 존재하는 경우, 속성이 값이 존재하는 {@link DTLayerList}로 변환.
+	 * <p>
+	 * ngi 파일의 경우 1개의 레이어 내에 다수의 Geometry 타입 레이어가 존재할 수 있으나 {@link DTLayer}의 경우 
+	 * 가~~~ㄸ
+	 * @return {@link DTLayerList}
+	 * @throws Exception
+	 * 
+	 * @author DY.Oh
+	 */
 	public DTLayerList parseDTLayersWithAtt() throws Exception {
 
 		DTLayerList layers = new DTLayerList();
@@ -67,6 +94,33 @@ public class NGIFileLayerParser {
 		}
 		ngiReader.close();
 		ndaReader.close();
+		return layers;
+	}
+
+	/**
+	 * 속성이 존재하지 않는 ngi 레이어를 {@link DTLayerList} 객체로 변환.
+	 * 
+	 * @return {@link DTLayerList}
+	 * @throws Exception
+	 * 
+	 * @author DY.Oh
+	 */
+	public DTLayerList parseDTLayers() throws Exception {
+
+		DTLayerList layers = new DTLayerList();
+		String line = ngiReader.readLine();
+		while (line != null) {
+			if (line.equalsIgnoreCase("<LAYER_START>")) {
+				DTLayerList layerList = parseDTLayer();
+				for (DTLayer layer : layerList) {
+					if (layer.getSimpleFeatureCollection().size() > 0) {
+						layers.add(layer);
+					}
+				}
+			}
+			line = ngiReader.readLine();
+		}
+		ngiReader.close();
 		return layers;
 	}
 
@@ -127,25 +181,6 @@ public class NGIFileLayerParser {
 		return layers;
 	}
 
-	public DTLayerList parseDTLayers() throws Exception {
-
-		DTLayerList layers = new DTLayerList();
-		String line = ngiReader.readLine();
-		while (line != null) {
-			if (line.equalsIgnoreCase("<LAYER_START>")) {
-				DTLayerList layerList = parseDTLayer();
-				for (DTLayer layer : layerList) {
-					if (layer.getSimpleFeatureCollection().size() > 0) {
-						layers.add(layer);
-					}
-				}
-			}
-			line = ngiReader.readLine();
-		}
-		ngiReader.close();
-		return layers;
-	}
-
 	private DTLayerList parseDTLayer() throws Exception {
 
 		DTLayerList layers = new DTLayerList();
@@ -183,10 +218,6 @@ public class NGIFileLayerParser {
 		return layers;
 	}
 
-	/**
-	 * ngi 파일의 header에 저장된 레이어 타입을 반환 @author DY.Oh @Date 2017. 3. 11. 오전
-	 * 11:29:04 @param header @return String[] @throws
-	 */
 	private String[] getLayerTypes(NGIHeader header) {
 
 		String geometric = header.getGeometric_metadata();
@@ -199,10 +230,6 @@ public class NGIFileLayerParser {
 		return types;
 	}
 
-	/**
-	 * ngi 파일의 header에 저장된 레이어 ID를 반환 @author DY.Oh @Date 2017. 3. 11. 오전
-	 * 11:29:58 @return String @throws IOException @throws
-	 */
 	private String getLayerID() throws IOException {
 
 		String line = ngiReader.readLine();
@@ -221,10 +248,6 @@ public class NGIFileLayerParser {
 		return layerID;
 	}
 
-	/**
-	 * ngi 파일의 header에 저장된 레이어 Name을 반환 @author DY.Oh @Date 2017. 3. 11. 오전
-	 * 11:29:58 @return String @throws IOException @throws
-	 */
 	private String getLayerName() throws IOException {
 
 		String line = ngiReader.readLine();
@@ -242,10 +265,6 @@ public class NGIFileLayerParser {
 		return layerName;
 	}
 
-	/**
-	 * nda 파일의 header 정보를 NDAHeader 객체로 파싱 @author DY.Oh @Date 2017. 3. 11. 오전
-	 * 11:30:30 @return NDAHeader @throws IOException @throws
-	 */
 	private NDAHeader getNdaHeader() throws IOException {
 
 		NDAHeader ndaHeader = new NDAHeader();
@@ -266,10 +285,6 @@ public class NGIFileLayerParser {
 
 	}
 
-	/**
-	 * nda 파일에 저장된 객체의 속성정보를 List<NGIField> 객체로 파싱 @author DY.Oh @Date 2017. 3. 11.
-	 * 오전 11:31:07 @return List<NGIField> @throws IOException @throws
-	 */
 	private List<NDAField> getAttrib() throws IOException {
 
 		List<NDAField> fields = new ArrayList<NDAField>();
@@ -299,27 +314,8 @@ public class NGIFileLayerParser {
 		return fields;
 	}
 
-	/**
-	 * 문자열에서 큰 따옴표("")안에 해당된 문자열을 반환 @author DY.Oh @Date 2017. 3. 11. 오전
-	 * 11:08:21 @param line @return String @throws
-	 */
 	private String getQuotesText(String line) {
 		Pattern p = Pattern.compile("\\\"(.*?)\\\"");
-		Matcher m = p.matcher(line);
-		if (m.find()) {
-			String attr = m.group(1);
-			return attr;
-		} else {
-			return null;
-		}
-	}
-
-	/**
-	 * 문자열에서 괄호( )안에 해당되는 문자열을 반환 @author DY.Oh @Date 2017. 3. 11. 오전
-	 * 11:09:53 @param line @return String @throws
-	 */
-	private String getText(String line) {
-		Pattern p = Pattern.compile("\\((.*?)\\)");
 		Matcher m = p.matcher(line);
 		if (m.find()) {
 			String attr = m.group(1);
@@ -338,10 +334,6 @@ public class NGIFileLayerParser {
 		return returnStr;
 	}
 
-	/**
-	 * ngi 파일의 header 정보를 NGIHeader 객체로 파싱 @author DY.Oh @Date 2017. 3. 11. 오전
-	 * 11:30:30 @return NGIHeader @throws IOException @throws
-	 */
 	private NGIHeader getNgiHeader() throws IOException {
 
 		NGIHeader header = new NGIHeader();

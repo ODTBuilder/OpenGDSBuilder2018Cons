@@ -1,5 +1,18 @@
-/**
- * 
+/*
+ *    OpenGDS/Builder
+ *    http://git.co.kr
+ *
+ *    (C) 2014-2017, GeoSpatial Information Technology(GIT)
+ *    
+ *    This library is free software; you can redistribute it and/or
+ *    modify it under the terms of the GNU Lesser General Public
+ *    License as published by the Free Software Foundation;
+ *    version 3 of the License.
+ *
+ *    This library is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *    Lesser General Public License for more details.
  */
 package com.git.gdsbuilder.parser.json;
 
@@ -25,13 +38,45 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
- * @author GIT
+ * 오류 레이어를 GeoJSON 타입으로 변환하는 클래스
+ * 
+ * @author DY.OH
  *
  */
 public class ErrorLayerParser {
 
 	/**
-	 * @param errorLayer
+	 * 오류 레이어를 GeoJSON 타입으로 변환
+	 * 
+	 * <p>
+	 * <em>GeoJSON Example :</em>
+	 * <pre>
+	 * <code>
+	 * {
+	 *  "type": "FeatureCollection",
+	 *  "features": [
+	 * 	 {
+	 * 	 "type": "Feature",
+	 * 	 "geometry": {
+	 * 	  "type": "Point",
+	 * 	  "coordinates": [102.0, 0.5]
+	 * 	  },
+	 * 	  "properties": {
+	 * 	   "layerID": "layerID",
+	 *	   "featureID": "featureID",
+	 * 	   "errType": "Graphic",
+	 * 	   "errName": "EntityDuplicated",
+	 * 	   "comment": null
+	 * 	  }
+	 * 	 }
+	 *  ]
+	 * }
+	 * </code>
+	 * </pre>
+	 * 
+	 * @param errorLayer 오류 레이어
+	 * @return JSONObject 변환된 GeoJSON
+	 * @author DY.OH
 	 */
 	public JSONObject parseGeoJSON(ErrorLayer errorLayer) {
 

@@ -1,15 +1,25 @@
+/*
+ *    OpenGDS/Builder
+ *    http://git.co.kr
+ *
+ *    (C) 2014-2017, GeoSpatial Information Technology(GIT)
+ *    
+ *    This library is free software; you can redistribute it and/or
+ *    modify it under the terms of the GNU Lesser General Public
+ *    License as published by the Free Software Foundation;
+ *    version 3 of the License.
+ *
+ *    This library is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *    Lesser General Public License for more details.
+ */
 package com.git.gdsbuilder.quadtree;
 
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.index.quadtree.Key;
 import com.vividsolutions.jts.util.Assert;
 
-/**
- * Represents a node of a {@link Quadtree}. Nodes contain items which have a
- * spatial extent corresponding to the node's position in the quadtree.
- *
- * @version 1.7
- */
 public class Node extends NodeBase {
 	public static Node createNode(Envelope env) {
 		Key key = new Key(env);

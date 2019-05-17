@@ -17,9 +17,20 @@ import org.opengis.feature.simple.SimpleFeatureType;
 
 import com.vividsolutions.jts.geom.Geometry;
 
+/**
+ * {@link DXFEntity}를 {@link SimpleFeature}로 변환하는 클래스.
+ * <p>
+ * {@link DXFEntity} Entity 타입에 따라 {@link SimpleFeature}의 Schema인
+ * {@link SimpleFeatureType} 생성함.
+ * <p>
+ * {@link SimpleFeatureType}의 featureID, the_geom, originType은 {@link DXFEntity}
+ * Entity 타입에 상관없이 Default로 생성되며 이외의 속성은 각 Entity 타입에 따라 다른 값을 가질 수 있음.
+ * 
+ * @author DY.Oh
+ *
+ */
 public class DXFFileFeatureParser {
 
-	protected static String layerID = "featureID";
 	protected static String featureID = "featureID";
 	protected static String the_geom = "the_geom";
 	protected static String textValue = "textValue";
@@ -31,6 +42,16 @@ public class DXFFileFeatureParser {
 	protected static String originType = "originType";
 	protected static String boundary = "boundary";
 
+	/**
+	 * LINE 타입의 {@link DXFEntity}를 {@link SimpleFeature}로 변환.
+	 * 
+	 * @param epsg      좌표계 (ex EPSG:4326)
+	 * @param dxfEntity DXF Entity
+	 * @return {@link DXFEntity}를 변환한 {@link SimpleFeature}
+	 * @throws Exception
+	 * 
+	 * @author DY.Oh
+	 */
 	public static SimpleFeature parseDTLineFeaeture(String epsg, DXFEntity dxfEntity) throws Exception {
 
 		String entityType = dxfEntity.getType();
@@ -51,6 +72,19 @@ public class DXFFileFeatureParser {
 		}
 	}
 
+	/**
+	 * POLYLINE 타입의 {@link DXFEntity}를 {@link SimpleFeature}로 변환.
+	 * <p>
+	 * POLYLINE Entity는 높이값(z)과 폐합여부(flags)를 속성으로 가지므로 해당 값을 {@link SimpleFeature}의
+	 * {@link SimpleFeatureType}으로 변환함.
+	 * 
+	 * @param epsg      좌표계 (ex EPSG:4326)
+	 * @param dxfEntity DXF Entity
+	 * @return {@link DXFEntity}를 변환한 {@link SimpleFeature}
+	 * @throws Exception
+	 * 
+	 * @author DY.Oh
+	 */
 	public static SimpleFeature parseDTPolylineFeature(String epsg, DXFEntity dxfEntity) throws Exception {
 
 		String entityType = dxfEntity.getType();
@@ -74,6 +108,19 @@ public class DXFFileFeatureParser {
 		}
 	}
 
+	/**
+	 * LWPOLYLINE 타입의 {@link DXFEntity}를 {@link SimpleFeature}로 변환.
+	 * <p>
+	 * LWPOLYLINE Entity는 높이값(z)과 폐합여부(flags)를 속성으로 가지므로 해당 값을
+	 * {@link SimpleFeature}의 {@link SimpleFeatureType}으로 변환함.
+	 * 
+	 * @param epsg      좌표계 (ex EPSG:4326)
+	 * @param dxfEntity DXF Entity
+	 * @return {@link DXFEntity}를 변환한 {@link SimpleFeature}
+	 * @throws Exception
+	 * 
+	 * @author DY.Oh
+	 */
 	public static SimpleFeature parseDTLWPolylineFeature(String epsg, DXFEntity dxfEntity) throws Exception {
 
 		String entityType = dxfEntity.getType();
@@ -98,6 +145,19 @@ public class DXFFileFeatureParser {
 		}
 	}
 
+	/**
+	 * INSERT 타입의 {@link DXFEntity}를 {@link SimpleFeature}로 변환.
+	 * <p>
+	 * INSERT Entity는 각도(rotate)를 속성으로 가지므로 해당 값을 {@link SimpleFeature}의
+	 * {@link SimpleFeatureType}으로 변환함.
+	 * 
+	 * @param epsg      좌표계 (ex EPSG:4326)
+	 * @param dxfEntity DXF Entity
+	 * @return {@link DXFEntity}를 변환한 {@link SimpleFeature}
+	 * @throws Exception
+	 * 
+	 * @author DY.Oh
+	 */
 	public static SimpleFeature parseDTInsertFeature(String epsg, DXFEntity dxfEntity) throws Exception {
 
 		String entityType = dxfEntity.getType();
@@ -119,6 +179,16 @@ public class DXFFileFeatureParser {
 		}
 	}
 
+	/**
+	 * CIRCLE 타입의 {@link DXFEntity}를 {@link SimpleFeature}로 변환.
+	 * 
+	 * @param epsg      좌표계 (ex EPSG:4326)
+	 * @param dxfEntity DXF Entity
+	 * @return {@link DXFEntity}를 변환한 {@link SimpleFeature}
+	 * @throws Exception
+	 * 
+	 * @author DY.Oh
+	 */
 	public static SimpleFeature parseDTCircleFeature(String epsg, DXFEntity dxfEntity) throws Exception {
 
 		String entityType = dxfEntity.getType();
@@ -139,6 +209,16 @@ public class DXFFileFeatureParser {
 		}
 	}
 
+	/**
+	 * SOLID 타입의 {@link DXFEntity}를 {@link SimpleFeature}로 변환.
+	 * 
+	 * @param epsg      좌표계 (ex EPSG:4326)
+	 * @param dxfEntity DXF Entity
+	 * @return {@link DXFEntity}를 변환한 {@link SimpleFeature}
+	 * @throws Exception
+	 * 
+	 * @author DY.Oh
+	 */
 	public static SimpleFeature parseDTSolidFeature(String epsg, DXFEntity dxfEntity) throws Exception {
 
 		String entityType = dxfEntity.getType();
@@ -161,6 +241,19 @@ public class DXFFileFeatureParser {
 
 	}
 
+	/**
+	 * TEXT 타입의 {@link DXFEntity}를 {@link SimpleFeature}로 변환.
+	 * <p>
+	 * TEXT Entity는 text, 높이값(height)과 각도(Rotation)를 속성으로 가지므로 해당 값을
+	 * {@link SimpleFeature}의 {@link SimpleFeatureType}으로 변환함.
+	 * 
+	 * @param epsg      좌표계 (ex EPSG:4326)
+	 * @param dxfEntity DXF Entity
+	 * @return {@link DXFEntity}를 변환한 {@link SimpleFeature}
+	 * @throws Exception
+	 * 
+	 * @author DY.Oh
+	 */
 	public static SimpleFeature parseDTTextFeature(String epsg, DXFEntity dxfEntity) throws Exception {
 
 		String entityType = dxfEntity.getType();
@@ -187,6 +280,16 @@ public class DXFFileFeatureParser {
 		}
 	}
 
+	/**
+	 * ARC 타입의 {@link DXFEntity}를 {@link SimpleFeature}로 변환.
+	 * 
+	 * @param epsg      좌표계 (ex EPSG:4326)
+	 * @param dxfEntity DXF Entity
+	 * @return {@link DXFEntity}를 변환한 {@link SimpleFeature}
+	 * @throws Exception
+	 * 
+	 * @author DY.Oh
+	 */
 	public static SimpleFeature parseDTArcFeature(String epsg, DXFEntity dxfEntity) throws Exception {
 
 		String entityType = dxfEntity.getType();

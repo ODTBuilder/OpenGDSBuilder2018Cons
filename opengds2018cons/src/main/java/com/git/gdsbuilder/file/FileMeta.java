@@ -14,7 +14,6 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-
 package com.git.gdsbuilder.file;
 
 /**
@@ -25,8 +24,17 @@ package com.git.gdsbuilder.file;
  */
 public class FileMeta {
 
+	/**
+	 * 업로드 파일명
+	 */
 	String fileName;
+	/**
+	 * 업로드 파일 경로
+	 */
 	String filePath;
+	/**
+	 * 업로드 파일 포맷
+	 */
 	String fileType;
 
 	boolean isTrue;

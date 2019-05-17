@@ -14,19 +14,31 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-
 package com.git.gdsbuilder.type.dt.layer;
 
 import java.util.ArrayList;
 
 /**
- * LayerList 정보를 저장하는 클래스
+ * {@link com.git.gdsbuilder.type.dt.layer.DTLayerList}정보를 저장하는 클래스.
+ * <p>
+ * 다수의 {@link com.git.gdsbuilder.type.dt.layer.DTLayer}을
+ * {@link java.util.ArrayList} 형태로 저장
  * 
  * @author DY.Oh
- * @Date 2017. 3. 11. 오후 1:32:25
  */
 public class DTLayerList extends ArrayList<DTLayer> {
 
+	/**
+	 * {@link com.git.gdsbuilder.type.dt.layer.DTLayerList} 중 layerID에 해당하는
+	 * {@link com.git.gdsbuilder.type.dt.layer.DTLayer}를 검색하여 반환
+	 * 
+	 * @param layerID 검색하고자 하는 {@link com.git.gdsbuilder.type.dt.layer.DTLayer}의
+	 *                layerID
+	 * @return DTLayer layerID에 해당하는
+	 *         {@link com.git.gdsbuilder.type.dt.layer.DTLayer}
+	 * 
+	 * @author DY.Oh
+	 */
 	public DTLayer getDTLayer(String layerID) {
 
 		for (int i = 0; i < this.size(); i++) {
@@ -38,6 +50,17 @@ public class DTLayerList extends ArrayList<DTLayer> {
 		return null;
 	}
 
+	/**
+	 * {@link com.git.gdsbuilder.type.dt.layer.DTLayerList} 중 id와 Geometry type이 동일한
+	 * {@link com.git.gdsbuilder.type.dt.layer.DTLayer}의 존재 여부를 확인
+	 * 
+	 * @param id   {@link com.git.gdsbuilder.type.dt.layer.DTLayer} id
+	 * @param type {@link com.git.gdsbuilder.type.dt.layer.DTLayer} Geometry type
+	 * @return boolean {@link com.git.gdsbuilder.type.dt.layer.DTLayerList} 중 id와
+	 *         Geometry type이 동일한 {@link com.git.gdsbuilder.type.dt.layer.DTLayer}의
+	 *         존재 여부
+	 * @author DY.Oh
+	 */
 	public boolean isEqualsLayer(String id, String type) {
 
 		for (int i = 0; i < this.size(); i++) {

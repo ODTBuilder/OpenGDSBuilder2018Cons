@@ -111,9 +111,8 @@ public class FeatureCloseCollectionValidatorImpl implements FeatureCloseCollecti
 			if (minDistPt == null) {
 				return null;
 			}
-			ErrorFeature errFeature = new ErrorFeature(featureID, DMQAOptions.Type.REFENTITYNONE.getErrCode(),
-					DMQAOptions.Type.REFENTITYNONE.getErrTypeE(), DMQAOptions.Type.REFENTITYNONE.getErrNameE(), "",
-					minDistPt);
+			ErrorFeature errFeature = new ErrorFeature(featureID, DMQAOptions.REFENTITYNONE.getErrCode(),
+					DMQAOptions.REFENTITYNONE.getErrTypeE(), DMQAOptions.REFENTITYNONE.getErrNameE(), "", minDistPt);
 			return errFeature;
 		} else {
 			return null;
@@ -207,9 +206,8 @@ public class FeatureCloseCollectionValidatorImpl implements FeatureCloseCollecti
 			if (minDistPt == null) {
 				return null;
 			}
-			ErrorFeature errFeature = new ErrorFeature(featureID, DMQAOptions.Type.REFENTITYNONE.getErrCode(),
-					DMQAOptions.Type.REFENTITYNONE.getErrTypeE(), DMQAOptions.Type.REFENTITYNONE.getErrNameE(), "",
-					minDistPt);
+			ErrorFeature errFeature = new ErrorFeature(featureID, DMQAOptions.REFENTITYNONE.getErrCode(),
+					DMQAOptions.REFENTITYNONE.getErrTypeE(), DMQAOptions.REFENTITYNONE.getErrNameE(), "", minDistPt);
 			return errFeature;
 		} else {
 			return null;
@@ -317,8 +315,8 @@ public class FeatureCloseCollectionValidatorImpl implements FeatureCloseCollecti
 			String reLayerId = closeLayer.getLayerID();
 
 			ErrorFeature errFeature = new ErrorFeature(featureID, reLayerId, reFeatureID,
-					DMQAOptions.Type.REFZVALUEMISS.getErrCode(), DMQAOptions.Type.REFZVALUEMISS.getErrTypeE(),
-					DMQAOptions.Type.REFZVALUEMISS.getErrNameE(), "", minDistPt);
+					DMQAOptions.REFZVALUEMISS.getErrCode(), DMQAOptions.REFZVALUEMISS.getErrTypeE(),
+					DMQAOptions.REFZVALUEMISS.getErrNameE(), "", minDistPt);
 			return errFeature;
 		} else {
 			return null;
@@ -448,8 +446,8 @@ public class FeatureCloseCollectionValidatorImpl implements FeatureCloseCollecti
 			}
 			String reLayerId = closeLayer.getLayerID();
 			ErrorFeature errFeature = new ErrorFeature(featureID, reLayerId, reFeatureID,
-					DMQAOptions.Type.REFATTRIBUTEMISS.getErrCode(), DMQAOptions.Type.REFATTRIBUTEMISS.getErrTypeE(),
-					DMQAOptions.Type.REFATTRIBUTEMISS.getErrNameE(), "", minDistPt);
+					DMQAOptions.REFATTRIBUTEMISS.getErrCode(), DMQAOptions.REFATTRIBUTEMISS.getErrTypeE(),
+					DMQAOptions.REFATTRIBUTEMISS.getErrNameE(), "", minDistPt);
 			return errFeature;
 		} else {
 			return null;

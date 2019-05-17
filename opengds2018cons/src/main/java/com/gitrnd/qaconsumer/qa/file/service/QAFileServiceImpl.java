@@ -281,7 +281,7 @@ public class QAFileServiceImpl implements QAFileService {
 				JSONObject neatLineObj = (JSONObject) neatLine;
 				neatLineCode = (String) neatLineObj.get("code");
 			}
-            
+
 			// files
 			QAFileParser parser = new QAFileParser(epsg, cIdx, type, unZipFile, neatLineCode);
 			boolean parseTrue = parser.isTrue();
@@ -432,7 +432,7 @@ public class QAFileServiceImpl implements QAFileService {
 						e.printStackTrace();
 					}
 					ErrorLayer errLayer = validator.getErrLayer();
-					errLayer.setLayerName(errLayerName);
+					errLayer.setLayerID(errLayerName);
 					int errSize = errLayer.getErrFeatureList().size();
 					if (errSize > 0) {
 						// write shp file
@@ -475,7 +475,7 @@ public class QAFileServiceImpl implements QAFileService {
 	 */
 	protected void insertQAReport(ErrorLayer errLayer, int errCount, int pIdx) {
 
-		String errLayerName = errLayer.getLayerName();
+		String errLayerName = errLayer.getLayerID();
 		int layerCount = errLayer.getLayerCount();
 		int featureCount = errLayer.getFeatureCount();
 		int normalCount = 0;
@@ -629,8 +629,7 @@ public class QAFileServiceImpl implements QAFileService {
 	 * 
 	 * @author SG.Lee
 	 * @Date 2018. 4. 18. 오전 9:09:33
-	 * @param source
-	 *            void
+	 * @param source void
 	 */
 	@SuppressWarnings("unused")
 	private static void subDirList(String source) {
@@ -697,8 +696,7 @@ public class QAFileServiceImpl implements QAFileService {
 	 * 
 	 * @author SG.Lee
 	 * @Date 2018. 4. 18. 오후 1:24:16
-	 * @param unzipFolder
-	 *            void
+	 * @param unzipFolder void
 	 */
 	private static File[] createCollectionFolders(File unzipFolder) {
 		boolean equalFlag = false; // 파일명이랑 압축파일명이랑 같을시 대비 flag값
@@ -715,8 +713,8 @@ public class QAFileServiceImpl implements QAFileService {
 		for (int i = 0; i < fileList.length; i++) {
 			if (fileList[i].isDirectory()) {
 				/*
-				 * String message = "[디렉토리] "; message = fileList[ i
-				 * ].getName(); System.out.println( message );
+				 * String message = "[디렉토리] "; message = fileList[ i ].getName();
+				 * System.out.println( message );
 				 * 
 				 * subDirList( fileList[ i ].getPath());//하위 폴더 탐색
 				 */ } else {
@@ -819,8 +817,7 @@ public class QAFileServiceImpl implements QAFileService {
 	 * @Date 2018. 4. 18. 오전 9:45:55
 	 * @param source
 	 * @param dest
-	 * @throws IOException
-	 *             void
+	 * @throws IOException void
 	 */
 	private static void FileNio2Copy(String source, String dest) throws IOException {
 		Files.copy(new File(source).toPath(), new File(dest).toPath());

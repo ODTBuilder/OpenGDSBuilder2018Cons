@@ -1,3 +1,19 @@
+/*
+ *    OpenGDS/Builder
+ *    http://git.co.kr
+ *
+ *    (C) 2014-2017, GeoSpatial Information Technology(GIT)
+ *    
+ *    This library is free software; you can redistribute it and/or
+ *    modify it under the terms of the GNU Lesser General Public
+ *    License as published by the Free Software Foundation;
+ *    version 3 of the License.
+ *
+ *    This library is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *    Lesser General Public License for more details.
+ */
 package com.git.gdsbuilder.file.writer;
 
 import java.io.File;
@@ -9,11 +25,9 @@ import java.util.Map;
 
 import org.geotools.data.DataUtilities;
 import org.geotools.data.DefaultTransaction;
-import org.geotools.data.FileDataStoreFactorySpi;
 import org.geotools.data.Transaction;
 import org.geotools.data.shapefile.ShapefileDataStore;
 import org.geotools.data.shapefile.ShapefileDataStoreFactory;
-import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.data.simple.SimpleFeatureStore;
 import org.geotools.feature.DefaultFeatureCollection;
@@ -29,43 +43,45 @@ import com.git.gdsbuilder.type.validate.error.ErrorFeature;
 import com.git.gdsbuilder.type.validate.error.ErrorLayer;
 import com.vividsolutions.jts.geom.Geometry;
 
+/**
+ * 
+ * 오류 레이어를 Point 타입의 SHP 파일로 생성하는 클래스.
+ * 
+ * @author DY.OH
+ */
 public class SHPFileWriter {
 
-	public static void writeSHP(String epsg, SimpleFeatureCollection simpleFeatureCollection, String filePath)
-			throws IOException, SchemaException, NoSuchAuthorityCodeException, FactoryException {
-
-		FileDataStoreFactorySpi factory = new ShapefileDataStoreFactory();
-
-		File file = new File(filePath);
-		Map map = Collections.singletonMap("url", file.toURI().toURL());
-		ShapefileDataStore myData = (ShapefileDataStore) factory.createNewDataStore(map);
-		SimpleFeatureType featureType = simpleFeatureCollection.getSchema();
-		myData.forceSchemaCRS(CRS.decode(epsg));
-		myData.setCharset(Charset.forName("EUC-KR"));
-		myData.createSchema(featureType);
-		Transaction transaction = new DefaultTransaction("create");
-		String typeName = myData.getTypeNames()[0];
-		SimpleFeatureSource featureSource = myData.getFeatureSource(typeName);
-		if (featureSource instanceof SimpleFeatureStore) {
-			SimpleFeatureStore featureStore = (SimpleFeatureStore) featureSource;
-			featureStore.setTransaction(transaction);
-			try {
-				featureStore.addFeatures(simpleFeatureCollection);
-				transaction.commit();
-			} catch (Exception e) {
-				e.printStackTrace();
-				transaction.rollback();
-			} finally {
-				transaction.close();
-			}
-		}
-	}
-
+	/**
+	 * 
+	 * 오류 레이어를 Point 타입의 SHP 포맷 파일로 생성.
+	 * 
+	 * <p>
+	 * <em>example use:</em>
+	 * 
+	 * <pre>
+	 * <code>
+	 * SHPFileWriter.writeSHP("EPSG:4326", errLayer, "C:\\data\\example.shp")
+	 * </code>
+	 * </pre>
+	 * 
+	 * @param epsg     SHP 파일 좌표계 ex) EPSG:4326
+	 * @param errLayer 오류 레이어
+	 * @param filePath 파일 경로
+	 * @throws IOException
+	 * @throws SchemaException
+	 * @throws NoSuchAuthorityCodeException
+	 * @throws FactoryException
+	 * 
+	 * @author DY.OH
+	 */
 	public static void writeSHP(String epsg, ErrorLayer errLayer, String filePath)
 			throws IOException, SchemaException, NoSuchAuthorityCodeException, FactoryException {
 
 		DefaultFeatureCollection collection = new DefaultFeatureCollection();
 		List<ErrorFeature> errList = errLayer.getErrFeatureList();
+
+		SimpleFeatureType sfType = DataUtilities.createType("ErrorLayer",
+				"layer:String,feature:String,refLayer:String,refFeature:String,errCode:String,errType:String,errName:String,comment:String,the_geom:Point");
 
 		if (errList.size() > 0) {
 			for (int i = 0; i < errList.size(); i++) {
@@ -81,27 +97,8 @@ public class SHPFileWriter {
 				Geometry errPoint = err.getErrPoint();
 
 				String featureIdx = errCode + "_" + featureID;
-
-				// String featureIdx = "f_" + i;
-				String geomType = errPoint.getGeometryType();
 				String comment = err.getComment();
 
-//				CoordinateReferenceSystem worldCRS = CRS.decode("EPSG:32652");
-//				CoordinateReferenceSystem dataCRS = CRS.decode(epsg);
-//				MathTransform transform = CRS.findMathTransform(worldCRS, dataCRS);
-//				Geometry afterGeom = null;
-//				try {
-//					afterGeom = JTS.transform(errPoint, transform);
-//				} catch (MismatchedDimensionException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (TransformException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-				SimpleFeatureType sfType = DataUtilities.createType(featureIdx,
-						"layer:String,feature:String,refLayer:String,refFeature:String,errCode:String,errType:String,errName:String,comment:String,the_geom:"
-								+ geomType);
 				SimpleFeature newSimpleFeature = SimpleFeatureBuilder.build(sfType, new Object[] { layerID, featureID,
 						refLayerId, refFeatureId, errCode, errType, errName, comment, errPoint }, featureIdx);
 
@@ -120,7 +117,6 @@ public class SHPFileWriter {
 			myData.forceSchemaCRS(CRS.decode(epsg));
 
 			SimpleFeatureSource featureSource = myData.getFeatureSource(typeName);
-
 			if (featureSource instanceof SimpleFeatureStore) {
 				SimpleFeatureStore featureStore = (SimpleFeatureStore) featureSource;
 				featureStore.setTransaction(transaction);

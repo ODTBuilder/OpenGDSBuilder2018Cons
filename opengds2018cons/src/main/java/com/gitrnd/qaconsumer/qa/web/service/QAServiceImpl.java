@@ -411,7 +411,7 @@ public class QAServiceImpl implements QAService {
 						e.printStackTrace();
 					}
 					ErrorLayer errLayer = validator.getErrLayer();
-					errLayer.setLayerName(errLayerName);
+					errLayer.setLayerID(errLayerName);
 					int errSize = errLayer.getErrFeatureList().size();
 					if (errSize > 0) {
 						// write shp file
@@ -454,7 +454,7 @@ public class QAServiceImpl implements QAService {
 	 */
 	protected void insertQAReport(ErrorLayer errLayer, int errCount, int pIdx) {
 
-		String errLayerName = errLayer.getLayerName();
+		String errLayerName = errLayer.getLayerID();
 		int layerCount = errLayer.getLayerCount();
 		int featureCount = errLayer.getFeatureCount();
 		int normalCount = 0;

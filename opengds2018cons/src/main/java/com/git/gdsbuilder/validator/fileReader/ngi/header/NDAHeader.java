@@ -21,29 +21,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @className NDAHeader.java
- * @description NDAHeader 정보를 담고있는 클래스
+ * NDA 파일 내에 존재하는 Layer의 Header 정보를 저장하는 클래스.
+ * <p>
+ * NDA 파일 Import 할 때 파일 내의 각 레이어 마다 Header 정보를 저장한 후 다시 NDA 포맷으로 Export 할 때 해당
+ * 정보를 포함하여 Export 함.
+ * 
+ * 
  * @author DY.Oh
- * @date 2018. 1. 30. 오후 2:20:25
+ *
  */
 public class NDAHeader {
 
 	private String version;
 	private List<NDAField> aspatial_field_def;
 
-	/**
-	 * constructors
-	 */
 	public NDAHeader() {
 
 	}
 
-	/**
-	 * constructors
-	 * 
-	 * @param version
-	 * @param aspatial_field_def
-	 */
 	public NDAHeader(String version, List<NDAField> aspatial_field_def) {
 		super();
 		this.version = version;
@@ -70,6 +65,13 @@ public class NDAHeader {
 		aspatial_field_def.add(field);
 	}
 
+	/**
+	 * NDA 파일 내의 특정 레이어의 모든 속성 컬럼명 반환.
+	 * 
+	 * @return List<String>
+	 * 
+	 * @author DY.Oh
+	 */
 	public List<String> getFieldNames() {
 		List<String> fieldNames = new ArrayList<String>();
 		for (NDAField field : this.aspatial_field_def) {
