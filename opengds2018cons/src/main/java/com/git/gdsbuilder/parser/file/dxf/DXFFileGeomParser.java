@@ -1,4 +1,4 @@
-package com.git.gdsbuilder.validator.fileReader.dxf.parser;
+package com.git.gdsbuilder.parser.file.dxf;
 
 import java.util.Iterator;
 

@@ -15,7 +15,7 @@
  *    Lesser General Public License for more details.
  */
 
-package com.git.gdsbuilder.validator.fileReader.ngi.header;
+package com.git.gdsbuilder.parser.file.ngi;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.git.gdsbuilder.validator.fileReader;
+package com.git.gdsbuilder.parser.file;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -16,8 +16,8 @@ import java.util.zip.ZipInputStream;
 
 import org.apache.commons.io.FileUtils;
 
-import com.git.gdsbuilder.file.FileMeta;
-import com.git.gdsbuilder.file.FileMetaList;
+import com.git.gdsbuilder.parser.file.meta.FileMeta;
+import com.git.gdsbuilder.parser.file.meta.FileMetaList;
 
 import lombok.Data;
 

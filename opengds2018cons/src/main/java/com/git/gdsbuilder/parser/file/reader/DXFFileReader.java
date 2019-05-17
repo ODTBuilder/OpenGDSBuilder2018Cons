@@ -1,4 +1,4 @@
-package com.git.gdsbuilder.validator.fileReader.dxf.reader;
+package com.git.gdsbuilder.parser.file.reader;
 
 import java.util.Iterator;
 
@@ -8,10 +8,10 @@ import org.kabeja.parser.DXFParser;
 import org.kabeja.parser.Parser;
 import org.kabeja.parser.ParserBuilder;
 
+import com.git.gdsbuilder.parser.file.dxf.DXFFileLayerParser;
 import com.git.gdsbuilder.type.dt.collection.DTLayerCollection;
 import com.git.gdsbuilder.type.dt.layer.DTLayer;
 import com.git.gdsbuilder.type.dt.layer.DTLayerList;
-import com.git.gdsbuilder.validator.fileReader.dxf.parser.DXFFileLayerParser;
 
 /**
  * 특정 경로에 존재하는 DXF 파일을 읽어 검수를 하기 위해 {@link DTLayerCollection} 객체로 변환하는 클래스.

@@ -236,7 +236,7 @@ public class LayerQaudValidatorImpl extends LayerValidatorImpl implements LayerQ
 	}
 
 	@Override
-	public ErrorLayer validateOneAcre(DTLayerList relationLayers, double tolerance) {
+	public ErrorLayer validateOneAcre(DTLayerList relationLayers) {
 
 		ErrorLayer errorLayer = new ErrorLayer();
 		for (Object result : this.envelops) {

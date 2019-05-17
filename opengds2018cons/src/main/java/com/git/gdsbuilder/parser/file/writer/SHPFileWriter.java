@@ -14,7 +14,7 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package com.git.gdsbuilder.file.writer;
+package com.git.gdsbuilder.parser.file.writer;
 
 import java.io.File;
 import java.io.IOException;

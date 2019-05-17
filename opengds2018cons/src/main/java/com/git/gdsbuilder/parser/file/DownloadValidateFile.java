@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.git.gdsbuilder.validator.fileReader;
+package com.git.gdsbuilder.parser.file;
 
 import java.io.File;
 import java.io.FileOutputStream;

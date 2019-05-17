@@ -15,7 +15,7 @@
  *    Lesser General Public License for more details.
  */
 
-package com.git.gdsbuilder.validator.fileReader.ngi.parser;
+package com.git.gdsbuilder.parser.file.ngi;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,9 +29,6 @@ import org.opengis.feature.simple.SimpleFeature;
 
 import com.git.gdsbuilder.type.dt.layer.DTLayer;
 import com.git.gdsbuilder.type.dt.layer.DTLayerList;
-import com.git.gdsbuilder.validator.fileReader.ngi.header.NDAField;
-import com.git.gdsbuilder.validator.fileReader.ngi.header.NDAHeader;
-import com.git.gdsbuilder.validator.fileReader.ngi.header.NGIHeader;
 
 /**
  * ngi/nda 파일의 Layer를 {@link DTLayerList} 객체로 파싱하는 클래스

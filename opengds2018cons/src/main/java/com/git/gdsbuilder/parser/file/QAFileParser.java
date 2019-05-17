@@ -26,16 +26,14 @@ import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.feature.DefaultFeatureCollection;
 import org.opengis.feature.simple.SimpleFeature;
 
-import com.git.gdsbuilder.file.FileMeta;
-import com.git.gdsbuilder.file.FileMetaList;
+import com.git.gdsbuilder.parser.file.meta.FileMeta;
+import com.git.gdsbuilder.parser.file.meta.FileMetaList;
+import com.git.gdsbuilder.parser.file.shp.SHPFileLayerParser;
 import com.git.gdsbuilder.type.dt.collection.DTLayerCollection;
 import com.git.gdsbuilder.type.dt.collection.DTLayerCollectionList;
 import com.git.gdsbuilder.type.dt.collection.MapSystemRule;
 import com.git.gdsbuilder.type.dt.layer.DTLayer;
 import com.git.gdsbuilder.type.dt.layer.DTLayerList;
-import com.git.gdsbuilder.validator.fileReader.FileDTLayerCollectionReader;
-import com.git.gdsbuilder.validator.fileReader.UnZipFile;
-import com.git.gdsbuilder.validator.fileReader.shp.parser.SHPFileLayerParser;
 
 import lombok.Data;
 

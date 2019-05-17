@@ -2674,13 +2674,6 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 		}
 	}
 
-	/**
-	 * @since 2018. 3. 23.
-	 * @author DY.Oh
-	 * @param feature
-	 * @param validatorLayer
-	 * @return List<ErrorFeature>
-	 */
 	@Override
 	public List<ErrorFeature> validateFEntityInHole(DTFeature feature, DTLayer validatorLayer) {
 
@@ -2795,13 +2788,6 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 		}
 	}
 
-	/**
-	 * @since 2018. 4. 10.
-	 * @author DY.Oh
-	 * @param feature
-	 * @param relationLayers
-	 * @return
-	 */
 	@Override
 	public ErrorFeature validateSymbolOut(DTFeature feature, DTLayerList relationLayers) {
 

@@ -14,12 +14,11 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package com.git.gdsbuilder.file;
+package com.git.gdsbuilder.parser.file.meta;
 
 import java.util.ArrayList;
 
 /**
- * 
  * .zip 파일 (다수 업로드파일)에 대한 정보 객체
  * 
  * @author SG.Lee

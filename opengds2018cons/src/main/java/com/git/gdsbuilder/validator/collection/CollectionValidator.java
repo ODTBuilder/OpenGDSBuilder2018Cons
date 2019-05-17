@@ -647,7 +647,7 @@ public class CollectionValidator {
 						// 임상도
 						if (option.equals("FCodeLogicalAttribute")) {
 							if (figures != null) {
-								typeErrorLayer = layerValidator.validateFFcodeLogicalAttribute(figures);
+								typeErrorLayer = layerValidator.validateFcodeLogicalAttribute(figures);
 								if (typeErrorLayer != null) {
 									attrResult.mergeErrorLayer(typeErrorLayer);
 								}

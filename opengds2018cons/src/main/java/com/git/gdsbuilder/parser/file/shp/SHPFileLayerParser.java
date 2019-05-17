@@ -1,4 +1,4 @@
-package com.git.gdsbuilder.validator.fileReader.shp.parser;
+package com.git.gdsbuilder.parser.file.shp;
 
 import java.io.File;
 import java.nio.charset.Charset;

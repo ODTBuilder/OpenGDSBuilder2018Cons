@@ -15,7 +15,7 @@
  *    Lesser General Public License for more details.
  */
 
-package com.git.gdsbuilder.validator.fileReader.ngi.header;
+package com.git.gdsbuilder.parser.file.ngi;
 
 /**
  * NDA 파일 내에 존재하는 Layer의 Header 정보 중 속성 컬럼에 대한 정보를 저장하는 클래스.

@@ -56,10 +56,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.git.gdsbuilder.file.writer.SHPFileWriter;
 import com.git.gdsbuilder.geoserver.converter.GeoserverDataConverter;
 import com.git.gdsbuilder.geoserver.converter.impl.GeoserverDataConverterImpl;
 import com.git.gdsbuilder.parser.file.QAFileParser;
+import com.git.gdsbuilder.parser.file.writer.SHPFileWriter;
 import com.git.gdsbuilder.parser.qa.QATypeParser;
 import com.git.gdsbuilder.type.dt.collection.DTLayerCollection;
 import com.git.gdsbuilder.type.dt.collection.DTLayerCollectionList;

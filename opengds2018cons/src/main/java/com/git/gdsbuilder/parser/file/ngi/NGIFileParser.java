@@ -32,12 +32,14 @@
  *    Lesser General Public License for more details.
  */
 
-package com.git.gdsbuilder.validator.fileReader.ngi;
+package com.git.gdsbuilder.parser.file.ngi;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
@@ -49,21 +51,36 @@ import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 /**
- * {@link NGIDataStore} 객체를 생성하는 클래스
+ * ngi/nda 파일을 {@link NGIDataStore}로 변환는 클래스
  * 
  * @author DY.Oh
  */
-public class NGIDataStoreFactoryExtend extends NGIDataStoreFactory {
+public class NGIFileParser extends NGIDataStoreFactory {
 
 	/**
-	 * {@link NGIDataStore} 객체를 생성
+	 * ngi/nda 파일을 {@link NGIDataStore}로 변환하여 반환
 	 * 
-	 * @param params url, srs, charset param Map
+	 * @param ngiFilePath 파일 경로
+	 * @param srs         좌표계 (ex. EPSG:4326)
+	 * @param charset     인고딩 타입 (ex. EUC-KR)
+	 * @return NGIDataStore
 	 * @throws IOException
 	 * 
 	 * @author DY.Oh
 	 */
-	public void createDTNGIDataStore(Map<String, Serializable> params) throws IOException {
+	public NGIDataStore parse(String ngiFilePath, String srs, String charset) throws IOException {
+
+		Map<String, Serializable> params = new HashMap<String, Serializable>();
+
+		params.put(NGIDataStoreFactory.PARAM_FILE.key, DataUtilities.fileToURL(new File(ngiFilePath)));
+		params.put(NGIDataStoreFactory.PARAM_SRS.key, srs);
+		params.put(NGIDataStoreFactory.PARAM_CHARSET.key, charset);
+
+		return createDTDataStore(params);
+
+	}
+
+	private NGIDataStore createDTDataStore(Map<String, Serializable> params) throws IOException {
 
 		URL url = (URL) PARAM_FILE.lookUp(params);
 		String code = (String) PARAM_SRS.lookUp(params);
@@ -85,6 +102,7 @@ public class NGIDataStoreFactoryExtend extends NGIDataStoreFactory {
 				LOGGER.log(Level.WARNING, e.getMessage(), e);
 			}
 		}
-		new NGIDataStore(DataUtilities.urlToFile(url), Charset.forName(charset), crs);
+		return new NGIDataStore(DataUtilities.urlToFile(url), Charset.forName(charset), crs);
 	}
+
 }

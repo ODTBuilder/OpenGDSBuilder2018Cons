@@ -15,7 +15,7 @@
  *    Lesser General Public License for more details.
  */
 
-package com.git.gdsbuilder.validator.fileReader.ngi;
+package com.git.gdsbuilder.parser.file.ngi;
 
 import java.io.BufferedReader;
 import java.io.File;

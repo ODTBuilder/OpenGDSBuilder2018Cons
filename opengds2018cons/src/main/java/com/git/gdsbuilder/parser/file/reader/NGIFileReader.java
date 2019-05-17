@@ -15,14 +15,14 @@
  *    Lesser General Public License for more details.
  */
 
-package com.git.gdsbuilder.validator.fileReader.ngi.reader;
+package com.git.gdsbuilder.parser.file.reader;
 
+import com.git.gdsbuilder.parser.file.ngi.NGIDataStore;
+import com.git.gdsbuilder.parser.file.ngi.NGIFileLayerParser;
+import com.git.gdsbuilder.parser.file.ngi.NGIFileParser;
 import com.git.gdsbuilder.type.dt.collection.DTLayerCollection;
 import com.git.gdsbuilder.type.dt.layer.DTLayer;
 import com.git.gdsbuilder.type.dt.layer.DTLayerList;
-import com.git.gdsbuilder.validator.fileReader.ngi.NGIDataStore;
-import com.git.gdsbuilder.validator.fileReader.ngi.parser.NGIFileLayerParser;
-import com.git.gdsbuilder.validator.fileReader.ngi.parser.NGIFileParser;
 
 /**
  * ngi/nda 파일을 {@link DTLayerCollection} 객체로 변환하는 클래스.

@@ -1,12 +1,12 @@
-package com.git.gdsbuilder.validator.fileReader.shp.reader;
+package com.git.gdsbuilder.parser.file.reader;
 
 import java.util.List;
 import java.util.Map;
 
+import com.git.gdsbuilder.parser.file.shp.SHPFileLayerParser;
 import com.git.gdsbuilder.type.dt.collection.DTLayerCollection;
 import com.git.gdsbuilder.type.dt.layer.DTLayer;
 import com.git.gdsbuilder.type.dt.layer.DTLayerList;
-import com.git.gdsbuilder.validator.fileReader.shp.parser.SHPFileLayerParser;
 
 public class SHPFileReader {
 

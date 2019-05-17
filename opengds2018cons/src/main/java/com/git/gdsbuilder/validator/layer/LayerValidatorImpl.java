@@ -2475,7 +2475,7 @@ public class LayerValidatorImpl implements LayerValidator {
 	 * @return
 	 */
 	@Override
-	public ErrorLayer validateFFcodeLogicalAttribute(List<OptionFigure> figures) {
+	public ErrorLayer validateFcodeLogicalAttribute(List<OptionFigure> figures) {
 
 		ErrorLayer errorLayer = new ErrorLayer();
 		String layerID = validatorLayer.getLayerID();
@@ -2517,12 +2517,6 @@ public class LayerValidatorImpl implements LayerValidator {
 		}
 	}
 
-	/**
-	 * @since 2018. 3. 21.
-	 * @author DY.Oh
-	 * @param figures
-	 * @return ErrorLayer
-	 */
 	@Override
 	public ErrorLayer validateFLabelLogicalAttribute(List<OptionFigure> figures) {
 
@@ -2565,12 +2559,6 @@ public class LayerValidatorImpl implements LayerValidator {
 		}
 	}
 
-	/**
-	 * @since 2018. 3. 23.
-	 * @author DY.Oh
-	 * @param tole
-	 * @return ErrorLayer
-	 */
 	@Override
 	public ErrorLayer validateFEntityInHole() {
 
@@ -2651,69 +2639,6 @@ public class LayerValidatorImpl implements LayerValidator {
 		}
 	}
 
-	/**
-	 * @since 2018. 3. 30.
-	 * @author DY.Oh
-	 * @param figures
-	 * @param closeLayer
-	 * @return ErrorLayer
-	 */
-	@Override
-	public ErrorLayer validateDissolve(List<OptionFigure> figures, DTLayer closeLayer) {
-
-		ErrorLayer errorLayer = new ErrorLayer();
-		String layerID = validatorLayer.getLayerID();
-
-		OptionFilter filter = validatorLayer.getFilter();
-		List<AttributeFilter> attrConditions = null;
-		if (filter != null) {
-			attrConditions = filter.getFilter();
-		}
-
-		SimpleFeatureCollection sfc = validatorLayer.getSimpleFeatureCollection();
-		SimpleFeatureIterator iter = sfc.features();
-		SimpleFeatureCollection closeSfc = closeLayer.getSimpleFeatureCollection();
-
-		SimpleFeature sf;
-		DTFeature feature;
-
-		while (iter.hasNext()) {
-			sf = iter.next();
-			feature = new DTFeature(layerID, sf, attrConditions);
-			for (OptionFigure figure : figures) {
-				String fCode = figure.getLayerID();
-				List<ErrorFeature> errorFeatures = new ArrayList<>();
-				if (fCode == null) {
-					errorFeatures = attributeValidator.validateDissolve(feature, closeSfc, figure);
-				} else {
-					if (fCode.equals(layerID)) {
-						errorFeatures = attributeValidator.validateDissolve(feature, closeSfc, figure);
-					}
-				}
-				if (errorFeatures != null) {
-					for (ErrorFeature errFeature : errorFeatures) {
-						errFeature.setLayerID(layerID);
-						errorLayer.addErrorFeature(errFeature);
-					}
-				}
-			}
-		}
-		iter.close();
-		if (errorLayer.getErrFeatureList().size() > 0) {
-			errorLayer.setLayerID(validatorLayer.getLayerID());
-			return errorLayer;
-		} else {
-			return null;
-		}
-	}
-
-	/**
-	 * 
-	 * @since 2018. 4. 10.
-	 * @author DY.Oh
-	 * @param relationLayers
-	 * @return
-	 */
 	@Override
 	public ErrorLayer validateSymbolOut(DTLayerList relationLayers) {
 

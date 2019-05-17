@@ -42,7 +42,7 @@ import com.git.gdsbuilder.type.validate.option.standard.LayerFixMiss;
 
 /**
  * JSONArray 형태의 검수 옵션(검수 항목 및 검수 항목별 세부 설정)정보를
- * {@link com.git.gdsbuilder.file.writer.SHPFileWriter} 형태로 변환하는 클래스
+ * {@link com.git.gdsbuilder.parser.file.writer.SHPFileWriter} 형태로 변환하는 클래스
  * 
  * @author DY.Oh
  */
@@ -53,7 +53,7 @@ public class QATypeParser {
 	 */
 	JSONArray validateTypeArray;
 	/**
-	 * {@link com.git.gdsbuilder.file.writer.SHPFileWriter}형태의 검수 옵션 정보
+	 * {@link com.git.gdsbuilder.parser.file.writer.SHPFileWriter}형태의 검수 옵션 정보
 	 */
 	QALayerTypeList validateLayerTypeList;
 	/**
@@ -63,7 +63,7 @@ public class QATypeParser {
 
 	/**
 	 * JSONArray 형태의 검수 옵션(검수 항목 및 검수 항목별 세부 설정)정보를
-	 * {@link com.git.gdsbuilder.file.writer.SHPFileWriter} 형태로 변환을 위한 생성자
+	 * {@link com.git.gdsbuilder.parser.file.writer.SHPFileWriter} 형태로 변환을 위한 생성자
 	 * 
 	 * @param validateTypeArray 검수 옵션(검수 항목 및 검수 항목별 세부 설정)정보
 	 */
@@ -90,7 +90,7 @@ public class QATypeParser {
 
 	/**
 	 * JSONArray 형태의 검수 옵션(검수 항목 및 검수 항목별 세부 설정)정보를
-	 * {@link com.git.gdsbuilder.file.writer.SHPFileWriter} 형태로 변환
+	 * {@link com.git.gdsbuilder.parser.file.writer.SHPFileWriter} 형태로 변환
 	 * 
 	 * @author DY.Oh
 	 */

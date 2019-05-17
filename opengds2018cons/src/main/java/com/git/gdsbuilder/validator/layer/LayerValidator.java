@@ -31,7 +31,6 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-
 package com.git.gdsbuilder.validator.layer;
 
 import java.io.IOException;
@@ -300,6 +299,20 @@ public interface LayerValidator {
 			throws SchemaException, IOException;
 
 	/**
+	 * {@link DTLayer}의 내에 존재하는 모든 객체에 대하여 NodeMiss(선형노드오류, Missing node) 검수 수행.
+	 * 
+	 * @param relationLayer 검수 대상 {@link DTLayer}의 객체와 선형노드오류 여부를 검사할
+	 *                      {@link DTLayer}.
+	 * @param tolerance     허용오차 범위
+	 * @return {@link ErrorLayer} 선형노드오류가 발생한 모든 객체. 오류 객체가 없는 경우 {@code null} 반환
+	 * @throws SchemaException
+	 * @throws IOException
+	 * 
+	 * @author DY.Oh
+	 */
+	public ErrorLayer validateNodeMiss(DTLayer relationLayer, OptionTolerance tolerance);
+
+	/**
 	 * {@link DTLayer}의 내에 존재하는 모든 객체에 대하여 PointDuplicated(중복점오류, Duplicated point)
 	 * 검수 수행.
 	 * 
@@ -321,6 +334,17 @@ public interface LayerValidator {
 	public ErrorLayer validateOneAcre(DTLayerList relationLayerList);
 
 	/**
+	 * {@link DTLayer}의 내에 존재하는 모든 객체에 대하여 OneAcre(지류계오류, Mismatching farmland size
+	 * (Total)) 검수 수행.
+	 * 
+	 * @param relationLayer 경지계 {@link DTLayer}
+	 * @return {@link ErrorLayer} 지류계오류가 발생한 모든 객체. 오류 객체가 없는 경우 {@code null} 반환
+	 * 
+	 * @author DY.Oh
+	 */
+	public ErrorLayer validateOneAcre(DTLayer relationLayer);
+
+	/**
 	 * {@link DTLayer}의 내에 존재하는 모든 객체에 대하여 OneStage(경지계오류, Excluded farmland (Part))
 	 * 검수 수행.
 	 * 
@@ -330,6 +354,17 @@ public interface LayerValidator {
 	 * @author DY.Oh
 	 */
 	public ErrorLayer validateOneStage(DTLayerList relationLayerList);
+
+	/**
+	 * {@link DTLayer}의 내에 존재하는 모든 객체에 대하여 OneStage(경지계오류, Excluded farmland (Part))
+	 * 검수 수행.
+	 * 
+	 * @param relationLayer 지류계 {@link DTLayer}
+	 * @return {@link ErrorLayer} 경지계오류가 발생한 모든 객체. 오류 객체가 없는 경우 {@code null} 반환
+	 * 
+	 * @author DY.Oh
+	 */
+	public ErrorLayer validateOneStage(DTLayer relationLayer);
 
 	/**
 	 * {@link DTLayer}의 내에 존재하는 모든 객체에 대하여 UFIDMiss (UFID오류, Missing UFID) 검수 수행.
@@ -368,6 +403,17 @@ public interface LayerValidator {
 	public ErrorLayer validateBoundaryMiss(DTLayerList relationLayers);
 
 	/**
+	 * {@link DTLayer}의 내에 존재하는 모든 객체에 대하여 BoundaryMiss(경계누락오류, Missing boundary) 검수
+	 * 수행.
+	 * 
+	 * @param relationLayer {@link LineString} 타입의 중심선 {@link DTLayer}
+	 * @return {@link ErrorLayer} 경계누락오류가 발생한 모든 객체. 오류 객체가 없는 경우 {@code null} 반환
+	 * 
+	 * @author DY.Oh
+	 */
+	public ErrorLayer validateBoundaryMiss(DTLayer relationLayer);
+
+	/**
 	 * {@link DTLayer}의 내에 존재하는 모든 객체에 대하여 CenterLineMiss(중심선누락오류, Missing center
 	 * line) 검수 수행.
 	 * 
@@ -377,6 +423,17 @@ public interface LayerValidator {
 	 * @author DY.Oh
 	 */
 	public ErrorLayer validateCenterLineMiss(DTLayerList relationLayers);
+
+	/**
+	 * {@link DTLayer}의 내에 존재하는 모든 객체에 대하여 CenterLineMiss(중심선누락오류, Missing center
+	 * line) 검수 수행.
+	 * 
+	 * @param relationLayer {@link Polygon} 타입의 경계 {@link DTLayer}
+	 * @return {@link ErrorLayer} 경계누락오류가 발생한 모든 객체. 오류 객체가 없는 경우 {@code null} 반환
+	 * 
+	 * @author DY.Oh
+	 */
+	public ErrorLayer validateCenterLineMiss(DTLayer relationLayer);
 
 	/**
 	 * {@link DTLayer}의 내에 존재하는 모든 객체에 대하여 HoleMisPlaceMent(홀(Hole)존재오류, Hole
@@ -412,6 +469,20 @@ public interface LayerValidator {
 	 * @author DY.Oh
 	 */
 	public ErrorLayer valildateLinearDisconnection(DTLayerList relationLayers, OptionTolerance tolerance)
+			throws SchemaException;
+
+	/**
+	 * {@link DTLayer}의 내에 존재하는 모든 객체에 대하여 LinearDisconnection(선형단락오류, Linear
+	 * disconnection) 검수 수행.
+	 * 
+	 * @param relationLayer 포함관계 여부를 검수할 {@link DTLayer}
+	 * @param tolerance     허용오차 범위
+	 * @return {@link ErrorLayer} 선형단락오류가 발생한 모든 객체. 오류 객체가 없는 경우 {@code null} 반환
+	 * @throws SchemaException
+	 * 
+	 * @author DY.Oh
+	 */
+	public ErrorLayer valildateLinearDisconnection(DTLayer relationLayer, OptionTolerance tolerance)
 			throws SchemaException;
 
 	/**
@@ -590,108 +661,95 @@ public interface LayerValidator {
 
 	/**
 	 * {@link DTLayer}의 내에 존재하는 모든 객체에 대하여 LayerFixMiss(Geometry타입오류, Feature with
-	 * wrong geometry type) 및 (필드구조오류, Feature with wrong attribute value) 검수 수행.
+	 * wrong geometry type) 또는 (필드구조오류, Feature with wrong attribute value) 검수 수행.
 	 * 
 	 * @param geometry   Geometry 타입
 	 * @param fixedValue 속성 필드구조
-	 * @return
+	 * @return {@link ErrorLayer} Geometry타입오류 또는 필드구조오류가 발생한 모든 객체. 오류 객체가 없는 경우
+	 *         {@code null} 반환
 	 * 
 	 * @author DY.Oh
 	 */
 	public ErrorLayer validateLayerFixMiss(String geometry, List<FixedValue> fixedValue);
 
 	/**
-	 * @author DY.Oh
-	 * @Date 2018. 3. 21. 오후 2:30:17
-	 * @param figures
-	 * @return ErrorLayer
-	 * @decription
-	 */
-	/**
-	 * @param figures
-	 * @return
+	 * {@link DTLayer}의 내에 존재하는 모든 객체에 대하여 FcodeLogicalAttribute(FCode, Wrong F Code
+	 * (Forest)) 검수 수행.
 	 * 
-	 * @author GIT
+	 * @param figures 임목 Fcode 속성 조건
+	 * @return {@link ErrorLayer} FCode 오류가 발생한 모든 객체. 오류 객체가 없는 경우 {@code null} 반환
+	 * 
+	 * @author DY.Oh
 	 */
-	public ErrorLayer validateFFcodeLogicalAttribute(List<OptionFigure> figures);
+	public ErrorLayer validateFcodeLogicalAttribute(List<OptionFigure> figures);
 
 	/**
+	 * {@link DTLayer}의 내에 존재하는 모든 객체에 대하여 FLabelLogicalAttribute(Label불일치, Wrong F
+	 * Label (Forest)) 검수 수행.
+	 * 
+	 * @param figures 임목 Label 속성 조건
+	 * @return {@link ErrorLayer} Label불일치 오류가 발생한 모든 객체. 오류 객체가 없는 경우 {@code null}
+	 *         반환
+	 * 
 	 * @author DY.Oh
-	 * @Date 2018. 3. 21. 오후 5:28:01
-	 * @param figures
-	 * @return ErrorLayer
-	 * @decription
 	 */
 	public ErrorLayer validateFLabelLogicalAttribute(List<OptionFigure> figures);
 
 	/**
+	 * {@link DTLayer}의 내에 존재하는 모든 객체에 대하여 NumericalValue(수치값오류, Wrong numerical
+	 * value) 검수 수행.
+	 * 
+	 * @param figure 수치값 범위 조건
+	 * @return {@link ErrorLayer} 수치값 오류가 발생한 모든 객체. 오류 객체가 없는 경우 {@code null} 반환
+	 * 
 	 * @author DY.Oh
-	 * @Date 2018. 3. 22. 오후 10:48:11
-	 * @param figure
-	 * @return ErrorLayer
-	 * @decription
 	 */
 	public ErrorLayer validateNumericalValue(OptionFigure figure);
 
 	/**
+	 * {@link DTLayer}의 내에 존재하는 모든 객체에 대하여 EntityInHole(홀(Hole)중복오류, Hole with
+	 * entity) 검수 수행(임상도 검수에 적용).
+	 * 
+	 * @return {@link ErrorLayer} 홀(Hole)중복오류가 발생한 모든 객체. 오류 객체가 없는 경우 {@code null}
+	 *         반환
+	 * 
 	 * @author DY.Oh
-	 * @Date 2018. 3. 23. 오전 10:56:22
-	 * @param tole
-	 * @return ErrorLayer
-	 * @decription
 	 */
 	public ErrorLayer validateFEntityInHole();
 
 	/**
+	 * {@link DTLayer}의 내에 존재하는 모든 객체에 대하여 Dissolve(인접속성병합오류, Discord of adjacent
+	 * attribute) 검수 수행.
+	 * 
+	 * @param figures
+	 * @return {@link ErrorLayer} 인접속성병합오류가 발생한 모든 객체. 오류 객체가 없는 경우 {@code null} 반환
+	 * 
 	 * @author hochul.Kim
-	 * @Date 2018. 3. 27.
-	 * @param attrList
-	 * @return ErrorLayer
-	 * @decription 임상도 인접 속성 오류
 	 */
 	public ErrorLayer validateDissolve(List<OptionFigure> figures);
 
 	/**
-	 * @author DY.Oh
-	 * @Date 2018. 3. 30. 오후 1:43:12
-	 * @param figures
-	 * @param closeLayer
-	 * @return ErrorLayer
-	 * @decription
-	 */
-	public ErrorLayer validateDissolve(List<OptionFigure> figures, DTLayer closeLayer);
-
-	/**
-	 * @author DY.Oh
-	 * @Date 2018. 4. 5. 오전 11:56:38
-	 * @param tolerance
-	 * @return
+	 * {@link DTLayer}의 내에 존재하는 모든 객체에 대하여 SelfEntity(단독존재오류, Overlapping features)
+	 * 검수 수행.
+	 * 
+	 * @param tolerance 허용오차 범위
+	 * @return {@link ErrorLayer} 인접속성병합오류가 발생한 모든 객체. 오류 객체가 없는 경우 {@code null} 반환
 	 * @throws SchemaException
-	 * @throws IOException     ErrorLayer
-	 * @decription
+	 * @throws IOException
+	 * 
+	 * @author DY.Oh
 	 */
-	ErrorLayer validateSelfEntity(OptionTolerance tolerance) throws SchemaException, IOException;
+	public ErrorLayer validateSelfEntity(OptionTolerance tolerance) throws SchemaException, IOException;
 
 	/**
+	 * {@link DTLayer}의 내에 존재하는 모든 객체에 대하여 SymbolOut(심볼단독존재오류, Symbol missplacement)
+	 * 검수 수행(수치지도 검수에 적용).
+	 * 
+	 * @param relationLayers 심볼 {@link DTLayer}와 포함관계를 검사할 {@link DTLayerList}
+	 * @return {@link ErrorLayer} 심볼단독존재오류가 발생한 모든 객체. 오류 객체가 없는 경우 {@code null} 반환
+	 * 
 	 * @author DY.Oh
-	 * @Date 2018. 4. 10. 오전 11:18:17
-	 * @param relationLayers
-	 * @return ErrorLayer
-	 * @decription
 	 */
 	public ErrorLayer validateSymbolOut(DTLayerList relationLayers);
-
-	public ErrorLayer validateBoundaryMiss(DTLayer relationLayer);
-
-	public ErrorLayer validateCenterLineMiss(DTLayer relationLayer);
-
-	public ErrorLayer validateNodeMiss(DTLayer relationLayer, OptionTolerance tolerance);
-
-	public ErrorLayer valildateLinearDisconnection(DTLayer relationLayer, OptionTolerance tolerance)
-			throws SchemaException;
-
-	public ErrorLayer validateOneAcre(DTLayer relationLayer);
-
-	public ErrorLayer validateOneStage(DTLayer relationLayer);
 
 }

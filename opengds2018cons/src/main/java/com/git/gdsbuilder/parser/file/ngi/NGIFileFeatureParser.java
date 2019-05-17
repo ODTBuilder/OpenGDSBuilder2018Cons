@@ -15,7 +15,7 @@
  *    Lesser General Public License for more details.
  */
 
-package com.git.gdsbuilder.validator.fileReader.ngi.parser;
+package com.git.gdsbuilder.parser.file.ngi;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,8 +36,6 @@ import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 
-import com.git.gdsbuilder.validator.fileReader.ngi.header.NDAField;
-import com.git.gdsbuilder.validator.fileReader.ngi.header.NDAHeader;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;

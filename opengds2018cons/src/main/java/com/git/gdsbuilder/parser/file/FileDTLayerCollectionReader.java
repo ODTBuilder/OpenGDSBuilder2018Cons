@@ -32,16 +32,16 @@
  *    Lesser General Public License for more details.
  */
 
-package com.git.gdsbuilder.validator.fileReader;
+package com.git.gdsbuilder.parser.file;
 
 import java.io.IOException;
 
 import org.geotools.feature.SchemaException;
 
+import com.git.gdsbuilder.parser.file.reader.DXFFileReader;
+import com.git.gdsbuilder.parser.file.reader.NGIFileReader;
+import com.git.gdsbuilder.parser.file.reader.SHPFileReader;
 import com.git.gdsbuilder.type.dt.collection.DTLayerCollection;
-import com.git.gdsbuilder.validator.fileReader.dxf.reader.DXFFileReader;
-import com.git.gdsbuilder.validator.fileReader.ngi.reader.NGIFileReader;
-import com.git.gdsbuilder.validator.fileReader.shp.reader.SHPFileReader;
 
 /**
  * @className FileDTLayerCollectionReader.java

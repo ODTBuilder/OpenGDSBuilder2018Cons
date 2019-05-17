@@ -69,7 +69,9 @@ public interface FeatureAttributeValidator {
 	/**
 	 * BridgeNameMiss(교량명오류, Wrong bridge name) 검수 수행.
 	 * <p>
-	 * 하천을 위를 가로 지르는 교량의 교량명 속성값과 하천 중심선의 교량명 속성값의 일치 여부를 검사하file:///D:/consumer/opengds2018cons/doc/com/git/gdsbuilder/type/validate/error/ErrorFeature.html는 항목.
+	 * 하천을 위를 가로 지르는 교량의 교량명 속성값과 하천 중심선의 교량명 속성값의 일치 여부를
+	 * 검사하file:///D:/consumer/opengds2018cons/doc/com/git/gdsbuilder/type/validate/error/ErrorFeature.html는
+	 * 항목.
 	 * 
 	 * @param feature   교량 {@link DTFeature} 객체
 	 * @param reFeature 하천 중심선 {@link DTFeature} 객체
@@ -190,7 +192,7 @@ public interface FeatureAttributeValidator {
 	 * 임목 객체의 속성 중 Lable 속성값이 논리적으로 올바르지 않은 경우 오류 객체 반환.
 	 * 
 	 * @param feature 임목 객체 {@link DTFeature}
-	 * @param figure  임목 Lable 속성 조건
+	 * @param figure  임목 Label 속성 조건
 	 * @return {@link ErrorFeature} 검사 조건을 충족시키면 {@code null} 반환
 	 * 
 	 * @author DY.Oh
