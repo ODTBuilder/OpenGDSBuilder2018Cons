@@ -22,7 +22,6 @@ import org.opengis.feature.simple.SimpleFeature;
 
 import com.git.gdsbuilder.type.validate.option.specific.OptionFilter;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -39,7 +38,6 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class DTLayer {
 	/**
 	 * {@link com.git.gdsbuilder.type.dt.layer.DTLayer}을 포함하는

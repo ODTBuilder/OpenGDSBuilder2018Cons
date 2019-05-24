@@ -22,7 +22,6 @@ import org.opengis.feature.simple.SimpleFeature;
 
 import com.git.gdsbuilder.type.validate.option.specific.AttributeFilter;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -39,7 +38,6 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class DTFeature {
 
 	/**

@@ -9,19 +9,27 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * @className QACategory.java
- * @description
- * @author DY.Oh
- * @date 2018. 3. 9. 오전 10:50:02
+ * 검수 카테고리.
+ * 
+ * @author IJ.S
+ *
  */
-
 @Data
 @ToString
 @EqualsAndHashCode
 @NoArgsConstructor
 public class QACategory {
 
+	/**
+	 * index
+	 */
 	int cidx;
+	/**
+	 * 검수 카테고리명
+	 */
 	String title;
+	/**
+	 * 지원 파일 포맷
+	 */
 	String support;
 }

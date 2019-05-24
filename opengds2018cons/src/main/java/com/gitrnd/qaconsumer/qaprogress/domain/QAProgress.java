@@ -10,35 +10,71 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @className FileValidateProgress.java
- * @description
+ * QAProgress 객체.
+ * 
  * @author DY.Oh
- * @date 2018. 2. 7. 오전 10:55:35
+ *
  */
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class QAProgress {
 
-	Integer pIdx; // serial
-	Integer uIdx; // user idx
-	Integer fIdx; // file idx
-
+	/**
+	 * tb_progress index(PK)
+	 */
+	Integer pIdx;
+	/**
+	 * tb_user index
+	 */
+	Integer uIdx;
+	/**
+	 * tb_file index
+	 */
+	Integer fIdx;
+	/**
+	 * qa 진행 상태
+	 */
 	Integer qaState;
+	/**
+	 * qa 시작시간
+	 */
 	Timestamp start_time;
+	/**
+	 * qa 종료시간
+	 */
 	Timestamp endTime;
-
+	/**
+	 * qa file명
+	 */
 	String originName;
+	/**
+	 * tb_qa_category index
+	 */
 	Integer qaCategory;
+	/**
+	 * qa type
+	 */
 	String qaType;
-
+	/**
+	 * file type
+	 */
 	String fileType;
+	/**
+	 * err file 저장 경로
+	 */
 	String errdirectory;
+	/**
+	 * err file name
+	 */
 	String errFileName;
-	
-	Integer prid; //preset id
-
+	/**
+	 * tb_preset index
+	 */
+	Integer prid;
+	/**
+	 * qa comment
+	 */
 	String comment;
 
 }

@@ -10,12 +10,11 @@ import com.gitrnd.qaconsumer.qacategory.domain.QACategory;
 import com.gitrnd.qaconsumer.qacategory.mapper.QACategoryMapper;
 
 /**
- * @className QACategoryRepository.java
- * @description
- * @author DY.Oh
- * @date 2018. 3. 9. 오전 10:48:53
+ * QACategoryRepository.
+ * 
+ * @author IJ.S
+ *
  */
-
 @Repository
 public class QACategoryRepository {
 
@@ -23,11 +22,12 @@ public class QACategoryRepository {
 	private QACategoryMapper qaCategoryMapper;
 
 	/**
-	 * @author DY.Oh
-	 * @Date 2018. 3. 9. 오전 10:50:23
-	 * @param idx
-	 * @return QACategory
-	 * @decription
+	 * idx에 해당하는 {@link QACategory}를 DB에서 조회하여 반환.
+	 * 
+	 * @param idx idx
+	 * @return DB에서 조회된 {@link QACategory}
+	 * 
+	 * @author IJ.S
 	 */
 	public QACategory retrieveQACategoryByIdx(int idx) {
 		return qaCategoryMapper.retrieveQACategoryByIdx(idx);

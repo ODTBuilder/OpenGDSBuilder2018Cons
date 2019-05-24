@@ -6,10 +6,10 @@ package com.gitrnd.qaconsumer.qaprogress.domain;
 import java.util.ArrayList;
 
 /**
- * @className FileValidateProgressList.java
- * @description
+ * {@link List} 형태의 {@link QAProgress} 객체.
+ * 
  * @author DY.Oh
- * @date 2018. 2. 7. 오전 10:55:45
+ *
  */
 public class QAProgressList extends ArrayList<QAProgress> {
 

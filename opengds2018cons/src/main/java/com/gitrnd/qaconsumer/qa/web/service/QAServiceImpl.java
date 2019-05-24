@@ -63,7 +63,6 @@ import com.git.gdsbuilder.parser.file.writer.SHPFileWriter;
 import com.git.gdsbuilder.parser.qa.QATypeParser;
 import com.git.gdsbuilder.type.dt.collection.DTLayerCollection;
 import com.git.gdsbuilder.type.dt.collection.DTLayerCollectionList;
-import com.git.gdsbuilder.type.validate.error.ErrorFeature;
 import com.git.gdsbuilder.type.validate.error.ErrorLayer;
 import com.git.gdsbuilder.type.validate.layer.QALayerTypeList;
 import com.git.gdsbuilder.validator.collection.CollectionValidator;
@@ -74,10 +73,6 @@ import com.gitrnd.qaconsumer.preset.service.PresetService;
 import com.gitrnd.qaconsumer.qacategory.service.QACategoryService;
 import com.gitrnd.qaconsumer.qaprogress.domain.QAProgress;
 import com.gitrnd.qaconsumer.qaprogress.service.QAProgressService;
-import com.gitrnd.qaconsumer.qareport.details.domain.QADetailReport;
-import com.gitrnd.qaconsumer.qareport.details.service.QADetailReportService;
-import com.gitrnd.qaconsumer.qareport.domain.QAReport;
-import com.gitrnd.qaconsumer.qareport.service.QAReportService;
 import com.gitrnd.qaconsumer.user.domain.User;
 import com.gitrnd.qaconsumer.user.service.UserService;
 
@@ -116,10 +111,6 @@ public class QAServiceImpl implements QAService {
 	QACategoryService qaCatService;
 	@Autowired
 	PresetService presetService;
-	@Autowired
-	QAReportService reportService;
-	@Autowired
-	QADetailReportService detailService;
 
 	@SuppressWarnings("unchecked")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -417,8 +408,6 @@ public class QAServiceImpl implements QAService {
 						// write shp file
 						writeErrShp(epsg, errLayer);
 					}
-					// insert qa report
-					insertQAReport(errLayer, errSize, pIdx);
 				}
 			};
 			Future future = execService.submit(runnable);
@@ -444,44 +433,6 @@ public class QAServiceImpl implements QAService {
 			return true;
 		} else {
 			return false;
-		}
-	}
-
-	/**
-	 * @param errLayer
-	 * @param errCount
-	 * @param pIdx
-	 */
-	protected void insertQAReport(ErrorLayer errLayer, int errCount, int pIdx) {
-
-		String errLayerName = errLayer.getLayerID();
-		int layerCount = errLayer.getLayerCount();
-		int featureCount = errLayer.getFeatureCount();
-		int normalCount = 0;
-		if (errCount > 0) {
-			normalCount = featureCount - errCount;
-		}
-		int exceptCount = errLayer.getExceptCount();
-		String comment = errLayer.getComment();
-
-		QAReport report = new QAReport(errLayerName, layerCount, featureCount, normalCount, errCount, exceptCount,
-				comment, pIdx);
-		Integer rIdx = reportService.insertQAReport(report);
-
-		List<ErrorFeature> errList = errLayer.getErrFeatureList();
-		for (ErrorFeature err : errList) {
-
-			String refLayerId = err.getRefLayerId();
-			String featureId = err.getFeatureID();
-			String refFeatureId = err.getRefFeatureId();
-			String errType = err.getErrType();
-			String errName = err.getErrName();
-			String errPoint = err.getErrPoint().toString();
-			String detailComment = err.getComment();
-
-			QADetailReport detail = new QADetailReport(refLayerId, featureId, refFeatureId, errType, errName, errPoint,
-					detailComment, rIdx);
-			detailService.insertQADetailReport(detail);
 		}
 	}
 

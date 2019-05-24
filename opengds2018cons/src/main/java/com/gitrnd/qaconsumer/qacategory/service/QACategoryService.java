@@ -11,12 +11,11 @@ import com.gitrnd.qaconsumer.qacategory.domain.QACategory;
 import com.gitrnd.qaconsumer.qacategory.repository.QACategoryRepository;
 
 /**
- * @className QACategoryService.java
- * @description
- * @author DY.Oh
- * @date 2018. 3. 9. 오전 10:48:11
+ * QACategoryService.
+ * 
+ * @author IJ.S
+ *
  */
-
 @Service
 @Transactional
 public class QACategoryService {
@@ -24,6 +23,14 @@ public class QACategoryService {
 	@Autowired
 	private QACategoryRepository qaCategoryRepository;
 
+	/**
+	 * idx에 해당하는 {@link QACategory}를 DB에서 조회하여 반환.
+	 * 
+	 * @param idx idx
+	 * @return DB에서 조회된 {@link QACategory}
+	 * 
+	 * @author IJ.S
+	 */
 	@Transactional(readOnly = true)
 	public QACategory retrieveQACategoryByIdx(int idx) {
 		return qaCategoryRepository.retrieveQACategoryByIdx(idx);
