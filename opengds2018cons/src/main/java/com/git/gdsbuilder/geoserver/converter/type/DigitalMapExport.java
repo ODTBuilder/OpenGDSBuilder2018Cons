@@ -15,20 +15,47 @@ import java.util.Map;
 import com.git.gdsbuilder.geoserver.converter.unzip.DigitalUnzip;
 
 /**
- * @Description Geoserver Data -> 수치지도 구조의 File  
+ * Geoserver 데이터를 다운받아 수치지도 구조로 변환하는 클래스 
  * @author SG.Lee
- * @Date 2018. 10. 30. 오전 9:53:18
+ * @since 2018. 10. 30. 오전 9:53:18
  * */
 public class DigitalMapExport {
+	/**
+	 * 버퍼사이즈
+	 */
 	private static final int BUFFER_SIZE = 4096;	
+	/**
+	 * Geoserver Service Type
+	 */
 	private final static String SERVICE = "WFS";
+	/**
+	 * WFS Request 유형
+	 */
 	private final static String REQUEST = "GetFeature";
+	/**
+	 * Geoserver 버전
+	 */
 	private final static String VERSION = "1.0.0";
+	/**
+	 * Output포맷
+	 */
 	private final static String OUTPUTFORMAT = "SHAPE-ZIP";
 	
+	/**
+	 * Geoserver URL
+	 */
 	private final String serverURL;
+	/**
+	 * layerMaps Map<작업공간,레이어리스트>
+	 */
 	private final Map<String,List<String>> layerMaps;
+	/**
+	 * Export 경로
+	 */
 	private final Path outputFolderPath;
+	/**
+	 * 좌표계
+	 */
 	private final String srs;
 	
 	/**
@@ -56,9 +83,9 @@ public class DigitalMapExport {
 	}
 	
 	/**
-	 * @Description 
+	 * 파일 Export
 	 * @author SG.Lee
-	 * @Date 2018. 10. 29. 오후 3:48:38
+	 * @since 2018. 10. 29. 오후 3:48:38
 	 * @return int 200 성공
 	 * 			   500 내부에러
 	 * 			   700 파일구조에러

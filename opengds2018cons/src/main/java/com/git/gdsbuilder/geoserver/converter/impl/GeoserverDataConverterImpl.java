@@ -10,27 +10,25 @@ import com.git.gdsbuilder.geoserver.converter.type.ForestExport;
 import com.git.gdsbuilder.geoserver.converter.type.UndergroundExport;
 
 /**
- * { "layers":{ "geoserver30":{ "admin":[
- * "geo_shp_37712012_A0010000_MULTIPOLYGON",
- * "geo_shp_37712012_A0020000_MULTILINESTRING",
- * "geo_shp_37712012_A0070000_MULTIPOLYGON",
- * "geo_shp_37712012_B0010000_MULTIPOLYGON",
- * "geo_shp_37712012_B0020000_MULTILINESTRING",
- * "geo_shp_37712012_F0010000_MULTILINESTRING",
- * "geo_shp_37712012_H0010000_MULTILINESTRING" ], "shp":[ "a0010000",
- * "a0020000", "a0070000", "b0010000", "b0020000", "f0010000", "h0010000" ] } }
- * "cidx" : "0" }
- * 
- * @Description
+ * Geoserver 데이터를 검수 유형에 따라 파일로 변환하는 클래스
+ * 수치지도, 임상도, 지하시설물 검수유형을 지원함 
  * @author SG.Lee
- * @Date 2018. 9. 28. 오후 5:25:38
- */
+ * @since 2018. 10. 30. 오전 9:52:33
+ * */
 public class GeoserverDataConverterImpl implements GeoserverDataConverter {
 	private final String serverURL;
 	private final Map<String, List<String>> layerMaps;
 	private final String outputFolderPath;
 	private final String srs;
 
+	/**
+	 * GeoserverDataConverterImpl 생성자
+	 * @author SG.LEE
+	 * @param serverURL Geoserver URL
+	 * @param layerMaps Map<작업공간, 레이어명>
+	 * @param outputFolderPath Export 경로
+	 * @param srs 좌표계
+	 */
 	public GeoserverDataConverterImpl(String serverURL, Map<String, List<String>> layerMaps, String outputFolderPath,
 			String srs) {
 		if (serverURL.isEmpty() || layerMaps == null || outputFolderPath.isEmpty() || srs.isEmpty()) {
@@ -59,7 +57,6 @@ public class GeoserverDataConverterImpl implements GeoserverDataConverter {
 	}
 
 	/**
-	 * 
 	 * @since 2018. 10. 30.
 	 * @author SG.Lee
 	 * @return
@@ -70,7 +67,6 @@ public class GeoserverDataConverterImpl implements GeoserverDataConverter {
 	}
 
 	/**
-	 * 
 	 * @since 2018. 10. 30.
 	 * @author SG.Lee
 	 * @return
@@ -102,7 +98,6 @@ public class GeoserverDataConverterImpl implements GeoserverDataConverter {
 	}
 
 	/**
-	 * 
 	 * @since 2018. 10. 30.
 	 * @author SG.Lee
 	 * @param nearLine

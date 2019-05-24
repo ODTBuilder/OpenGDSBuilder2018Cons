@@ -579,7 +579,7 @@ public class QAFileServiceImpl implements QAFileService {
 	 * 폴더 내에 폴더가 있을시 하위 폴더 탐색
 	 * 
 	 * @author SG.Lee
-	 * @Date 2018. 4. 18. 오전 9:09:33
+	 * @since 2018. 4. 18. 오전 9:09:33
 	 * @param source void
 	 */
 	@SuppressWarnings("unused")
@@ -646,7 +646,7 @@ public class QAFileServiceImpl implements QAFileService {
 	 * 임상도 폴더 재생성
 	 * 
 	 * @author SG.Lee
-	 * @Date 2018. 4. 18. 오후 1:24:16
+	 * @since 2018. 4. 18. 오후 1:24:16
 	 * @param unzipFolder void
 	 */
 	private static File[] createCollectionFolders(File unzipFolder) {
@@ -729,7 +729,7 @@ public class QAFileServiceImpl implements QAFileService {
 	 * 파일이동
 	 * 
 	 * @author SG.Lee
-	 * @Date 2018. 4. 18. 오전 9:46:27
+	 * @since 2018. 4. 18. 오전 9:46:27
 	 * @param folderName
 	 * @param fileName
 	 * @param beforeFilePath
@@ -765,7 +765,7 @@ public class QAFileServiceImpl implements QAFileService {
 	 * 파일복사
 	 * 
 	 * @author SG.Lee
-	 * @Date 2018. 4. 18. 오전 9:45:55
+	 * @since 2018. 4. 18. 오전 9:45:55
 	 * @param source
 	 * @param dest
 	 * @throws IOException void

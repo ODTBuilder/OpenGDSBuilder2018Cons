@@ -7,9 +7,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 /**
- * @Description DigitalMap 파일을 지정된 경로에 압축해제하는 기능을 제공 
+ * 수치지도 파일을 지정된 경로에 압축해제하는 기능을 제공하는 클래스 
  * @author SG.Lee
- * @Date 2018. 10. 17. 오전 10:18:19
+ * @since 2018. 10. 17. 오전 10:18:19
  * */
 public class DigitalUnzip {
 
@@ -32,7 +32,11 @@ public class DigitalUnzip {
 	 */
 	private String fileDirectory;
 
-	
+	/**
+	 * 생성자
+	 * @author SG.LEE
+	 * @param zipFile 다운로드 받은 File 클래스
+	 */
 	public DigitalUnzip(File zipFile, String output_dir){
 		this.zipFile = zipFile;
 		this.OUTPUT_DIR = output_dir;
@@ -42,7 +46,7 @@ public class DigitalUnzip {
 	/**
 	 * 압축폴더명 반환
 	 * 
-	 * @return String
+	 * @return String 압축폴더명
 	 */
 	public String getEntryName() {
 		return entryName;
@@ -62,7 +66,7 @@ public class DigitalUnzip {
 	/**
 	 * 압축파일 경로 반환
 	 * 
-	 * @return String
+	 * @return String 압축파일 경로
 	 */
 	public String getFileDirectory() {
 		return fileDirectory;
@@ -81,16 +85,16 @@ public class DigitalUnzip {
 	/**
 	 * 압축해제 경로 반환
 	 * 
-	 * @return String
+	 * @return String 압축해제 경로
 	 */
 	public String getOUTPUT_DIR() {
 		return OUTPUT_DIR;
 	}
 
 	/**
-	 * @Description zip 파일의 압축 해제 후 지정된 경로에 압축 해제
+	 * zip 파일의 압축 해제 후 지정된 경로에 압축 해제
 	 * @author SG.Lee
-	 * @Date 2018. 8. 1. 오전 11:37:15
+	 * @since 2018. 8. 1. 오전 11:37:15
 	 * @return 에러코드 200 성공
 	 *                 700 파일구조 에러
 	 *                 

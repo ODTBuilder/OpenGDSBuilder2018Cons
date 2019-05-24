@@ -405,7 +405,7 @@ public class QAFileParser {
 
 	/**
 	 * @author DY.Oh
-	 * @Date 2018. 3. 29. 오후 6:10:03 void
+	 * @since 2018. 3. 29. 오후 6:10:03 void
 	 * @decription
 	 */
 	private void parseUndergroundQA10File() {
@@ -450,7 +450,7 @@ public class QAFileParser {
 
 	/**
 	 * @author DY.Oh
-	 * @Date 2018. 3. 29. 오후 6:04:16 void
+	 * @since 2018. 3. 29. 오후 6:04:16 void
 	 * @decription
 	 */
 	private void parseNumericalQA20NgiFile() {
@@ -512,7 +512,7 @@ public class QAFileParser {
 
 	/**
 	 * @author DY.Oh
-	 * @Date 2018. 3. 29. 오후 5:49:52 void
+	 * @since 2018. 3. 29. 오후 5:49:52 void
 	 * @decription
 	 */
 	private void parseNumericalQA20ShpFile() {
@@ -592,7 +592,7 @@ public class QAFileParser {
 
 	/**
 	 * @author DY.Oh
-	 * @Date 2018. 3. 29. 오후 3:10:06
+	 * @since 2018. 3. 29. 오후 3:10:06
 	 * @decription
 	 */
 	private void parseNumericalQA10File() {
@@ -731,7 +731,7 @@ public class QAFileParser {
 
 	/**
 	 * @author DY.Oh
-	 * @Date 2018. 4. 17. 오전 11:20:17
+	 * @since 2018. 4. 17. 오전 11:20:17
 	 * @param collectionList2
 	 * @param neatlineLayer
 	 * @decription

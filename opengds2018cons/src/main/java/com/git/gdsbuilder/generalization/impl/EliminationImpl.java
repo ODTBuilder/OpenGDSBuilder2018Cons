@@ -18,7 +18,7 @@ import com.vividsolutions.jts.geom.Geometry;
 /**
  * 일반화 Type중 Elimination을 수행한다.
  * @author SG.Lee
- * @Date 2016.10
+ * @since 2016.10
  * */
 public class EliminationImpl implements Elimination {
 	

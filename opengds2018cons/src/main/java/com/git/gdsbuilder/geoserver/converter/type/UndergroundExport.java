@@ -12,21 +12,63 @@ import java.util.List;
 
 import com.git.gdsbuilder.geoserver.converter.unzip.UndergroundUnzip;
 
+/**
+ * Geoserver 데이터를 다운받아 지하시설물 구조로 변환하는 클래스 
+ * @author SG.LEE
+ * @since 2018. 10. 30. 오전 9:53:18
+ */
 public class UndergroundExport {
-	private final static String tmp_dir_prefix ="temp_";
-	
+	/**
+	 * 버퍼사이즈
+	 */
 	private static final int BUFFER_SIZE = 4096;	
+	/**
+	 * Geoserver Service Type
+	 */
 	private final static String SERVICE = "WFS";
+	/**
+	 * WFS Request 유형
+	 */
 	private final static String REQUEST = "GetFeature";
+	/**
+	 * Geoserver 버전
+	 */
 	private final static String VERSION = "1.0.0";
+	/**
+	 * Output포맷
+	 */
 	private final static String OUTPUTFORMAT = "SHAPE-ZIP";
 	
+	/**
+	 * Geoserver URL
+	 */
 	private final String serverURL;
+	/**
+	 * 작업공간
+	 */
 	private final String workspace;
+	/**
+	 * 레이어 리스트
+	 */
 	private final List<String> layerNames;
+	/**
+	 * Export 경로
+	 */
 	private final Path outputFolderPath;
+	/**
+	 * 좌표계
+	 */
 	private final String srs;
 	
+	/**
+	 * UndergroundExport 생성자
+	 * @author SG.LEE
+	 * @param serverURL Geoserver URL
+	 * @param workspace 작업공간
+	 * @param layerNames 레이어리스트
+	 * @param outputFolderPath Export 경로
+	 * @param srs 좌표계(ex. EPSG:4326)
+	 */
 	public UndergroundExport(String serverURL, String workspace, List<String> layerNames, String outputFolderPath, String srs){
 		if(serverURL.isEmpty()||workspace.isEmpty()||layerNames==null||outputFolderPath.isEmpty()||srs.isEmpty()){
 			throw new IllegalArgumentException("필수파라미터 입력안됨");
@@ -46,9 +88,9 @@ public class UndergroundExport {
 	}
 	
 	/**
-	 * @Description 
+	 * 파일 Export 
 	 * @author SG.Lee
-	 * @Date 2018. 10. 29. 오후 3:48:38
+	 * @since 2018. 10. 29. 오후 3:48:38
 	 * @return int 200 성공
 	 * 			   500 내부에러
 	 * 			   700 파일구조에러

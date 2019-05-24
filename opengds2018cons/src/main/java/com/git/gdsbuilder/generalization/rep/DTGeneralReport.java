@@ -7,7 +7,7 @@ import com.git.gdsbuilder.generalization.rep.type.DTGeneralReportNums;
 /**
  * 일반화결과 레포트
  * @author SG.Lee
- * @Date 2016.10
+ * @since 2016.10
  * */
 public class DTGeneralReport implements Serializable {
 	private DTGeneralReportNums entityNums;
@@ -16,7 +16,7 @@ public class DTGeneralReport implements Serializable {
 	/**
 	 * 일반화레포트 Type
 	 * @author SG.Lee
-	 * @Date 2016.10.24
+	 * @since 2016.10.24
 	 * */
 	public enum DTGeneralReportNumsType {
 		ENTITY("entity"),

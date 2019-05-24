@@ -1,15 +1,16 @@
 package com.git.gdsbuilder.geoserver.converter;
 
 /**
- * @Description Geoserver Data -> 검수 File 
+ * Geoserver 데이터를 검수 유형에 따라 파일로 변환하는 인터페이스
+ * 수치지도, 임상도, 지하시설물 검수유형을 지원함 
  * @author SG.Lee
- * @Date 2018. 10. 30. 오전 9:52:33
+ * @since 2018. 10. 30. 오전 9:52:33
  * */
 public interface GeoserverDataConverter {
 	/**
-	 * @Description Geoserver Data -> 수치지도 구조의 File
+	 * Geoserver WFS를 활용해 Data를 수치지도 파일구조에 맞게 다운로드함
 	 * @author SG.Lee
-	 * @Date 2018. 10. 30. 오전 9:57:15
+	 * @since 2018. 10. 30. 오전 9:57:15
 	 * @return int 200 성공
 	 * 			   500 내부에러
 	 * 			   700 파일구조에러
@@ -20,9 +21,9 @@ public interface GeoserverDataConverter {
 	public int digitalExport();
 	
 	/**
-	 * @Description 
+	 * Geoserver WFS를 활용해 Data를 지하시설물 파일구조에 맞게 다운로드함
 	 * @author SG.Lee
-	 * @Date 2018. 10. 29. 오후 3:48:38
+	 * @since 2018. 10. 29. 오후 3:48:38
 	 * @return int 200 성공
 	 * 			   500 내부에러
 	 * 			   700 파일구조에러
@@ -33,9 +34,9 @@ public interface GeoserverDataConverter {
 	public int undergroundExport();
 	
 	/**
-	 * @Description 
+	 * Geoserver WFS를 활용해 Data를 임상도 파일구조에 맞게 다운로드함
 	 * @author SG.Lee
-	 * @Date 2018. 10. 29. 오후 3:48:38
+	 * @since 2018. 10. 29. 오후 3:48:38
 	 * @return int 200 성공
 	 * 			   500 내부에러
 	 * 			   700 파일구조에러

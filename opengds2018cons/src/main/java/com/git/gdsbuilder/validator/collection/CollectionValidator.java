@@ -1725,7 +1725,7 @@ public class CollectionValidator {
  * 쓰레드 AttResult 클래스
  * 
  * @author SG.Lee
- * @Date 2017. 9. 6. 오후 3:09:38
+ * @since 2017. 9. 6. 오후 3:09:38
  */
 class AttResult {
 	ErrorLayer treadErrorLayer = new ErrorLayer();
@@ -1742,7 +1742,7 @@ class AttResult {
  * 쓰레드 GeomResult 클래스
  * 
  * @author SG.Lee
- * @Date 2017. 9. 6. 오후 3:09:38
+ * @since 2017. 9. 6. 오후 3:09:38
  */
 class GeometricResult {
 	ErrorLayer treadErrorLayer = new ErrorLayer();
@@ -1759,7 +1759,7 @@ class GeometricResult {
  * 쓰레드 CloseCollectionResult 클래스
  * 
  * @author SG.Lee
- * @Date 2017. 9. 6. 오후 3:09:38
+ * @since 2017. 9. 6. 오후 3:09:38
  */
 class CloseCollectionResult {
 	ErrorLayer treadErrorLayer = new ErrorLayer();

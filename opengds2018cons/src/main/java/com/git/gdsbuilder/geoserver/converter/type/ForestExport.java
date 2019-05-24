@@ -15,28 +15,64 @@ import java.util.List;
 import com.git.gdsbuilder.geoserver.converter.unzip.ForestUnzip;
 
 /**
- * @Description Geoserver Data -> 수치지도 구조의 File
+ * Geoserver 데이터를 다운받아 임상도 구조로 변환하는 클래스 
  * @author SG.Lee
- * @Date 2018. 10. 30. 오전 9:53:18
+ * @since 2018. 10. 30. 오전 9:53:18
  */
 public class ForestExport {
+	/**
+	 * 버퍼사이즈
+	 */
 	private static final int BUFFER_SIZE = 4096;
+	/**
+	 * Geoserver Service Type
+	 */
 	private final static String SERVICE = "WFS";
+	/**
+	 * WFS Request 유형
+	 */
 	private final static String REQUEST = "GetFeature";
+	/**
+	 * Geoserver 버전
+	 */
 	private final static String VERSION = "1.0.0";
+	/**
+	 * Output포맷
+	 */
 	private final static String OUTPUTFORMAT = "SHAPE-ZIP";
 
+	/**
+	 * Geoserver URL
+	 */
 	private final String serverURL;
+	/**
+	 * 작업공간
+	 */
 	private final String workspace;
+	/**
+	 * 레이어 리스트
+	 */
 	private final List<String> layerNames;
+	/**
+	 * Export 경로
+	 */
 	private final Path outputFolderPath;
+	/**
+	 * 좌표계
+	 */
 	private final String srs;
+	/**
+	 * 도곽 레이어명
+	 */
 	private final String nearLine;
 
+	/**
+	 * 임상도명
+	 */
 	private final static String FORESTFNAME = "forest";
 
 	/**
-	 * 생성자
+	 * ForestExport 클래스 생성자
 	 * 
 	 * @param serverURL        Geoserver URL
 	 * @param workspace        작업공간
@@ -70,9 +106,9 @@ public class ForestExport {
 	}
 
 	/**
-	 * @Description
+	 * 파일 Export
 	 * @author SG.Lee
-	 * @Date 2018. 10. 29. 오후 3:48:38
+	 * @since 2018. 10. 29. 오후 3:48:38
 	 * @return int 200 성공 500 내부에러 700 파일구조에러 612 레이어 리스트 NULL 702 파일손상 703
 	 *         Geoserver Layer 다운에러
 	 */
@@ -213,7 +249,7 @@ public class ForestExport {
 	 * 임상도 폴더 재생성
 	 * 
 	 * @author SG.Lee
-	 * @Date 2018. 4. 18. 오후 1:24:16
+	 * @since 2018. 4. 18. 오후 1:24:16
 	 * @param unzipFolder void
 	 */
 	private static File[] createCollectionFolders(File unzipFolder, String nearLine) {
@@ -298,12 +334,12 @@ public class ForestExport {
 	 * 파일이동
 	 * 
 	 * @author SG.Lee
-	 * @Date 2018. 4. 18. 오전 9:46:27
-	 * @param folderName
-	 * @param fileName
-	 * @param beforeFilePath
-	 * @param afterFilePath
-	 * @return String
+	 * @since 2018. 4. 18. 오전 9:46:27
+	 * @param folderName 폴더명
+	 * @param fileName 파일명
+	 * @param beforeFilePath 이동전 경로
+	 * @param afterFilePath 이동후 경로
+	 * @return String 파일경로
 	 */
 	private static String moveDirectory(String folderName, String fileName, String beforeFilePath,
 			String afterFilePath) {
@@ -334,7 +370,7 @@ public class ForestExport {
 	 * 파일복사
 	 * 
 	 * @author SG.Lee
-	 * @Date 2018. 4. 18. 오전 9:45:55
+	 * @since 2018. 4. 18. 오전 9:45:55
 	 * @param source
 	 * @param dest
 	 * @throws IOException void

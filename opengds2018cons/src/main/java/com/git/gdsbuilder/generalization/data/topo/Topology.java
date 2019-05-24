@@ -22,7 +22,7 @@ public class Topology {
 	/**
 	 * Topology GET, SET 
 	 * @author SG.Lee
-	 * @Date 2016.10.05
+	 * @since 2016.10.05
 	 * */
 	public String getObjID() {
 		return objID;
