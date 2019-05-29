@@ -1,6 +1,6 @@
 spring:
   rabbitmq:
-    host: 175.116.181.42
+    host: localhost
     port: 5672
     virtual-host: only_opengds
     username: qaconsumer
@@ -14,7 +14,7 @@ spring:
       default-requeue-rejected: false
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://175.116.181.42:5432/opengds_2018?charSet=UTF-8&prepareThreshold=1
+    url: jdbc:postgresql://localhost:5432/opengds_2018?charSet=UTF-8&prepareThreshold=1
     username: opensource
     password: opensource
     driver-class-name: org.postgresql.Driver
@@ -29,7 +29,7 @@ server:
     context-path: /geodt
     port: 8089
 gitrnd:
-  serverhost: 175.116.181.32
+  serverhost: localhost
   apache:
     basedir: gdofiles
     basedrive: C
