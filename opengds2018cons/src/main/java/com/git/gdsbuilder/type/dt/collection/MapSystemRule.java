@@ -28,7 +28,7 @@ package com.git.gdsbuilder.type.dt.collection;
  * 기준으로 상(ID-10), 하(ID+10), 좌(ID-1), 우(ID+1) ID 값을 가짐.
  * 
  * @author DY.Oh
- * @date 2018. 1. 30. 오후 2:02:11
+ * @since 2018. 1. 30. 오후 2:02:11
  */
 public class MapSystemRule {
 

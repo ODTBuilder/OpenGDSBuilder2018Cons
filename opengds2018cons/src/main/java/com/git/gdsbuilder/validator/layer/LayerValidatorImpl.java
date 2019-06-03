@@ -685,7 +685,7 @@ public class LayerValidatorImpl implements LayerValidator {
 
 	/**
 	 * @author DY.Oh
-	 * @Date 2018. 3. 6. 오후 2:02:50
+	 * @since 2018. 3. 6. 오후 2:02:50
 	 * @param fixedValue
 	 * @return ErrorLayer
 	 * @decription
@@ -1708,7 +1708,7 @@ public class LayerValidatorImpl implements LayerValidator {
 		 * 쓰레드 ValidateUNodeMiss 결과클래스
 		 * 
 		 * @author SG.Lee
-		 * @Date 2017. 9. 6. 오후 3:09:38
+		 * @since 2017. 9. 6. 오후 3:09:38
 		 */
 		class ValidateUNodeMissResult {
 			ErrorLayer treadErrorLayer = new ErrorLayer();
@@ -1821,7 +1821,7 @@ public class LayerValidatorImpl implements LayerValidator {
 		 * 쓰레드 validateUAvrgDPH20 결과클래스
 		 * 
 		 * @author SG.Lee
-		 * @Date 2017. 9. 6. 오후 3:09:38
+		 * @since 2017. 9. 6. 오후 3:09:38
 		 */
 		class ValidateUAvrgDPH20Result {
 			ErrorLayer treadErrorLayer = new ErrorLayer();
@@ -1946,7 +1946,7 @@ public class LayerValidatorImpl implements LayerValidator {
 		 * 쓰레드 ValidateULeaderline 결과클래스
 		 * 
 		 * @author SG.Lee
-		 * @Date 2017. 9. 6. 오후 3:09:38
+		 * @since 2017. 9. 6. 오후 3:09:38
 		 */
 		class ValidateULeaderlineResult {
 			ErrorLayer treadErrorLayer = new ErrorLayer();
@@ -2130,7 +2130,7 @@ public class LayerValidatorImpl implements LayerValidator {
 		 * 쓰레드 ValidateUSymbolDirection 결과클래스
 		 * 
 		 * @author SG.Lee
-		 * @Date 2017. 9. 6. 오후 3:09:38
+		 * @since 2017. 9. 6. 오후 3:09:38
 		 */
 		class ValidateUSymbolDirectionResult {
 			ErrorLayer treadErrorLayer = new ErrorLayer();
@@ -2263,7 +2263,7 @@ public class LayerValidatorImpl implements LayerValidator {
 		 * 쓰레드 ValidateUSymbolOut 결과클래스
 		 * 
 		 * @author SG.Lee
-		 * @Date 2017. 9. 6. 오후 3:09:38
+		 * @since 2017. 9. 6. 오후 3:09:38
 		 */
 		class ValidateUSymbolOutResult {
 			ErrorLayer treadErrorLayer = new ErrorLayer();

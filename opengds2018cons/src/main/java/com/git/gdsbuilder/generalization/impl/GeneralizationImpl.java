@@ -22,7 +22,7 @@ import com.git.gdsbuilder.generalization.rep.type.DTGeneralReportNums;
 /**
  * 일반화를 처리한다.
  * @author SG.Lee
- * @Date 2016.10.24 
+ * @since 2016.10.24 
  * */
 public class GeneralizationImpl extends TopoGeneralizationData implements Generalization {
 	
@@ -67,7 +67,7 @@ public class GeneralizationImpl extends TopoGeneralizationData implements Genera
 	/**
 	 * Generalization 순서 Enum
 	 * @author SG.Lee
-	 * @Date 2016.10.24
+	 * @since 2016.10.24
 	 * */
 	public enum GeneralizationOrder {
 		SIMPLIFICATION("simplification"),

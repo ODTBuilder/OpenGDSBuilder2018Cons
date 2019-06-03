@@ -8,7 +8,7 @@ import com.git.gdsbuilder.generalization.rep.DTGeneralReport;
 /**
  *
  * @author SG.Lee
- * @Date 2017. 9. 27. 오후 4:34:28
+ * @since 2017. 9. 27. 오후 4:34:28
  */
 public class DTGeneralEAfLayer {
 	private SimpleFeatureCollection collection; // 일반화 하고 난후의 결과
@@ -46,7 +46,7 @@ public class DTGeneralEAfLayer {
 	}
 
 	/**
-	 * 일반화를 실행 @author SG.Lee @Date 2016.09 @param preLayer - 일반화 하기전 레이어 객체 order -
+	 * 일반화를 실행 @author SG.Lee @since 2016.09 @param preLayer - 일반화 하기전 레이어 객체 order -
 	 * 일반화 순서 @return DTGeneralAfLayer - 일반화 결과 @throws
 	 */
 	/*
