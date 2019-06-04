@@ -30,7 +30,7 @@ import org.opengis.filter.FilterFactory2;
 
 import com.git.gdsbuilder.type.dt.collection.MapSystemRule.MapSystemRuleType;
 import com.git.gdsbuilder.type.dt.layer.DTLayer;
-import com.git.gdsbuilder.type.validate.option.specific.OptionTolerance;
+import com.git.gdsbuilder.type.validate.option.OptionTolerance;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryCollection;

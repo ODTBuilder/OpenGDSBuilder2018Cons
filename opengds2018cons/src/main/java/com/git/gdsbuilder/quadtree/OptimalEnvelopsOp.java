@@ -3,24 +3,59 @@ package com.git.gdsbuilder.quadtree;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.geotools.data.shapefile.index.quadtree.QuadTree;
+import org.geotools.data.simple.SimpleFeatureCollection;
+
 import com.vividsolutions.jts.geom.Envelope;
 
+/**
+ * 1개 영역 내 포함되는 최대 객체 수(maxSize)에 따라 {@link QuadTree} 검수 영역 Level을 계산하는 클래스.
+ * 
+ * @author DY.Oh
+ *
+ */
 public class OptimalEnvelopsOp {
 
+	/**
+	 * {@link SimpleFeatureCollection} Quadtree
+	 */
 	private Quadtree quadTree;
-
+	/**
+	 * 1개 영역 내 포함되는 최대 객체 수(maxSize)
+	 */
 	private int maxSize;
-
+	/**
+	 * Quadtree 최대 레벨
+	 */
 	private int maxLevel;
-
+	/**
+	 * 1개 영역 내 포함되는 최대 객체 수(maxSize)를 만족하는 Quadtree 레벨
+	 */
 	private int optimalLevel;
 
+	/**
+	 * OptimalEnvelopsOp 생성자.
+	 * 
+	 * @param quadTree quadTree
+	 * @param maxLevel Quadtree 최대 레벨
+	 * @param maxSize  1개 영역 내 포함되는 최대 객체 수
+	 */
 	public OptimalEnvelopsOp(Quadtree quadTree, int maxLevel, int maxSize) {
 		this.quadTree = quadTree;
 		this.maxLevel = maxLevel;
 		this.maxSize = maxSize;
 	}
 
+	/**
+	 * level에 해당하는 Index 영역 목록 반환.
+	 * <p>
+	 * 해당 level에 도달 할 때 까지 Max 레벨부터 순차적으로 계산.
+	 * 
+	 * @param level quadtree 레벨
+	 * @return Index 영역 목록
+	 * 
+	 * @author DY.Oh
+	 */
 	public List<Object> getOptimalEnvelops(int level) {
 
 		boolean isOptimal = true;
@@ -43,7 +78,7 @@ public class OptimalEnvelopsOp {
 		}
 	}
 
-	public List<Object> getNodeEnvelopeList(Node[] nodes, int level) {
+	private List<Object> getNodeEnvelopeList(Node[] nodes, int level) {
 
 		List<Object> envelopeList = new ArrayList<>();
 

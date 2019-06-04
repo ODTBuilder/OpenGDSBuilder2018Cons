@@ -50,16 +50,15 @@ import org.opengis.filter.FilterFactory2;
 import com.git.gdsbuilder.type.dt.feature.DTFeature;
 import com.git.gdsbuilder.type.dt.layer.DTLayer;
 import com.git.gdsbuilder.type.validate.error.ErrorFeature;
-import com.git.gdsbuilder.type.validate.option.specific.AttributeFigure;
-import com.git.gdsbuilder.type.validate.option.specific.AttributeFilter;
-import com.git.gdsbuilder.type.validate.option.specific.OptionFigure;
-import com.git.gdsbuilder.type.validate.option.specific.OptionFilter;
-import com.git.gdsbuilder.type.validate.option.standard.FixedValue;
-import com.git.gdsbuilder.type.validate.option.type.FTMQAOptions;
-import com.git.gdsbuilder.type.validate.option.type.LayerFieldOptions;
-import com.git.gdsbuilder.type.validate.option.type.DMQAOptions;
-import com.git.gdsbuilder.type.validate.option.type.UFMQAOptions;
-import com.git.gdsbuilder.validator.feature.filter.FeatureFilter;
+import com.git.gdsbuilder.type.validate.option.AttributeFigure;
+import com.git.gdsbuilder.type.validate.option.AttributeFilter;
+import com.git.gdsbuilder.type.validate.option.DMQAOptions;
+import com.git.gdsbuilder.type.validate.option.FTMQAOptions;
+import com.git.gdsbuilder.type.validate.option.FixedValue;
+import com.git.gdsbuilder.type.validate.option.LayerFieldOptions;
+import com.git.gdsbuilder.type.validate.option.OptionFigure;
+import com.git.gdsbuilder.type.validate.option.OptionFilter;
+import com.git.gdsbuilder.type.validate.option.UFMQAOptions;
 import com.vividsolutions.jts.algorithm.Angle;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -265,13 +264,6 @@ public class FeatureAttributeValidatorImpl implements FeatureAttributeValidator 
 		}
 	}
 
-	/**
-	 * @since 2018. 3. 6.
-	 * @author DY.Oh
-	 * @param DTFeature
-	 * @param fiedMap
-	 * @return ErrorFeature
-	 */
 	@Override
 	public ErrorFeature validateLayerFixMiss(DTFeature DTFeature, List<FixedValue> fixArry) {
 
@@ -742,12 +734,6 @@ public class FeatureAttributeValidatorImpl implements FeatureAttributeValidator 
 		}
 	}
 
-	/**
-	 * @since 2018. 3. 21.
-	 * @author DY.Oh
-	 * @param feature
-	 * @return ErrorFeature
-	 */
 	@Override
 	public ErrorFeature validateFcodeLogicalAttribute(DTFeature feature, OptionFigure figure) {
 
@@ -803,13 +789,6 @@ public class FeatureAttributeValidatorImpl implements FeatureAttributeValidator 
 		}
 	}
 
-	/**
-	 * @since 2018. 3. 21.
-	 * @author DY.Oh
-	 * @param feature
-	 * @param figure
-	 * @return ErrorFeature
-	 */
 	@Override
 	public ErrorFeature validateFLabelLogicalAttribute(DTFeature feature, OptionFigure figure) {
 

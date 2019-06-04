@@ -56,10 +56,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.git.gdsbuilder.parser.file.DownloadValidateFile;
-import com.git.gdsbuilder.parser.file.QAFileParser;
-import com.git.gdsbuilder.parser.file.UnZipFile;
+import com.git.gdsbuilder.parser.file.reader.UnZipFile;
 import com.git.gdsbuilder.parser.file.writer.SHPFileWriter;
+import com.git.gdsbuilder.parser.qa.DownloadValidateFile;
+import com.git.gdsbuilder.parser.qa.QAFileParser;
 import com.git.gdsbuilder.parser.qa.QATypeParser;
 import com.git.gdsbuilder.type.dt.collection.DTLayerCollection;
 import com.git.gdsbuilder.type.dt.collection.DTLayerCollectionList;

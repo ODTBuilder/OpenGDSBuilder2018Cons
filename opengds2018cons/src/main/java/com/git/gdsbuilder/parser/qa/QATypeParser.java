@@ -27,18 +27,18 @@ import org.json.simple.JSONObject;
 
 import com.git.gdsbuilder.type.validate.layer.QALayerType;
 import com.git.gdsbuilder.type.validate.layer.QALayerTypeList;
+import com.git.gdsbuilder.type.validate.option.AttributeFigure;
+import com.git.gdsbuilder.type.validate.option.AttributeFilter;
+import com.git.gdsbuilder.type.validate.option.AttributeMiss;
+import com.git.gdsbuilder.type.validate.option.CloseMiss;
+import com.git.gdsbuilder.type.validate.option.FixedValue;
+import com.git.gdsbuilder.type.validate.option.GraphicMiss;
+import com.git.gdsbuilder.type.validate.option.LayerFixMiss;
+import com.git.gdsbuilder.type.validate.option.OptionFigure;
+import com.git.gdsbuilder.type.validate.option.OptionFilter;
+import com.git.gdsbuilder.type.validate.option.OptionRelation;
+import com.git.gdsbuilder.type.validate.option.OptionTolerance;
 import com.git.gdsbuilder.type.validate.option.QAOption;
-import com.git.gdsbuilder.type.validate.option.specific.AttributeFigure;
-import com.git.gdsbuilder.type.validate.option.specific.AttributeFilter;
-import com.git.gdsbuilder.type.validate.option.specific.AttributeMiss;
-import com.git.gdsbuilder.type.validate.option.specific.CloseMiss;
-import com.git.gdsbuilder.type.validate.option.specific.GraphicMiss;
-import com.git.gdsbuilder.type.validate.option.specific.OptionFigure;
-import com.git.gdsbuilder.type.validate.option.specific.OptionFilter;
-import com.git.gdsbuilder.type.validate.option.specific.OptionRelation;
-import com.git.gdsbuilder.type.validate.option.specific.OptionTolerance;
-import com.git.gdsbuilder.type.validate.option.standard.FixedValue;
-import com.git.gdsbuilder.type.validate.option.standard.LayerFixMiss;
 
 /**
  * JSONArray 형태의 검수 옵션(검수 항목 및 검수 항목별 세부 설정)정보를

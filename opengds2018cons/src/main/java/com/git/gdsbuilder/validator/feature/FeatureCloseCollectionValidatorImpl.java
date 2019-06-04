@@ -10,13 +10,12 @@ import org.opengis.feature.simple.SimpleFeature;
 import com.git.gdsbuilder.type.dt.feature.DTFeature;
 import com.git.gdsbuilder.type.dt.layer.DTLayer;
 import com.git.gdsbuilder.type.validate.error.ErrorFeature;
-import com.git.gdsbuilder.type.validate.option.specific.AttributeFigure;
-import com.git.gdsbuilder.type.validate.option.specific.AttributeFilter;
-import com.git.gdsbuilder.type.validate.option.specific.OptionFigure;
-import com.git.gdsbuilder.type.validate.option.specific.OptionFilter;
-import com.git.gdsbuilder.type.validate.option.specific.OptionTolerance;
-import com.git.gdsbuilder.type.validate.option.type.DMQAOptions;
-import com.git.gdsbuilder.validator.feature.filter.FeatureFilter;
+import com.git.gdsbuilder.type.validate.option.AttributeFigure;
+import com.git.gdsbuilder.type.validate.option.AttributeFilter;
+import com.git.gdsbuilder.type.validate.option.DMQAOptions;
+import com.git.gdsbuilder.type.validate.option.OptionFigure;
+import com.git.gdsbuilder.type.validate.option.OptionFilter;
+import com.git.gdsbuilder.type.validate.option.OptionTolerance;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -323,16 +322,6 @@ public class FeatureCloseCollectionValidatorImpl implements FeatureCloseCollecti
 		}
 	}
 
-	/**
-	 * @since 2018. 3. 22.
-	 * @author DY.Oh
-	 * @param simpleFeature
-	 * @param closeSfc
-	 * @param closeBoundary
-	 * @param tolerance
-	 * @param figure
-	 * @return ErrorFeature
-	 */
 	@Override
 	public ErrorFeature validateRefAttributeMiss(DTFeature feature, DTLayer closeLayer, Geometry closeBoundary,
 			OptionTolerance tolerance, OptionFigure figure) {

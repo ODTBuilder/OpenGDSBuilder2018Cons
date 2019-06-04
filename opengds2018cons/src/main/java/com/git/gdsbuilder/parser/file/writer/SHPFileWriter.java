@@ -67,10 +67,10 @@ public class SHPFileWriter {
 	 * @param epsg     SHP 파일 좌표계 ex) EPSG:4326
 	 * @param errLayer 오류 레이어
 	 * @param filePath 파일 경로
-	 * @throws IOException
-	 * @throws SchemaException
-	 * @throws NoSuchAuthorityCodeException
-	 * @throws FactoryException
+	 * @throws IOException                  {@link IOException}
+	 * @throws SchemaException              {@link SchemaException}
+	 * @throws NoSuchAuthorityCodeException {@link NoSuchAuthorityCodeException}
+	 * @throws FactoryException             {@link FactoryException}
 	 * 
 	 * @author DY.OH
 	 */

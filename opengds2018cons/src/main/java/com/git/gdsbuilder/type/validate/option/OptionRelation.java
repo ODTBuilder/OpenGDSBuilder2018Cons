@@ -14,7 +14,7 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package com.git.gdsbuilder.type.validate.option.specific;
+package com.git.gdsbuilder.type.validate.option;
 
 import java.util.List;
 
@@ -38,13 +38,13 @@ public class OptionRelation {
 	 */
 	String name;
 	/**
-	 * {@link com.git.gdsbuilder.type.validate.option.specific.OptionFilter}에 따라 해당
-	 * 레이어의 특정 속성 값을 가진 객체만 검수 수행
+	 * {@link com.git.gdsbuilder.type.validate.option.OptionFilter}에 따라 해당 레이어의 특정
+	 * 속성 값을 가진 객체만 검수 수행
 	 */
 	List<OptionFilter> filters;
 	/**
-	 * {@link com.git.gdsbuilder.type.validate.option.specific.AttributeMiss} 검수 시
-	 * 필요한 검수 대상 객체의 속성 key, value 정보를 저장
+	 * {@link com.git.gdsbuilder.type.validate.option.AttributeMiss} 검수 시 필요한 검수 대상
+	 * 객체의 속성 key, value 정보를 저장
 	 */
 	List<OptionFigure> figures;
 	/**
@@ -53,8 +53,10 @@ public class OptionRelation {
 	List<OptionTolerance> tolerances;
 
 	/**
-	 * @param code
-	 * @return
+	 * code에 해당하는 {@link OptionFilter} 반환.
+	 * 
+	 * @param code 레이어 ID
+	 * @return code에 해당하는 {@link OptionFilter}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -71,8 +73,10 @@ public class OptionRelation {
 	}
 
 	/**
-	 * @param code
-	 * @return
+	 * code에 해당하는 {@link OptionFigure} 반환.
+	 * 
+	 * @param code 레이어 ID
+	 * @return code에 해당하는 {@link OptionFigure}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -89,8 +93,10 @@ public class OptionRelation {
 	}
 
 	/**
-	 * @param code
-	 * @return
+	 * code에 해당하는 {@link OptionTolerance} 반환.
+	 * 
+	 * @param code 레이어 ID
+	 * @return code에 해당하는 {@link OptionTolerance}
 	 * 
 	 * @author DY.Oh
 	 */

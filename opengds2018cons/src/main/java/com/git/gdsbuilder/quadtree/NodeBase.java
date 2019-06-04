@@ -8,12 +8,7 @@ import java.util.List;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.index.ItemVisitor;
 
-/**
- * The base class for nodes in a {@link Quadtree}.
- *
- * @version 1.7
- */
-public abstract class NodeBase implements Serializable {
+public abstract class NodeBase extends com.vividsolutions.jts.index.quadtree.NodeBase implements Serializable {
 
 //DEBUG private static int itemCount = 0;  // debugging
 

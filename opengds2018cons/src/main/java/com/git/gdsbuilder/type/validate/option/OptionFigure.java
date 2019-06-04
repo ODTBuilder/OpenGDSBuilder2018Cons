@@ -14,7 +14,7 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package com.git.gdsbuilder.type.validate.option.specific;
+package com.git.gdsbuilder.type.validate.option;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +24,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * {@link com.git.gdsbuilder.type.validate.option.specific.AttributeMiss} 또는
- * {@link com.git.gdsbuilder.type.validate.option.specific.GraphicMiss} 검수 항목 정의
- * 시 검수 대상 레이어의 속성 key, value 정보를 저장하는 클래스
+ * {@link com.git.gdsbuilder.type.validate.option.AttributeMiss} 또는
+ * {@link com.git.gdsbuilder.type.validate.option.GraphicMiss} 검수 항목 정의 시 검수 대상
+ * 레이어의 속성 key, value 정보를 저장하는 클래스
  * 
  * @author DY.Oh
  *
@@ -46,13 +46,13 @@ public class OptionFigure {
 	List<AttributeFigure> figure;
 
 	/**
-	 * fidx에 해당하는 List<AttributeFigure> 반환
+	 * fidx에 해당하는 {@linkplain AttributeFigure} 목록 반환
 	 * <p>
-	 * {@link com.git.gdsbuilder.type.validate.option.specific.AttributeFigure} 정의 시
-	 * 순서에 따라 index를 부여하며 해당 index로 List<AttributeFigure>를 검색할 수 있음.
+	 * {@link com.git.gdsbuilder.type.validate.option.AttributeFigure} 정의 시 순서에 따라
+	 * index를 부여하며 해당 index로 {@linkplain AttributeFigure} 목록을 검색할 수 있음.
 	 * 
 	 * @param fidx 검수 옵션 index
-	 * @return List<AttributeFigure> fidx에 해당하는 List<AttributeFigure>
+	 * @return fidx에 해당하는 {@linkplain AttributeFigure} 목록
 	 * 
 	 * @author DY.Oh
 	 */

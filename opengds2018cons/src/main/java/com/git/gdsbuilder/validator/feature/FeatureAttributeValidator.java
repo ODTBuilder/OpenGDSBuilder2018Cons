@@ -41,9 +41,9 @@ import org.geotools.data.simple.SimpleFeatureCollection;
 import com.git.gdsbuilder.type.dt.feature.DTFeature;
 import com.git.gdsbuilder.type.dt.layer.DTLayer;
 import com.git.gdsbuilder.type.validate.error.ErrorFeature;
-import com.git.gdsbuilder.type.validate.option.specific.AttributeFigure;
-import com.git.gdsbuilder.type.validate.option.specific.OptionFigure;
-import com.git.gdsbuilder.type.validate.option.standard.FixedValue;
+import com.git.gdsbuilder.type.validate.option.AttributeFigure;
+import com.git.gdsbuilder.type.validate.option.FixedValue;
+import com.git.gdsbuilder.type.validate.option.OptionFigure;
 
 /**
  * {@link DTFeature}의 속성을 검수하는 클래스
@@ -146,8 +146,8 @@ public interface FeatureAttributeValidator {
 	/**
 	 * LayerFixMiss(필드구조오류, Feature with wrong attribute value) 검수 수행.
 	 * <p>
-	 * {@link DTFeature} 객체의 속성 필드 구조(필수 컬럼 누락, 컬럼 타입, 필수 속성값 누락 등)가
-	 * List<FixedValue> 조건에 일치하지 않는 경우 오류 객체 반환.
+	 * {@link DTFeature} 객체의 속성 필드 구조(필수 컬럼 누락, 컬럼 타입, 필수 속성값 누락 등)가 조건에 일치하지 않는 경우
+	 * 오류 객체 반환.
 	 * 
 	 * @param feature    속성 필드 구조 검수 대상 {@link DTFeature}
 	 * @param fixedValue 속성 필드 구조(필수 컬럼 누락, 컬럼 타입, 필수 속성값 누락 등) 조건

@@ -13,8 +13,9 @@
  *    but WITHOUT ANY WARRANTY; without even the implied warranty of
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
+ * 
  */
-package com.git.gdsbuilder.type.validate.option.specific;
+package com.git.gdsbuilder.type.validate.option;
 
 import java.util.List;
 
@@ -23,12 +24,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * {@link com.git.gdsbuilder.type.validate.option.specific.AttributeMiss} 또는
- * {@link com.git.gdsbuilder.type.validate.option.specific.GraphicMiss} 수행 시
+ * {@link com.git.gdsbuilder.type.validate.option.AttributeMiss} 또는
+ * {@link com.git.gdsbuilder.type.validate.option.GraphicMiss} 수행 시
  * 사용되는 속성 필터
  * <p>
- * {@link com.git.gdsbuilder.type.validate.option.specific.OptionFilter}에 따라 해당
- * 레이어의 특정 속성 값을 가진 객체만 검수 수행. 레이어의 모든 객체에 적용됨.
+ * 속성 중 특정 key 값을 가지며, 특정 value를 가진 1개의 객체 검수
  * 
  * @author DY.Oh
  *
@@ -36,14 +36,15 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OptionFilter {
+public class AttributeFilter {
 
 	/**
-	 * 속성 필터를 적용할 레이어 ID
+	 * 속성 컬럼 key
 	 */
-	String layerID;
+	String key;
 	/**
-	 * 속성 필터
+	 * 속성 value list
 	 */
-	List<AttributeFilter> filter;
+	List<Object> values;
+
 }

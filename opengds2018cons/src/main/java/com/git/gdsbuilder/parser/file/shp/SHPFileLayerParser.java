@@ -16,13 +16,23 @@ import org.opengis.filter.Filter;
 import com.git.gdsbuilder.type.dt.layer.DTLayer;
 
 /**
- * 
+ * 1개의 SHP 파일을 {@link DTLayer} 객체로 변환하는 클래스.
  * 
  * @author DY.Oh
  *
  */
 public class SHPFileLayerParser {
 
+	/**
+	 * 1개의 SHP {@link File} 객체를 {@link DTLayer} 객체로 변환하는 클래스
+	 * 
+	 * @param epsg 좌표계 (ex EPSG:4326)
+	 * @param file shp 파일 객체
+	 * @return {@link DTLayer}
+	 * @throws Exception {@link Exception}
+	 * 
+	 * @author DY.Oh
+	 */
 	public DTLayer parseDTLayer(String epsg, File file) throws Exception {
 
 		String fileName = file.getName();
@@ -43,7 +53,7 @@ public class SHPFileLayerParser {
 		}
 	}
 
-	public SimpleFeatureCollection getShpObject(String epsg, File file, String shpName) {
+	private SimpleFeatureCollection getShpObject(String epsg, File file, String shpName) {
 
 		ShapefileDataStore beforeStore = null;
 		SimpleFeatureCollection collection = null;
@@ -65,6 +75,17 @@ public class SHPFileLayerParser {
 		return collection;
 	}
 
+	/**
+	 * 특정 경로의 1개 SHP 파일을 {@link DTLayer} 객체로 변환하는 클래스.
+	 * 
+	 * @param epsg     좌표계 (ex EPSG:4326)
+	 * @param filePath SHP 파일 경로
+	 * @param shpName  SHP 파일명
+	 * @return {@link DTLayer}
+	 * @throws Exception {@link Exception}
+	 * 
+	 * @author DY.Oh
+	 */
 	public DTLayer parseDTLayer(String epsg, String filePath, String shpName) throws Exception {
 
 		SimpleFeatureCollection collection = getShpObject(epsg, filePath, shpName);
@@ -84,7 +105,7 @@ public class SHPFileLayerParser {
 		}
 	}
 
-	public SimpleFeatureCollection getShpObject(String epsg, String filePath, String shpName) {
+	private SimpleFeatureCollection getShpObject(String epsg, String filePath, String shpName) {
 
 		ShapefileDataStore beforeStore = null;
 		try {

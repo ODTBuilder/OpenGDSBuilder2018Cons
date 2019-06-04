@@ -15,7 +15,8 @@ import java.util.List;
 import com.git.gdsbuilder.geoserver.converter.unzip.ForestUnzip;
 
 /**
- * Geoserver 데이터를 다운받아 임상도 구조로 변환하는 클래스 
+ * Geoserver 데이터를 다운받아 임상도 구조로 변환하는 클래스
+ * 
  * @author SG.Lee
  * @since 2018. 10. 30. 오전 9:53:18
  */
@@ -107,6 +108,7 @@ public class ForestExport {
 
 	/**
 	 * 파일 Export
+	 * 
 	 * @author SG.Lee
 	 * @since 2018. 10. 29. 오후 3:48:38
 	 * @return int 200 성공 500 내부에러 700 파일구조에러 612 레이어 리스트 NULL 702 파일손상 703
@@ -335,10 +337,10 @@ public class ForestExport {
 	 * 
 	 * @author SG.Lee
 	 * @since 2018. 4. 18. 오전 9:46:27
-	 * @param folderName 폴더명
-	 * @param fileName 파일명
+	 * @param folderName     폴더명
+	 * @param fileName       파일명
 	 * @param beforeFilePath 이동전 경로
-	 * @param afterFilePath 이동후 경로
+	 * @param afterFilePath  이동후 경로
 	 * @return String 파일경로
 	 */
 	private static String moveDirectory(String folderName, String fileName, String beforeFilePath,

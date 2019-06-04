@@ -3,36 +3,13 @@ package com.git.gdsbuilder.quadtree;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.index.*;
 
-/**
- * A Quadtree is a spatial index structure for efficient range querying of items
- * bounded by 2D rectangles. {@link Geometry}s can be indexed by using their
- * {@link Envelope}s. Any type of Object can also be indexed as long as it has
- * an extent that can be represented by an {@link Envelope}.
- * <p>
- * This Quadtree index provides a <b>primary filter</b> for range rectangle
- * queries. The various query methods return a list of all items which
- * <i>may</i> intersect the query rectangle. Note that it may thus return items
- * which do <b>not</b> in fact intersect the query rectangle. A secondary filter
- * is required to test for actual intersection between the query rectangle and
- * the envelope of each candidate item. The secondary filter may be performed
- * explicitly, or it may be provided implicitly by subsequent operations
- * executed on the items (for instance, if the index query is followed by
- * computing a spatial predicate between the query geometry and tree items, the
- * envelope intersection check is performed automatically.
- * <p>
- * This implementation does not require specifying the extent of the inserted
- * items beforehand. It will automatically expand to accomodate any extent of
- * dataset.
- * <p>
- * This data structure is also known as an <i>MX-CIF quadtree</i> following the
- * terminology of Samet and others.
- *
- * @version 1.7
- */
-public class Quadtree implements SpatialIndex, Serializable {
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.index.ArrayListVisitor;
+import com.vividsolutions.jts.index.ItemVisitor;
+import com.vividsolutions.jts.index.SpatialIndex;
+
+public class Quadtree extends com.vividsolutions.jts.index.quadtree.Quadtree implements SpatialIndex, Serializable {
 	private static final long serialVersionUID = -7461163625812743604L;
 
 	/**
@@ -93,7 +70,7 @@ public class Quadtree implements SpatialIndex, Serializable {
 			return root.depth();
 		return 0;
 	}
-	
+
 	/**
 	 * Tests whether the index contains any items.
 	 * 

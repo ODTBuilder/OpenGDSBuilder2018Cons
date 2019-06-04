@@ -48,7 +48,7 @@ public class DXFFileFeatureParser {
 	 * @param epsg      좌표계 (ex EPSG:4326)
 	 * @param dxfEntity DXF Entity
 	 * @return {@link DXFEntity}를 변환한 {@link SimpleFeature}
-	 * @throws Exception
+	 * @throws Exception {@link Exception}{@link Exception}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -81,7 +81,7 @@ public class DXFFileFeatureParser {
 	 * @param epsg      좌표계 (ex EPSG:4326)
 	 * @param dxfEntity DXF Entity
 	 * @return {@link DXFEntity}를 변환한 {@link SimpleFeature}
-	 * @throws Exception
+	 * @throws Exception {@link Exception}{@link Exception}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -117,7 +117,7 @@ public class DXFFileFeatureParser {
 	 * @param epsg      좌표계 (ex EPSG:4326)
 	 * @param dxfEntity DXF Entity
 	 * @return {@link DXFEntity}를 변환한 {@link SimpleFeature}
-	 * @throws Exception
+	 * @throws Exception {@link Exception}{@link Exception}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -154,7 +154,7 @@ public class DXFFileFeatureParser {
 	 * @param epsg      좌표계 (ex EPSG:4326)
 	 * @param dxfEntity DXF Entity
 	 * @return {@link DXFEntity}를 변환한 {@link SimpleFeature}
-	 * @throws Exception
+	 * @throws Exception {@link Exception}{@link Exception}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -185,7 +185,7 @@ public class DXFFileFeatureParser {
 	 * @param epsg      좌표계 (ex EPSG:4326)
 	 * @param dxfEntity DXF Entity
 	 * @return {@link DXFEntity}를 변환한 {@link SimpleFeature}
-	 * @throws Exception
+	 * @throws Exception {@link Exception}{@link Exception}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -215,7 +215,7 @@ public class DXFFileFeatureParser {
 	 * @param epsg      좌표계 (ex EPSG:4326)
 	 * @param dxfEntity DXF Entity
 	 * @return {@link DXFEntity}를 변환한 {@link SimpleFeature}
-	 * @throws Exception
+	 * @throws Exception {@link Exception}{@link Exception}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -250,7 +250,7 @@ public class DXFFileFeatureParser {
 	 * @param epsg      좌표계 (ex EPSG:4326)
 	 * @param dxfEntity DXF Entity
 	 * @return {@link DXFEntity}를 변환한 {@link SimpleFeature}
-	 * @throws Exception
+	 * @throws Exception {@link Exception}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -286,7 +286,7 @@ public class DXFFileFeatureParser {
 	 * @param epsg      좌표계 (ex EPSG:4326)
 	 * @param dxfEntity DXF Entity
 	 * @return {@link DXFEntity}를 변환한 {@link SimpleFeature}
-	 * @throws Exception
+	 * @throws Exception {@link Exception}
 	 * 
 	 * @author DY.Oh
 	 */

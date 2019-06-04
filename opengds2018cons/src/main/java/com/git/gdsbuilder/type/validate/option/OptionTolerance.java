@@ -14,15 +14,15 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package com.git.gdsbuilder.type.validate.option.specific;
+package com.git.gdsbuilder.type.validate.option;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * {@link com.git.gdsbuilder.type.validate.option.specific.AttributeMiss} 또는
- * {@link com.git.gdsbuilder.type.validate.option.specific.GraphicMiss} 검수 항목 정의
+ * {@link com.git.gdsbuilder.type.validate.option.AttributeMiss} 또는
+ * {@link com.git.gdsbuilder.type.validate.option.GraphicMiss} 검수 항목 정의
  * 시 검수 대상 레이어의 허용 오차범위, 수치 조건 등의 수치 정보를 저장하는 클래스
  * 
  * @author DY.Oh

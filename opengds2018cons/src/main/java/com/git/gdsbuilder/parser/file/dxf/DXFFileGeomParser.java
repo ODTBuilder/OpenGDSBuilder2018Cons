@@ -30,7 +30,7 @@ public class DXFFileGeomParser {
 	 * @param startAng  각도
 	 * @param angExtent 각도의 크기
 	 * @return {@link Geometry}
-	 * @throws Exception
+	 * @throws Exception {@link Exception}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -56,7 +56,7 @@ public class DXFFileGeomParser {
 	 * @param pt     중심점
 	 * @param radius 반지름
 	 * @return {@link Geometry}
-	 * @throws Exception
+	 * @throws Exception {@link Exception}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -79,7 +79,7 @@ public class DXFFileGeomParser {
 	 * @param epsg 좌표계 (ex EPSG:4326)
 	 * @param pt   중심점
 	 * @return {@link Geometry}
-	 * @throws Exception
+	 * @throws Exception {@link Exception}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -99,7 +99,7 @@ public class DXFFileGeomParser {
 	 * @param startPt {@link LineString}의 첫점
 	 * @param endPt   {@link LineString}의 끝점
 	 * @return {@link Geometry}
-	 * @throws Exception
+	 * @throws Exception {@link Exception}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -128,7 +128,7 @@ public class DXFFileGeomParser {
 	 * @param vertexIterator Point Collection
 	 * @param vertexCount    Point 갯수
 	 * @return {@link Geometry}
-	 * @throws Exception
+	 * @throws Exception {@link Exception}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -181,7 +181,7 @@ public class DXFFileGeomParser {
 	 * @param vertexCount    Point 갯수
 	 * @param elevation      높이값(z)
 	 * @return {@link Geometry}
-	 * @throws Exception
+	 * @throws Exception {@link Exception}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -229,7 +229,7 @@ public class DXFFileGeomParser {
 	 * @param point3 {@link Polygon}의 셋째 점
 	 * @param point4 {@link Polygon}의 넷째 점
 	 * @return {@link Geometry}
-	 * @throws Exception
+	 * @throws Exception {@link Exception}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -264,7 +264,7 @@ public class DXFFileGeomParser {
 	 * @param minimumX 최소 x 좌표
 	 * @param minimumY 최소 y 좌표
 	 * @return {@link Geometry}
-	 * @throws Exception
+	 * @throws Exception {@link Exception}
 	 * 
 	 * @author DY.Oh
 	 */

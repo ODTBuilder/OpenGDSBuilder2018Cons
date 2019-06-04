@@ -14,24 +14,20 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package com.git.gdsbuilder.type.validate.option.type;
+package com.git.gdsbuilder.type.validate.option;
 
 /**
- * 임상도 검수 항목 6가지에 대한 영문 검수 항목명, 한글 검수 항목명, 오류 타입 등의 정보를 저장하는 Enum 클래스
+ * 레이어 구조 검수 항목 2가지에 대한 영문 검수 항목명, 한글 검수 항목명, 오류 타입 등의 정보를 저장하는 Enum 클래스
+ * <p>
+ * 수치지도, 임상도, 지하시설물 검수에 모두 적용
  * 
  * @author DY.Oh
  *
  */
-public enum FTMQAOptions {
+public enum LayerFieldOptions {
 
-	FCODELOGICALATTRIBUTE("FCodeLogicalAttribute", "Wrong F Code (Forest)", "FCode불일치", "AttributeError", "속성오류"),
-	FLABELLOGICALATTRIBUTE("FLabelLogicalAttribute", "Wrong F Label (Forest)", "AttributeError", "Label불일치", "속성오류"),
-	DISSOLVE("Dissolve", "Discord of adjacent attribute", "인접속성병합오류", "AttributeError", "속성오류"),
-
-	MULTIPART("MultiPart", "Selection of wrong multiple parts", "다중객체존재오류", "GraphicError", "그래픽오류"),
-	SMALLAREA("SmallArea", "Areas under tolerance limit", "미세폴리곤존재오류", "GraphicError", "그래픽오류"),
-	FENTITYINHOLE("FEntityInHole", "Holes in polygons", "홀(Hole)폴리곤존재오류", "GraphicError", "그래픽오류"),
-	SELFENTITY("SelfEntity", "Overlapping features", "단독존재오류", "GraphicError", "그래픽오류");
+	LAYERFIELDFIXMISS("LayerFixMiss", "Feature with wrong attribute value", "필드구조오류", "LayerError", "레이어오류"),
+	LAYERTYPEFIXMISS("LayerFixMiss", "Feature with wrong geometry type", "Geometry타입오류", "LayerError", "레이어오류");
 
 	/**
 	 * 검수옵션 생성 및 오류 레이어 생성 시 사용되는 에러코드
@@ -54,7 +50,7 @@ public enum FTMQAOptions {
 	 */
 	String errType;
 
-	private FTMQAOptions(String errCode, String errNameE, String errName, String errTypeE, String errType) {
+	private LayerFieldOptions(String errCode, String errNameE, String errName, String errTypeE, String errType) {
 		this.errCode = errCode;
 		this.errNameE = errNameE;
 		this.errName = errName;
@@ -86,6 +82,14 @@ public enum FTMQAOptions {
 		this.errName = errName;
 	}
 
+	public String getErrType() {
+		return errType;
+	}
+
+	public void setErrType(String errType) {
+		this.errType = errType;
+	}
+
 	public String getErrTypeE() {
 		return errTypeE;
 	}
@@ -94,11 +98,4 @@ public enum FTMQAOptions {
 		this.errTypeE = errTypeE;
 	}
 
-	public String getErrType() {
-		return errType;
-	}
-
-	public void setErrType(String errType) {
-		this.errType = errType;
-	}
 }

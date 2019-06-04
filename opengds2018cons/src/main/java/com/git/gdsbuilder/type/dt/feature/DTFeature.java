@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.opengis.feature.simple.SimpleFeature;
 
-import com.git.gdsbuilder.type.validate.option.specific.AttributeFilter;
+import com.git.gdsbuilder.type.validate.option.AttributeFilter;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,13 +31,11 @@ import lombok.NoArgsConstructor;
  * 상위 {@link com.git.gdsbuilder.type.dt.collection.DTLayerCollection}의 ID,
  * {@link com.git.gdsbuilder.type.dt.layer.DTLayer}의 ID 및 Geometry/Attribute 값을
  * 저장하는 {@link org.opengis.feature.simple.SimpleFeature}, 속성 필터링을 위한
- * {@link com.git.gdsbuilder.type.validate.option.specific.AttributeFilter}
- * List로 구성됨.
+ * {@link com.git.gdsbuilder.type.validate.option.AttributeFilter} List로 구성됨.
  * 
  * @author DY.Oh
  */
 @Data
-@NoArgsConstructor
 public class DTFeature {
 
 	/**
@@ -53,8 +51,8 @@ public class DTFeature {
 	 */
 	SimpleFeature simefeature;
 	/**
-	 * 속성 필터링을 위한
-	 * {@link com.git.gdsbuilder.type.validate.option.specific.AttributeFilter} List
+	 * 속성 필터링을 위한 {@link com.git.gdsbuilder.type.validate.option.AttributeFilter}
+	 * List
 	 */
 	List<AttributeFilter> filter;
 
@@ -62,6 +60,18 @@ public class DTFeature {
 		this.layerID = layerID;
 		this.simefeature = simefeature;
 		this.filter = filter;
+	}
+
+	public DTFeature(String typeName, String layerID, SimpleFeature simefeature, List<AttributeFilter> filter) {
+		super();
+		this.typeName = typeName;
+		this.layerID = layerID;
+		this.simefeature = simefeature;
+		this.filter = filter;
+	}
+
+	public DTFeature() {
+		super();
 	}
 
 }

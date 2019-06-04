@@ -60,8 +60,9 @@ public class DTLayerCollectionList extends ArrayList<DTLayerCollection> {
 	 * 좌, 우 각각의 {@link com.git.gdsbuilder.type.dt.collection.DTLayerCollection}를
 	 * {@link com.git.gdsbuilder.type.dt.collection.DTLayerCollectionList}에 담아 반환
 	 * 
-	 * @param mapSystemRule
+	 * @param mapSystemRule 인접도엽(상, 하, 좌, 우) ID 정보
 	 * @return DTLayerCollectionList
+	 *         {@link com.git.gdsbuilder.type.dt.collection.DTLayerCollectionList}
 	 * 
 	 * @author DY.Oh
 	 */

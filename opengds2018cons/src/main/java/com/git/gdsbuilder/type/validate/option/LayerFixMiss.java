@@ -13,9 +13,8 @@
  *    but WITHOUT ANY WARRANTY; without even the implied warranty of
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
- * 
  */
-package com.git.gdsbuilder.type.validate.option.specific;
+package com.git.gdsbuilder.type.validate.option;
 
 import java.util.List;
 
@@ -24,11 +23,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * {@link com.git.gdsbuilder.type.validate.option.specific.AttributeMiss} 또는
- * {@link com.git.gdsbuilder.type.validate.option.specific.GraphicMiss} 수행 시
- * 사용되는 속성 필터
- * <p>
- * 속성 중 특정 key 값을 가지며, 특정 value를 가진 1개의 객체 검수
+ * 특정 레이어의 Geometry 타입, 속성 컬럼 구조, 고정 속성값 검수 항목을 정의하는 클래스
  * 
  * @author DY.Oh
  *
@@ -36,15 +31,23 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AttributeFilter {
+public class LayerFixMiss {
 
 	/**
-	 * 속성 컬럼 key
+	 * 검수항목 이름
 	 */
-	String key;
+	String option;
 	/**
-	 * 속성 value list
+	 * 레이어 ID
 	 */
-	List<Object> values;
+	String layerID;
+	/**
+	 * 레이어 Geometry 타입
+	 */
+	String geometry;
+	/**
+	 * 레이어 속성 컬럼 구조 및 고정 속성값
+	 */
+	List<FixedValue> fix;
 
 }

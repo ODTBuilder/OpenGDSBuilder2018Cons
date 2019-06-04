@@ -67,10 +67,11 @@ public class NGIFileLayerParser {
 	 * <p>
 	 * ngi 파일과 동일 경로에 nda 파일이 존재하는 경우, 속성이 값이 존재하는 {@link DTLayerList}로 변환.
 	 * <p>
-	 * ngi 파일의 경우 1개의 레이어 내에 다수의 Geometry 타입 레이어가 존재할 수 있으나 {@link DTLayer}의 경우 
+	 * ngi 파일의 경우 1개의 레이어 내에 다수의 Geometry 타입 레이어가 존재할 수 있으나 {@link DTLayer}의 경우
 	 * 가~~~ㄸ
+	 * 
 	 * @return {@link DTLayerList}
-	 * @throws Exception
+	 * @throws Exception {@link Exception}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -98,7 +99,7 @@ public class NGIFileLayerParser {
 	 * 속성이 존재하지 않는 ngi 레이어를 {@link DTLayerList} 객체로 변환.
 	 * 
 	 * @return {@link DTLayerList}
-	 * @throws Exception
+	 * @throws Exception {@link Exception}
 	 * 
 	 * @author DY.Oh
 	 */

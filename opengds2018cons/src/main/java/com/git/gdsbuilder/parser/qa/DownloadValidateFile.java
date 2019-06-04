@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.git.gdsbuilder.parser.file;
+package com.git.gdsbuilder.parser.qa;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,15 +12,27 @@ import java.net.URL;
 import java.net.URLDecoder;
 
 /**
- * @className DownloadValidateFile.java
- * @description
+ * 다른 경로(원격 또는 로컬)에 있는 파일을 특졍 경로에 다운로드 하는 클래스.
+ * 
  * @author DY.Oh
- * @since 2018. 2. 13. 오후 4:38:32
+ *
  */
 public class DownloadValidateFile {
 
 	private static final int BUFFER_SIZE = 4096;
 
+	/**
+	 * 다른 경로(원격 또는 로컬)에 있는 파일을 특졍 경로에 다운로드 함.
+	 * 
+	 * @param path        원격 또는 로컬에 존재하는 파일 경로
+	 * @param zipfilePath 파일을 다운로드 할 경로
+	 * @return {@code true} : 다운로드 성공
+	 *         <p>
+	 *         {@code false} : 다운로드 실패
+	 * @throws IOException {@link IOException}
+	 * 
+	 * @author DY.Oh
+	 */
 	public boolean download(String path, String zipfilePath) throws IOException {
 
 		URL url = new URL(path);

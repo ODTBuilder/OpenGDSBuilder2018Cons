@@ -14,7 +14,7 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package com.git.gdsbuilder.type.validate.option.standard;
+package com.git.gdsbuilder.type.validate.option;
 
 import java.util.List;
 
@@ -23,31 +23,34 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 특정 레이어의 Geometry 타입, 속성 컬럼 구조, 고정 속성값 검수 항목을 정의하는 클래스
+ * 특정 레이어의 속성 컬럼 구조, 고정 속성값 검수 항목을 정의하는 클래스
  * 
  * @author DY.Oh
- *
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LayerFixMiss {
+public class FixedValue {
 
 	/**
-	 * 검수항목 이름
+	 * 속성 컬럼명
 	 */
-	String option;
+	String key;
 	/**
-	 * 레이어 ID
+	 * 속성 타입(ex. String, Integer, Double..)
 	 */
-	String layerID;
+	String type;
 	/**
-	 * 레이어 Geometry 타입
+	 * 속성값 Null 허용 여부
 	 */
-	String geometry;
+	boolean isnull;
 	/**
-	 * 레이어 속성 컬럼 구조 및 고정 속성값
+	 * 속성값 길이
 	 */
-	List<FixedValue> fix;
+	Long length;
+	/**
+	 * 고정 속성값 List (해당 속성값만 가질 수 있음)
+	 */
+	List<Object> values;
 
 }

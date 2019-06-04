@@ -18,11 +18,6 @@ package com.git.gdsbuilder.type.validate.option;
 
 import java.util.List;
 
-import com.git.gdsbuilder.type.validate.option.specific.AttributeMiss;
-import com.git.gdsbuilder.type.validate.option.specific.CloseMiss;
-import com.git.gdsbuilder.type.validate.option.specific.GraphicMiss;
-import com.git.gdsbuilder.type.validate.option.standard.LayerFixMiss;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,13 +29,13 @@ import lombok.NoArgsConstructor;
  * 옵션에 대한 정보를 저장
  * <p>
  * 레이어 Geometry 타입, 속성 컬럼 구조 검수 항목인
- * {@link com.git.gdsbuilder.type.validate.option.standard.LayerFixMiss}, 레이어 내
+ * {@link com.git.gdsbuilder.type.validate.option.LayerFixMiss}, 레이어 내
  * 객체의 속성 값 검수 항목인
- * {@link com.git.gdsbuilder.type.validate.option.standard.AttributeMiss}, 레이어 내
+ * {@link com.git.gdsbuilder.type.validate.option.AttributeMiss}, 레이어 내
  * 객체의 Geometry 검수 항목인
- * {@link com.git.gdsbuilder.type.validate.option.standard.GraphicMiss}, 인접 검수
+ * {@link com.git.gdsbuilder.type.validate.option.GraphicMiss}, 인접 검수
  * 영역의 레이어 간 검수 항목인
- * {@link com.git.gdsbuilder.type.validate.option.standard.CloseMiss} 각각을 List
+ * {@link com.git.gdsbuilder.type.validate.option.CloseMiss} 각각을 List
  * 형태로 저장
  * 
  * @author DY.Oh

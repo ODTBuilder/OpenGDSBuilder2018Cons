@@ -122,7 +122,7 @@ public class NGIFileFeatureParser {
 	 * 
 	 * @param featureID ngi 객체 ID
 	 * @return {@link SimpleFeature}
-	 * @throws Exception
+	 * @throws Exception {@link Exception}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -158,7 +158,7 @@ public class NGIFileFeatureParser {
 	 * @param featureID ngi/nda 객체 ID
 	 * @param ndaHeader nda 파일 header
 	 * @return {@link SimpleFeature}
-	 * @throws Exception
+	 * @throws Exception {@link Exception}
 	 * 
 	 * @author DY.Oh
 	 */

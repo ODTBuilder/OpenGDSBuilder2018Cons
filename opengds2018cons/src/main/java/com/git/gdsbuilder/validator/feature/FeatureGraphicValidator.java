@@ -43,7 +43,7 @@ import com.git.gdsbuilder.type.dt.feature.DTFeature;
 import com.git.gdsbuilder.type.dt.layer.DTLayer;
 import com.git.gdsbuilder.type.dt.layer.DTLayerList;
 import com.git.gdsbuilder.type.validate.error.ErrorFeature;
-import com.git.gdsbuilder.type.validate.option.specific.OptionTolerance;
+import com.git.gdsbuilder.type.validate.option.OptionTolerance;
 
 /**
  * {@link DTFeature}의 기하학적 오류 및 {@link DTFeature}간의 위상관계를 검수하는 클래스.

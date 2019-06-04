@@ -34,7 +34,7 @@ public class DXFFileLayerParser {
 	 * @param epsg     좌표계 (ex EPSG:4326)
 	 * @param dxfLayer DXF Entity 레이어
 	 * @return DTLayerList n개(DXF Entity 타입 갯수)의 {@link DTLayer}
-	 * @throws Exception
+	 * @throws Exception {@link Exception}
 	 * 
 	 * @author DY.Oh
 	 */

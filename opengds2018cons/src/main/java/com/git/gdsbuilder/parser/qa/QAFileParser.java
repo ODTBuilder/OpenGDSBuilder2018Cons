@@ -14,7 +14,7 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package com.git.gdsbuilder.parser.file;
+package com.git.gdsbuilder.parser.qa;
 
 import java.io.File;
 import java.util.Iterator;
@@ -28,6 +28,8 @@ import org.opengis.feature.simple.SimpleFeature;
 
 import com.git.gdsbuilder.parser.file.meta.FileMeta;
 import com.git.gdsbuilder.parser.file.meta.FileMetaList;
+import com.git.gdsbuilder.parser.file.reader.FileDTLayerCollectionReader;
+import com.git.gdsbuilder.parser.file.reader.UnZipFile;
 import com.git.gdsbuilder.parser.file.shp.SHPFileLayerParser;
 import com.git.gdsbuilder.type.dt.collection.DTLayerCollection;
 import com.git.gdsbuilder.type.dt.collection.DTLayerCollectionList;
@@ -403,11 +405,6 @@ public class QAFileParser {
 		}
 	}
 
-	/**
-	 * @author DY.Oh
-	 * @since 2018. 3. 29. 오후 6:10:03 void
-	 * @decription
-	 */
 	private void parseUndergroundQA10File() {
 
 		if (this.unZipFile.isFiles()) {
@@ -448,11 +445,6 @@ public class QAFileParser {
 		}
 	}
 
-	/**
-	 * @author DY.Oh
-	 * @since 2018. 3. 29. 오후 6:04:16 void
-	 * @decription
-	 */
 	private void parseNumericalQA20NgiFile() {
 
 		if (unZipFile.isFiles()) {
@@ -510,11 +502,6 @@ public class QAFileParser {
 		}
 	}
 
-	/**
-	 * @author DY.Oh
-	 * @since 2018. 3. 29. 오후 5:49:52 void
-	 * @decription
-	 */
 	private void parseNumericalQA20ShpFile() {
 
 		if (this.unZipFile.isDir()) {
@@ -590,11 +577,6 @@ public class QAFileParser {
 		}
 	}
 
-	/**
-	 * @author DY.Oh
-	 * @since 2018. 3. 29. 오후 3:10:06
-	 * @decription
-	 */
 	private void parseNumericalQA10File() {
 
 		if (this.unZipFile.isFiles()) {
@@ -729,13 +711,6 @@ public class QAFileParser {
 		}
 	}
 
-	/**
-	 * @author DY.Oh
-	 * @since 2018. 4. 17. 오전 11:20:17
-	 * @param collectionList2
-	 * @param neatlineLayer
-	 * @decription
-	 */
 	private DTLayerCollection setForestNeatLine(DTLayerCollection collection, DTLayer neatlineLayer) {
 
 		SimpleFeatureCollection neatSfc = neatlineLayer.getSimpleFeatureCollection();

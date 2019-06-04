@@ -14,7 +14,7 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package com.git.gdsbuilder.type.validate.option.standard;
+package com.git.gdsbuilder.type.validate.option;
 
 import java.util.List;
 
@@ -23,34 +23,39 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 특정 레이어의 속성 컬럼 구조, 고정 속성값 검수 항목을 정의하는 클래스
+ * 
  * 
  * @author DY.Oh
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class FixedValue {
+public class AttributeFigure {
 
 	/**
-	 * 속성 컬럼명
+	 * {@link com.git.gdsbuilder.type.validate.option.AttributeFigure} 정의
+	 * 순서에 따라 부여되는 index
+	 */
+	Long fIdx;
+	/**
+	 * 속성 key
 	 */
 	String key;
 	/**
-	 * 속성 타입(ex. String, Integer, Double..)
-	 */
-	String type;
-	/**
-	 * 속성값 Null 허용 여부
-	 */
-	boolean isnull;
-	/**
-	 * 속성값 길이
-	 */
-	Long length;
-	/**
-	 * 고정 속성값 List (해당 속성값만 가질 수 있음)
+	 * 속성 value List
 	 */
 	List<Object> values;
+	/**
+	 * 속성 value (수치형 속성 value 검수할 때 사용)
+	 */
+	Double number;
+	/**
+	 * 속성 value 조건 (수치형 속성 value 검수할 때 사용)
+	 */
+	String condition;
+	/**
+	 * 속성 value 간격 (수치형 속성 value 검수할 때 사용)
+	 */
+	Double interval;
 
 }

@@ -64,7 +64,7 @@ public class NGIFileParser extends NGIDataStoreFactory {
 	 * @param srs         좌표계 (ex. EPSG:4326)
 	 * @param charset     인고딩 타입 (ex. EUC-KR)
 	 * @return NGIDataStore
-	 * @throws IOException
+	 * @throws IOException {@link IOException}
 	 * 
 	 * @author DY.Oh
 	 */

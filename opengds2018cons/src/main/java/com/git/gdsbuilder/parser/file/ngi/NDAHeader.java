@@ -68,7 +68,7 @@ public class NDAHeader {
 	/**
 	 * NDA 파일 내의 특정 레이어의 모든 속성 컬럼명 반환.
 	 * 
-	 * @return List<String>
+	 * @return 속성 컬럼명 목록
 	 * 
 	 * @author DY.Oh
 	 */

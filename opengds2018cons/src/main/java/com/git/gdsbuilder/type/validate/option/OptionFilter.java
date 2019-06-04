@@ -14,7 +14,7 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package com.git.gdsbuilder.type.validate.option.specific;
+package com.git.gdsbuilder.type.validate.option;
 
 import java.util.List;
 
@@ -23,39 +23,27 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 
+ * {@link com.git.gdsbuilder.type.validate.option.AttributeMiss} 또는
+ * {@link com.git.gdsbuilder.type.validate.option.GraphicMiss} 수행 시
+ * 사용되는 속성 필터
+ * <p>
+ * {@link com.git.gdsbuilder.type.validate.option.OptionFilter}에 따라 해당
+ * 레이어의 특정 속성 값을 가진 객체만 검수 수행. 레이어의 모든 객체에 적용됨.
  * 
  * @author DY.Oh
+ *
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AttributeFigure {
+public class OptionFilter {
 
 	/**
-	 * {@link com.git.gdsbuilder.type.validate.option.specific.AttributeFigure} 정의
-	 * 순서에 따라 부여되는 index
+	 * 속성 필터를 적용할 레이어 ID
 	 */
-	Long fIdx;
+	String layerID;
 	/**
-	 * 속성 key
+	 * 속성 필터
 	 */
-	String key;
-	/**
-	 * 속성 value List
-	 */
-	List<Object> values;
-	/**
-	 * 속성 value (수치형 속성 value 검수할 때 사용)
-	 */
-	Double number;
-	/**
-	 * 속성 value 조건 (수치형 속성 value 검수할 때 사용)
-	 */
-	String condition;
-	/**
-	 * 속성 value 간격 (수치형 속성 value 검수할 때 사용)
-	 */
-	Double interval;
-
+	List<AttributeFilter> filter;
 }

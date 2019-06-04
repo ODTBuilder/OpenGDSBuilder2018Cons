@@ -45,9 +45,9 @@ import org.opengis.referencing.operation.TransformException;
 import com.git.gdsbuilder.type.dt.layer.DTLayer;
 import com.git.gdsbuilder.type.dt.layer.DTLayerList;
 import com.git.gdsbuilder.type.validate.error.ErrorLayer;
-import com.git.gdsbuilder.type.validate.option.specific.OptionFigure;
-import com.git.gdsbuilder.type.validate.option.specific.OptionTolerance;
-import com.git.gdsbuilder.type.validate.option.standard.FixedValue;
+import com.git.gdsbuilder.type.validate.option.FixedValue;
+import com.git.gdsbuilder.type.validate.option.OptionFigure;
+import com.git.gdsbuilder.type.validate.option.OptionTolerance;
 import com.git.gdsbuilder.validator.feature.FeatureAttributeValidator;
 import com.git.gdsbuilder.validator.feature.FeatureCloseCollectionValidator;
 import com.git.gdsbuilder.validator.feature.FeatureGraphicValidator;
@@ -75,7 +75,7 @@ public interface LayerValidator {
 	 * @param tolerance      허용오차 범위
 	 * @return {@link ErrorLayer} 등고선끊김오류가 발생한 모든 등고선 객체. 오류 객체가 없는 경우 {@code null}
 	 *         반환
-	 * @throws SchemaException
+	 * @throws SchemaException {@link SchemaException}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -87,7 +87,7 @@ public interface LayerValidator {
 	 * 
 	 * @return {@link ErrorLayer} 등고선교차오류가 발생한 모든 등고선 객체. 오류 객체가 없는 경우 {@code null}
 	 *         반환
-	 * @throws SchemaException
+	 * @throws SchemaException {@link SchemaException}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -100,7 +100,7 @@ public interface LayerValidator {
 	 * @param tolerance 허용오차 범위
 	 * @return {@link ErrorLayer} 등고선꺾임오류가 발생한 모든 등고선 객체. 오류 객체가 없는 경우 {@code null}
 	 *         반환
-	 * @throws SchemaException
+	 * @throws SchemaException {@link SchemaException}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -112,7 +112,7 @@ public interface LayerValidator {
 	 * 
 	 * @param figure 높이값의 범위 및 유효성 검사 조건
 	 * @return {@link ErrorLayer} 고도값오류가 발생한 모든 등고선 객체. 오류 객체가 없는 경우 {@code null} 반환
-	 * @throws SchemaException
+	 * @throws SchemaException {@link SchemaException}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -124,10 +124,10 @@ public interface LayerValidator {
 	 * 
 	 * @return {@link ErrorLayer} 직선화미처리오류가 발생한 모든 등고선 객체. 오류 객체가 없는 경우 {@code null}
 	 *         반환
-	 * @throws NoSuchAuthorityCodeException
-	 * @throws SchemaException
-	 * @throws FactoryException
-	 * @throws TransformException
+	 * @throws NoSuchAuthorityCodeException {@link NoSuchAuthorityCodeException}
+	 * @throws SchemaException              {@link SchemaException}
+	 * @throws FactoryException             {@link FactoryException}
+	 * @throws TransformException           {@link TransformException}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -141,7 +141,7 @@ public interface LayerValidator {
 	 * @param tolerance 허용 면적(㎡)
 	 * @return {@link ErrorLayer} 허용범위이하면적오류가 발생한 모든 등고선 객체. 오류 객체가 없는 경우
 	 *         {@code null} 반환
-	 * @throws SchemaException
+	 * @throws SchemaException {@link SchemaException}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -154,7 +154,7 @@ public interface LayerValidator {
 	 * @param tolerance 허용 길이(m)
 	 * @return {@link ErrorLayer} 허용범위이하길이오류가 발생한 모든 객체. 오류 객체가 없는 경우 {@code null}
 	 *         반환
-	 * @throws SchemaException
+	 * @throws SchemaException {@link SchemaException}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -168,7 +168,7 @@ public interface LayerValidator {
 	 *                       {@link DTLayerList}.
 	 * @param tolerance      허용오차 범위
 	 * @return {@link ErrorLayer} 기준점초과오류가 발생한 모든 객체. 오류 객체가 없는 경우 {@code null} 반환
-	 * @throws SchemaException
+	 * @throws SchemaException {@link SchemaException}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -182,8 +182,8 @@ public interface LayerValidator {
 	 *                       {@link DTLayerList}.
 	 * @param tolerance      허용오차 범위
 	 * @return {@link ErrorLayer} 단독존재오류가 발생한 모든 객체. 오류 객체가 없는 경우 {@code null} 반환
-	 * @throws SchemaException
-	 * @throws IOException
+	 * @throws SchemaException {@link SchemaException}
+	 * @throws IOException     {@link IOException}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -198,8 +198,8 @@ public interface LayerValidator {
 	 *                      {@link DTLayer}.
 	 * @param tolerance     허용오차 범위
 	 * @return {@link ErrorLayer} 단독존재오류가 발생한 모든 객체. 오류 객체가 없는 경우 {@code null} 반환
-	 * @throws SchemaException
-	 * @throws IOException
+	 * @throws SchemaException {@link SchemaException}
+	 * @throws IOException     {@link IOException}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -210,10 +210,10 @@ public interface LayerValidator {
 	 * {@link DTLayer}의 내에 존재하는 모든 객체에 대하여 OutBoundary(경계초과오류, Feature crossing the
 	 * boundary) 검수 수행.
 	 * 
-	 * @param relationLayer 검수 대상 {@link DTLayer}의 경계 초과 여부를 검사할 {@link DTLayer}.
-	 * @param tolerance     허용오차 범위
+	 * @param relationLayers 검수 대상 {@link DTLayer}의 경계 초과 여부를 검사할 {@link DTLayer}.
+	 * @param tolerance      허용오차 범위
 	 * @return {@link ErrorLayer} 경계초과오류가 발생한 모든 객체. 오류 객체가 없는 경우 {@code null} 반환
-	 * @throws SchemaException
+	 * @throws SchemaException {@link SchemaException}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -224,7 +224,7 @@ public interface LayerValidator {
 	 * features) 검수 수행.
 	 * 
 	 * @return {@link ErrorLayer} 요소중복오류가 발생한 모든 객체. 오류 객체가 없는 경우 {@code null} 반환
-	 * @throws SchemaException
+	 * @throws SchemaException {@link SchemaException}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -238,7 +238,7 @@ public interface LayerValidator {
 	 *                       {@link DTLayerList}
 	 * @param tole           허용오차 범위
 	 * @return {@link ErrorLayer} 객체폐합오류가 발생한 모든 객체. 오류 객체가 없는 경우 {@code null} 반환
-	 * @throws SchemaException
+	 * @throws SchemaException {@link SchemaException}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -253,7 +253,7 @@ public interface LayerValidator {
 	 *                       {@link DTLayerList}
 	 * @param reFigures      하천 중심선 {@link DTLayer}의 교량명 속성값 검사 조건
 	 * @return {@link ErrorLayer} 교량명오류가 발생한 모든 객체. 오류 객체가 없는 경우 {@code null} 반환
-	 * @throws SchemaException
+	 * @throws SchemaException {@link SchemaException}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -266,7 +266,7 @@ public interface LayerValidator {
 	 * 
 	 * @param figure 행정경계 {@link DTLayer}의 속성값 검사 조건
 	 * @return {@link ErrorLayer} 행정명오류가 발생한 모든 객체. 오류 객체가 없는 경우 {@code null} 반환
-	 * @throws SchemaException
+	 * @throws SchemaException {@link SchemaException}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -277,7 +277,7 @@ public interface LayerValidator {
 	 * 검수 수행.
 	 * 
 	 * @return {@link ErrorLayer} 폴리곤꼬임오류가 발생한 모든 객체. 오류 객체가 없는 경우 {@code null} 반환
-	 * @throws SchemaException
+	 * @throws SchemaException {@link SchemaException}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -290,8 +290,8 @@ public interface LayerValidator {
 	 *                       {@link DTLayerList}.
 	 * @param tolerance      허용오차 범위
 	 * @return {@link ErrorLayer} 선형노드오류가 발생한 모든 객체. 오류 객체가 없는 경우 {@code null} 반환
-	 * @throws SchemaException
-	 * @throws IOException
+	 * @throws SchemaException {@link SchemaException}
+	 * @throws IOException     {@link IOException}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -305,8 +305,8 @@ public interface LayerValidator {
 	 *                      {@link DTLayer}.
 	 * @param tolerance     허용오차 범위
 	 * @return {@link ErrorLayer} 선형노드오류가 발생한 모든 객체. 오류 객체가 없는 경우 {@code null} 반환
-	 * @throws SchemaException
-	 * @throws IOException
+	 * @throws SchemaException {@link SchemaException}
+	 * @throws IOException     {@link IOException}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -464,7 +464,7 @@ public interface LayerValidator {
 	 * @param relationLayers 포함관계 여부를 검수할 {@link DTLayerList}
 	 * @param tolerance      허용오차 범위
 	 * @return {@link ErrorLayer} 선형단락오류가 발생한 모든 객체. 오류 객체가 없는 경우 {@code null} 반환
-	 * @throws SchemaException
+	 * @throws SchemaException {@link SchemaException}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -478,7 +478,7 @@ public interface LayerValidator {
 	 * @param relationLayer 포함관계 여부를 검수할 {@link DTLayer}
 	 * @param tolerance     허용오차 범위
 	 * @return {@link ErrorLayer} 선형단락오류가 발생한 모든 객체. 오류 객체가 없는 경우 {@code null} 반환
-	 * @throws SchemaException
+	 * @throws SchemaException {@link SchemaException}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -583,7 +583,7 @@ public interface LayerValidator {
 	 * 
 	 * @param relationLayers 관로 이력 {@link DTLayerList}
 	 * @return {@link ErrorLayer} 지시선교차 오류가 발생한 모든 객체. 오류 객체가 없는 경우 {@code null} 반환
-	 * @throws SchemaException
+	 * @throws SchemaException {@link SchemaException}
 	 * 
 	 * @author DY.Oh
 	 */
@@ -721,7 +721,7 @@ public interface LayerValidator {
 	 * {@link DTLayer}의 내에 존재하는 모든 객체에 대하여 Dissolve(인접속성병합오류, Discord of adjacent
 	 * attribute) 검수 수행.
 	 * 
-	 * @param figures
+	 * @param figures 인접속성 조건
 	 * @return {@link ErrorLayer} 인접속성병합오류가 발생한 모든 객체. 오류 객체가 없는 경우 {@code null} 반환
 	 * 
 	 * @author hochul.Kim
@@ -734,8 +734,8 @@ public interface LayerValidator {
 	 * 
 	 * @param tolerance 허용오차 범위
 	 * @return {@link ErrorLayer} 인접속성병합오류가 발생한 모든 객체. 오류 객체가 없는 경우 {@code null} 반환
-	 * @throws SchemaException
-	 * @throws IOException
+	 * @throws SchemaException {@link SchemaException}
+	 * @throws IOException     {@link IOException}
 	 * 
 	 * @author DY.Oh
 	 */

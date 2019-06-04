@@ -14,7 +14,7 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package com.git.gdsbuilder.validator.feature.filter;
+package com.git.gdsbuilder.validator.feature;
 
 import java.util.List;
 
@@ -25,9 +25,9 @@ import org.opengis.feature.simple.SimpleFeature;
 
 import com.git.gdsbuilder.type.dt.layer.DTLayer;
 import com.git.gdsbuilder.type.dt.layer.DTLayerList;
-import com.git.gdsbuilder.type.validate.option.specific.AttributeFilter;
-import com.git.gdsbuilder.type.validate.option.specific.OptionFilter;
-import com.git.gdsbuilder.type.validate.option.specific.OptionTolerance;
+import com.git.gdsbuilder.type.validate.option.AttributeFilter;
+import com.git.gdsbuilder.type.validate.option.OptionFilter;
+import com.git.gdsbuilder.type.validate.option.OptionTolerance;
 
 /**
  * {@link SimpleFeature}의 Attribute 중 {@link AttributeFilter}에 해당하는 속성이 존재하는지

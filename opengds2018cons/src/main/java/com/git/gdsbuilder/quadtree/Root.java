@@ -5,12 +5,6 @@ import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.index.quadtree.IntervalSize;
 import com.vividsolutions.jts.util.Assert;
 
-/**
- * QuadRoot is the root of a single Quadtree. It is centred at the origin, and
- * does not have a defined extent.
- *
- * @version 1.7
- */
 public class Root extends NodeBase {
 
 	// the singleton root quad is centred at the origin.

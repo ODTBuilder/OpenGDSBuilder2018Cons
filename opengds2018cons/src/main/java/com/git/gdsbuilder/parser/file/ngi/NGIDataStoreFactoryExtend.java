@@ -59,7 +59,7 @@ public class NGIDataStoreFactoryExtend extends NGIDataStoreFactory {
 	 * {@link NGIDataStore} 객체를 생성
 	 * 
 	 * @param params url, srs, charset param Map
-	 * @throws IOException
+	 * @throws IOException {@link IOException}
 	 * 
 	 * @author DY.Oh
 	 */

@@ -32,13 +32,15 @@ import com.git.gdsbuilder.type.dt.layer.DTLayerList;
 public class NGIFileReader {
 
 	/**
+	 * ngi/nda 파일을 {@link DTLayerCollection} 객체로 변환.
+	 * 
 	 * @param epsg     좌표계 (ex EPSG:4326)
 	 * @param filePath 파일 경로
 	 * @param fileName 파일 이름
 	 * @param neatLine 검수 영역 레이어 이름
 	 * @return ngi/nda 파일을 변환한 {@link DTLayerCollection}, ngi/nda 파일 내에 레이어가 존재하지
 	 *         않거나 올바르지 않은 형태이면 {@code null} 반환
-	 * @throws Exception
+	 * @throws Exception {@link Exception}
 	 * 
 	 * @author DY.Oh
 	 */

@@ -20,8 +20,9 @@ import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.feature.DefaultFeatureCollection;
 import org.opengis.feature.simple.SimpleFeature;
 
-import com.git.gdsbuilder.type.validate.option.specific.OptionFilter;
+import com.git.gdsbuilder.type.validate.option.OptionFilter;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -29,15 +30,13 @@ import lombok.NoArgsConstructor;
  * {@link com.git.gdsbuilder.type.dt.layer.DTLayer}정보를 저장하는 클래스.
  * <p>
  * 1개의 레이어를 검수 할 때 사용되며 검수 레이어의 정보(레이어 type 및 ID), 레이어 내의 공간 객체들의 Collection인
- * {@Code org.geotools.data.simple.SimpleFeatureCollection}, 속성 컬럼 및 값을 지정하여
- * 해당하는 객체를 필터링하는
- * {@link com.git.gdsbuilder.type.validate.option.specific.OptionFilter}를 변수로
- * 가짐.
+ * {@link org.geotools.data.simple.SimpleFeatureCollection}, 속성 컬럼 및 값을 지정하여
+ * 해당하는 객체를 필터링하는 {@link com.git.gdsbuilder.type.validate.option.OptionFilter}를
+ * 변수로 가짐.
  * 
  * @author DY.Oh
  */
 @Data
-@NoArgsConstructor
 public class DTLayer {
 	/**
 	 * {@link com.git.gdsbuilder.type.dt.layer.DTLayer}을 포함하는
@@ -82,6 +81,20 @@ public class DTLayer {
 	 */
 	public void addFeature(SimpleFeature feature) {
 		((DefaultFeatureCollection) this.simpleFeatureCollection).add(feature);
+	}
+
+	public DTLayer(String typeName, String layerID, String layerType, SimpleFeatureCollection simpleFeatureCollection,
+			OptionFilter filter) {
+		super();
+		this.typeName = typeName;
+		this.layerID = layerID;
+		this.layerType = layerType;
+		this.simpleFeatureCollection = simpleFeatureCollection;
+		this.filter = filter;
+	}
+
+	public DTLayer() {
+		super();
 	}
 
 }

@@ -59,12 +59,12 @@ import com.git.gdsbuilder.type.dt.layer.DTLayer;
 import com.git.gdsbuilder.type.dt.layer.DTLayerList;
 import com.git.gdsbuilder.type.validate.error.ErrorFeature;
 import com.git.gdsbuilder.type.validate.error.ErrorLayer;
-import com.git.gdsbuilder.type.validate.option.specific.AttributeFigure;
-import com.git.gdsbuilder.type.validate.option.specific.AttributeFilter;
-import com.git.gdsbuilder.type.validate.option.specific.OptionFigure;
-import com.git.gdsbuilder.type.validate.option.specific.OptionFilter;
-import com.git.gdsbuilder.type.validate.option.specific.OptionTolerance;
-import com.git.gdsbuilder.type.validate.option.standard.FixedValue;
+import com.git.gdsbuilder.type.validate.option.AttributeFigure;
+import com.git.gdsbuilder.type.validate.option.AttributeFilter;
+import com.git.gdsbuilder.type.validate.option.FixedValue;
+import com.git.gdsbuilder.type.validate.option.OptionFigure;
+import com.git.gdsbuilder.type.validate.option.OptionFilter;
+import com.git.gdsbuilder.type.validate.option.OptionTolerance;
 import com.git.gdsbuilder.validator.feature.FeatureAttributeValidator;
 import com.git.gdsbuilder.validator.feature.FeatureAttributeValidatorImpl;
 import com.git.gdsbuilder.validator.feature.FeatureCloseCollectionValidator;
@@ -682,14 +682,6 @@ public class LayerValidatorImpl implements LayerValidator {
 			return null;
 		}
 	}
-
-	/**
-	 * @author DY.Oh
-	 * @since 2018. 3. 6. 오후 2:02:50
-	 * @param fixedValue
-	 * @return ErrorLayer
-	 * @decription
-	 */
 
 	@Override
 	public ErrorLayer validateLayerFixMiss(String geometry, List<FixedValue> fixedValue) {
@@ -2467,13 +2459,6 @@ public class LayerValidatorImpl implements LayerValidator {
 
 	// 임상도 검수
 
-	/**
-	 * 
-	 * @since 2018. 3. 21.
-	 * @author DY.Oh
-	 * @param figures
-	 * @return
-	 */
 	@Override
 	public ErrorLayer validateFcodeLogicalAttribute(List<OptionFigure> figures) {
 

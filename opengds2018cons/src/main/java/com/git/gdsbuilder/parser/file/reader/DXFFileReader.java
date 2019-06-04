@@ -42,7 +42,7 @@ public class DXFFileReader {
 	 * @param neatLineName 검수 영역 레이어 이름
 	 * @return DXF 파일을 변환한 {@link DTLayerCollection}, DXF 파일 내에 레이어가 존재하지 않거나 올바르지
 	 *         않은 형태이면 {@code null} 반환
-	 * @throws Exception
+	 * @throws Exception {@link Exception}
 	 * 
 	 * @author DY.Oh
 	 */

@@ -32,35 +32,29 @@
  *    Lesser General Public License for more details.
  */
 
-package com.git.gdsbuilder.parser.file;
+package com.git.gdsbuilder.parser.file.reader;
 
-import java.io.IOException;
-
-import org.geotools.feature.SchemaException;
-
-import com.git.gdsbuilder.parser.file.reader.DXFFileReader;
-import com.git.gdsbuilder.parser.file.reader.NGIFileReader;
-import com.git.gdsbuilder.parser.file.reader.SHPFileReader;
 import com.git.gdsbuilder.type.dt.collection.DTLayerCollection;
 
 /**
- * @className FileDTLayerCollectionReader.java
- * @description 검수 대상 파일을 읽어 DTLayerCollection로 파싱하는 클래스
+ * 검수 대상 파일을 읽어 {@link DTLayerCollection}로 파싱하는 클래스.
+ * 
  * @author DY.Oh
- * @since 2018. 1. 30. 오후 3:19:33
+ *
  */
 public class FileDTLayerCollectionReader {
 
 	/**
+	 * shp 파일을 읽어 {@link DTLayerCollection} 객체로 파싱.
+	 * 
+	 * @param epsg         좌표계 (ex. EPSG:4326)
+	 * @param filePath     shp 파일 경로
+	 * @param fileName     shp 파일명
+	 * @param neatLineName 검수 영역 shp 파일 명
+	 * @return {@link DTLayerCollection}
+	 * @throws Throwable {@link Throwable}
+	 * 
 	 * @author DY.Oh
-	 * @since 2018. 1. 30. 오후 4:29:53
-	 * @param filePath
-	 * @param fileName
-	 * @param neatLineName
-	 * @param neatLine
-	 * @return DTLayerCollection
-	 * @throws Throwable
-	 * @decription shp 파일을 읽어 DTLayerCollection 객체로 파싱
 	 */
 	public DTLayerCollection shpLayerParse(String epsg, String filePath, String fileName, String neatLineName)
 			throws Throwable {
@@ -71,15 +65,16 @@ public class FileDTLayerCollectionReader {
 	}
 
 	/**
+	 * dxf 파일을 읽어 {@link DTLayerCollection} 객체로 파싱.
+	 * 
+	 * @param epsg         좌표계 (ex. EPSG:4326)
+	 * @param filePath     dxf 파일 경로
+	 * @param fileName     dxf 파일명
+	 * @param neatLineName 검수 영역 shp 파일 명
+	 * @return {@link DTLayerCollection}
+	 * @throws Exception {@link Exception}
+	 * 
 	 * @author DY.Oh
-	 * @since 2018. 1. 30. 오후 4:30:21
-	 * @param epsg
-	 * @param filePath
-	 * @param fileName
-	 * @param neatLineName
-	 * @return DTLayerCollection
-	 * @throws Exception
-	 * @decription dxf 파일을 읽어 DTLayerCollection 객체로 파싱
 	 */
 	public DTLayerCollection dxfLayerParse(String epsg, String filePath, String fileName, String neatLineName)
 			throws Exception {
@@ -90,16 +85,16 @@ public class FileDTLayerCollectionReader {
 	}
 
 	/**
+	 * ngi/nda 파일을 읽어 DTLayerCollection 객체로 파싱.
+	 * 
+	 * @param epsg     좌표계 (ex. EPSG:4326)
+	 * @param filePath shp 파일 경로
+	 * @param fileName shp 파일명
+	 * @param neatLine 검수 영역 shp 파일 명
+	 * @return {@link DTLayerCollection}
+	 * @throws Exception {@link Exception}
+	 * 
 	 * @author DY.Oh
-	 * @since 2018. 1. 30. 오후 4:30:35
-	 * @param filePath
-	 * @param fileName
-	 * @param neatLineName
-	 * @param neatLine
-	 * @return DTLayerCollection
-	 * @throws IOException
-	 * @throws SchemaException
-	 * @decription ngi/nda 파일을 읽어 DTLayerCollection 객체로 파싱
 	 */
 	public DTLayerCollection ngiLayerParse(String epsg, String filePath, String fileName, String neatLine)
 			throws Exception {

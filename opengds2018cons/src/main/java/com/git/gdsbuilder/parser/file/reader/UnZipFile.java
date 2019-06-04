@@ -1,4 +1,4 @@
-package com.git.gdsbuilder.parser.file;
+package com.git.gdsbuilder.parser.file.reader;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -22,30 +22,57 @@ import com.git.gdsbuilder.parser.file.meta.FileMetaList;
 import lombok.Data;
 
 /**
- * @className UnZipFile.java
- * @description 압축파일를 지정경로에 압축을 푸는 클래스
+ * 지정경로에 압축파일의 압축을 해제하는 클래스.
+ * 
  * @author DY.Oh
- * @since 2018. 1. 30. 오후 1:50:27
+ *
  */
 @Data
 public class UnZipFile {
 
 	private final static String forestFName = "forest";
-
 	private String fileState = "";
 	private String brTag = "<br>";
 
+	/**
+	 * 압축파일명(.zip)
+	 */
 	String fileName;
+	/**
+	 * 압축파일 내 파일명
+	 */
 	String entryName;
+	/**
+	 * 압축파일 경로
+	 */
 	String fileDirectory;
+	/**
+	 * 압축파일 내 존재하는 파일명 목록
+	 */
 	Map<String, Object> fileNames;
-
+	/**
+	 * 압축 해제 경로
+	 */
 	String upzipPath;
+	/**
+	 * 압축파일 내 디렉토리 타입의 {@link FileMeta} 목록
+	 */
 	Map<String, FileMetaList> dirMetaList = new HashMap<>();
+	/**
+	 * 압축파일 내 파일 타입의 {@link FileMeta} 목록
+	 */
 	FileMetaList fileMetaList = new FileMetaList();
-
+	/**
+	 * 압축 해제 성공 파일명 목록
+	 */
 	List<String> failsNames;
+	/**
+	 * 압축파일 내의 파일 타입이 디렉토리인 경우 {@code true}
+	 */
 	boolean isDir;
+	/**
+	 * 압축파일 내의 파일 타입이 파일인 경우 {@code true}
+	 */
 	boolean isFiles;
 
 	public UnZipFile(String upzipPath) {
@@ -54,6 +81,15 @@ public class UnZipFile {
 		this.isFiles = false;
 	}
 
+	/**
+	 * 압축파일 압축 해제.
+	 * 
+	 * @param zipFile     압축파일 객체
+	 * @param catetoryIdx 검수 카테고리 Index
+	 * @throws Throwable @{@link Throwable}
+	 * 
+	 * @author DY.Oh
+	 */
 	public void decompress(File zipFile, Long catetoryIdx) throws Throwable {
 
 		List<String> faisFiles = new ArrayList<>();
@@ -305,13 +341,6 @@ public class UnZipFile {
 		Files.copy(new File(source).toPath(), new File(dest).toPath());
 	}
 
-	/**
-	 * @author DY.Oh
-	 * @since 2018. 2. 21. 오후 4:28:42
-	 * @param fileDirectory
-	 * @param type
-	 * @decription
-	 */
 	private void getFilMeta(String fileDirectory) {
 
 		File outputFile = new File(fileDirectory);
@@ -400,13 +429,5 @@ public class UnZipFile {
 			isTrue = false;
 		}
 		return isTrue;
-	}
-
-	private String getFileName(String filePath) {
-
-		String[] splitArr = filePath.split("\\\\");
-		String fileName = splitArr[splitArr.length - 1];
-		int pos = fileName.lastIndexOf(".");
-		return fileName.substring(0, pos);
 	}
 }
