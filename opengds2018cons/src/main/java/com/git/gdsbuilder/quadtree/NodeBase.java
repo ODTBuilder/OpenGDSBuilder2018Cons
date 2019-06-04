@@ -8,6 +8,12 @@ import java.util.List;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.index.ItemVisitor;
 
+/**
+ * {@link com.vividsolutions.jts.index.quadtree.NodeBase} 확장 클래스.
+ * 
+ * @author DY.Oh
+ *
+ */
 public abstract class NodeBase extends com.vividsolutions.jts.index.quadtree.NodeBase implements Serializable {
 
 //DEBUG private static int itemCount = 0;  // debugging

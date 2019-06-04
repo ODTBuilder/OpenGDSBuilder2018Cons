@@ -5,6 +5,12 @@ import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.index.quadtree.IntervalSize;
 import com.vividsolutions.jts.util.Assert;
 
+/**
+ * {@link NodeBase} 확장 클래스.
+ * 
+ * @author DY.Oh
+ *
+ */
 public class Root extends NodeBase {
 
 	// the singleton root quad is centred at the origin.

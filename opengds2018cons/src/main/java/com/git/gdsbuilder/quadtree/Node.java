@@ -20,6 +20,12 @@ import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.index.quadtree.Key;
 import com.vividsolutions.jts.util.Assert;
 
+/**
+ * {@link NodeBase} 확장 클래스.
+ * 
+ * @author DY.Oh
+ *
+ */
 public class Node extends NodeBase {
 	public static Node createNode(Envelope env) {
 		Key key = new Key(env);

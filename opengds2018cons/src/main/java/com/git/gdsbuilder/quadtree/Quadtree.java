@@ -9,6 +9,12 @@ import com.vividsolutions.jts.index.ArrayListVisitor;
 import com.vividsolutions.jts.index.ItemVisitor;
 import com.vividsolutions.jts.index.SpatialIndex;
 
+/**
+ * {@link com.vividsolutions.jts.index.quadtree.Quadtree} 확장 클래스.
+ * 
+ * @author DY.Oh
+ *
+ */
 public class Quadtree extends com.vividsolutions.jts.index.quadtree.Quadtree implements SpatialIndex, Serializable {
 	private static final long serialVersionUID = -7461163625812743604L;
 
