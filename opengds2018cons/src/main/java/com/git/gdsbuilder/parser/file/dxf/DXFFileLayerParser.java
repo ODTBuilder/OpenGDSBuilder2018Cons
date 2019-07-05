@@ -10,6 +10,9 @@ import org.opengis.feature.simple.SimpleFeature;
 
 import com.git.gdsbuilder.type.dt.layer.DTLayer;
 import com.git.gdsbuilder.type.dt.layer.DTLayerList;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * {@link DXFLayer}를 {@link DTLayerList}로 변환하는 클래스.

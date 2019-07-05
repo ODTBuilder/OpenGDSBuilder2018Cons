@@ -36,7 +36,7 @@ import lombok.Data;
  *
  */
 @Data
-public class QALayerParser {
+public class GeoserverLayerParser {
 
 	/**
 	 * Geoserver URL
@@ -71,11 +71,23 @@ public class QALayerParser {
 	 * @param pw        Geoserver 계정 비밀번호
 	 * @param layerName Geoserver SHP Layer 명
 	 */
-	public QALayerParser(String baseUrl, String user, String pw, String layerName) {
+	public GeoserverLayerParser(String baseUrl, String user, String pw, String layerName) {
 		super();
 		this.baseUrl = baseUrl;
 		this.user = user;
 		this.pw = pw;
+		this.layerName = layerName;
+	}
+
+	/**
+	 * Geoserver SHP Layer를 DTLayer로 변환하기 위한 생성자
+	 * 
+	 * @param baseUrl   Geoserver URL
+	 * @param layerName Geoserver SHP Layer 명
+	 */
+	public GeoserverLayerParser(String baseUrl, String layerName) {
+		super();
+		this.baseUrl = baseUrl;
 		this.layerName = layerName;
 	}
 

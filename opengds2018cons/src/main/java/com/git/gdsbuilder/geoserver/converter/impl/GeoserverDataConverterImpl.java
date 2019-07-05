@@ -130,4 +130,21 @@ public class GeoserverDataConverterImpl implements GeoserverDataConverter {
 		}
 		return flag;
 	}
+
+	@Override
+	public int generalizationExport() {
+		int flag = 500;
+		Iterator<String> keys = layerMaps.keySet().iterator();
+		while (keys.hasNext()) {
+			String workspace = keys.next();
+			List<String> layerNames = layerMaps.get(workspace);
+			if (layerNames != null) {
+			
+			} else {
+				flag = 612;
+				System.err.println("레이어 리스트 NULL");
+			}
+		}
+		return 0;
+	}
 }

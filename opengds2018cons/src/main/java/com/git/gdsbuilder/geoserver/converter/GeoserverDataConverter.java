@@ -37,4 +37,7 @@ public interface GeoserverDataConverter {
 	 *         Geoserver Layer 다운에러
 	 */
 	public int forestExport(String nearLine);
+
+	public int generalizationExport();
+
 }

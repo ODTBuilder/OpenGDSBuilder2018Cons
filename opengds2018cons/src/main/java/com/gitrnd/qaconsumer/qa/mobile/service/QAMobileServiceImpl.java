@@ -8,7 +8,7 @@ import org.json.simple.JSONObject;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 
-import com.git.gdsbuilder.parser.geoserver.QALayerParser;
+import com.git.gdsbuilder.parser.geoserver.GeoserverLayerParser;
 import com.git.gdsbuilder.parser.json.ErrorLayerParser;
 import com.git.gdsbuilder.parser.qa.QATypeParser;
 import com.git.gdsbuilder.type.dt.collection.DTLayerCollection;
@@ -53,7 +53,7 @@ public class QAMobileServiceImpl implements QAMobileService {
 			DTLayerList dtLayers = new DTLayerList();
 			for (int i = 0; i < geoLayers.size(); i++) {
 				String geoLayer = (String) geoLayers.get(i);
-				QALayerParser layerP = new QALayerParser(baseUrl, user, pw, geoLayer);
+				GeoserverLayerParser layerP = new GeoserverLayerParser(baseUrl, user, pw, geoLayer);
 				layerP.init();
 				DTLayer dtLayer = layerP.layerParse();
 				dtLayers.add(dtLayer);
@@ -83,14 +83,14 @@ public class QAMobileServiceImpl implements QAMobileService {
 			QATypeParser validateTypeParser = new QATypeParser(typeValidate);
 			QALayerTypeList validateLayerTypeList = validateTypeParser.getValidateLayerTypeList();
 			errorLayer = executorValidate(dtCollection, validateLayerTypeList);
-		//	if (errorLayer != null) {
-				ErrorLayerParser errLayerP = new ErrorLayerParser();
-				JSONObject errLayerJson = errLayerP.parseGeoJSON(errorLayer);
-				System.out.println(errLayerJson.toString());
-				return errLayerJson;
-	//		} else {
-	//			return null;
-	//		}
+			// if (errorLayer != null) {
+			ErrorLayerParser errLayerP = new ErrorLayerParser();
+			JSONObject errLayerJson = errLayerP.parseGeoJSON(errorLayer);
+			System.out.println(errLayerJson.toString());
+			return errLayerJson;
+			// } else {
+			// return null;
+			// }
 		} catch (Exception e) {
 			return null;
 		}

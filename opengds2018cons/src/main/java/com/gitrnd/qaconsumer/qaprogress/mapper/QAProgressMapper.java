@@ -13,6 +13,10 @@ import com.gitrnd.qaconsumer.qaprogress.domain.QAProgress;
  * @author DY.Oh
  *
  */
+/**
+ * @author DY.Oh
+ *
+ */
 @Mapper
 public interface QAProgressMapper {
 
@@ -47,17 +51,16 @@ public interface QAProgressMapper {
 	/**
 	 * tb_progress DB 테이블 조회.
 	 * 
-	 * @return List<HashMap<String, Object>>
+	 * @return tb_progress DB 테이블
 	 * 
 	 * @author DY.Oh
 	 */
 	public List<HashMap<String, Object>> selectQAProgressList();
 
 	/**
-	 * tb_progress DB 테이블 조회.
+	 * tb_progress DB 테이블의 start time 컬럼 조회
 	 * 
-	 * @param progress
-	 * @return {@link QAProgress}
+	 * @return tb_progress DB 테이블의 start time
 	 * 
 	 * @author DY.Oh
 	 */

@@ -1,6 +1,6 @@
 spring:
   rabbitmq:
-    host: localhost
+    host: 175.116.181.42
     port: 5672
     virtual-host: only_opengds
     username: qaconsumer
@@ -9,12 +9,13 @@ spring:
       exchange: opengds_qa_exchange
       routing-key: opengds_qa_key
       routing-key-mobile: opengds_mobile_qa_key
+      routing-key-generalization: opengds_generalization_key
     listener:
       acknowledge-mode: auto
       default-requeue-rejected: false
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/opengds_2018?charSet=UTF-8&prepareThreshold=1
+    url: jdbc:postgresql://175.116.181.42:5432/opengds_2018?charSet=UTF-8&prepareThreshold=1
     username: opensource
     password: opensource
     driver-class-name: org.postgresql.Driver
@@ -27,15 +28,16 @@ spring:
 server:
   servlet:
     context-path: /geodt
-    port: 8089
+    port: 8088
 gitrnd:
-  serverhost: localhost
+  serverhost: 175.116.181.42
   apache:
     basedir: gdofiles
     basedrive: C
   rabbitmq:
     queue: opengds_qa_queue
     mobilequeue: opengds_moblie_qa_queue
+    generalizationqueue: opengds_generalization_queue
 mybatis:
   config-location: classpath:config/mybatis.xml
   mapper-location: classpath:sql/*.xml

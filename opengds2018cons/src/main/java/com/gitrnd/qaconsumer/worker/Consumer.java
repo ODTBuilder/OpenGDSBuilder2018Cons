@@ -35,6 +35,10 @@ public class Consumer {
 	@Qualifier("mobileService")
 	QAMobileService mobileService;
 
+//	@Autowired
+//	@Qualifier("generalizationService")
+//	GeneralizationService generalizationService;
+
 	/**
 	 * Producer로부터 검수 Queue Message를 받는 메스드.
 	 * 
@@ -60,6 +64,27 @@ public class Consumer {
 			webService.validate(param);
 		}
 
+//		JSONParser p = new JSONParser();
+//		Object obj = null;
+//		try {
+//			obj = p.parse(new FileReader("D:\\일반화\\option.json"));
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		JSONObject fileObj = (JSONObject) obj;
+//		JSONObject preset = (JSONObject) fileObj.get("preset");
+//		JSONObject param = (JSONObject) p.parse(msg);
+//		
+//		
+//		
+
 	}
 
 	/**
@@ -73,7 +98,7 @@ public class Consumer {
 	 * 
 	 * @author DY.Oh
 	 */
-	@RabbitListener(queues = "opengds_moblie_qa_queue")
+	@RabbitListener(queues = "${gitrnd.rabbitmq.mobilequeue}")
 	public Object recievedWebMessageMobile(String msg) throws Throwable {
 
 		System.out.println(msg);
@@ -88,4 +113,15 @@ public class Consumer {
 			return null;
 		}
 	}
+
+//	@RabbitListener(queues = "${gitrnd.rabbitmq.generalizationqueue}")
+//	public void recievedWebMessageGeneralization(String msg) throws Throwable {
+//
+//		System.out.println(msg);
+//		// parse parameter
+//		JSONParser jsonP = new JSONParser();
+//		JSONObject param = (JSONObject) jsonP.parse(msg);
+//
+//		generalizationService.excute(param);
+//	}
 }

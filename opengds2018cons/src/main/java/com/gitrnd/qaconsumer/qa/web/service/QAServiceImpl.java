@@ -338,7 +338,7 @@ public class QAServiceImpl implements QAService {
 				boolean isTrue = zipFileDirectory();
 				if (isTrue) {
 					// err 파일이 있는 경우
-					String destination = "http://" + serverhost + ":" + port + contextPath + "/uploadGsError.do";
+					String destination = "http://" + serverhost + ":" + port + "/uploadGsError.do";
 					HttpPost post = new HttpPost(destination);
 					InputStream inputStream = new FileInputStream(ERR_FILE_DIR + ".zip");
 					MultipartEntityBuilder builder = MultipartEntityBuilder.create();

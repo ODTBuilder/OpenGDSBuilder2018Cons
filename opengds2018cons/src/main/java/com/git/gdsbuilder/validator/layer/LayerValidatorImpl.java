@@ -55,6 +55,7 @@ import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.operation.TransformException;
 
 import com.git.gdsbuilder.type.dt.feature.DTFeature;
+import com.git.gdsbuilder.type.dt.feature.DTFeatureList;
 import com.git.gdsbuilder.type.dt.layer.DTLayer;
 import com.git.gdsbuilder.type.dt.layer.DTLayerList;
 import com.git.gdsbuilder.type.validate.error.ErrorFeature;
@@ -71,6 +72,7 @@ import com.git.gdsbuilder.validator.feature.FeatureCloseCollectionValidator;
 import com.git.gdsbuilder.validator.feature.FeatureCloseCollectionValidatorImpl;
 import com.git.gdsbuilder.validator.feature.FeatureGraphicValidator;
 import com.git.gdsbuilder.validator.feature.FeatureGraphicValidatorImpl;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class LayerValidatorImpl implements LayerValidator {
@@ -523,6 +525,48 @@ public class LayerValidatorImpl implements LayerValidator {
 		String layerID = validatorLayer.getLayerID();
 		SimpleFeatureCollection sfc = validatorLayer.getSimpleFeatureCollection();
 		SimpleFeatureIterator sfcIter = sfc.features();
+
+		class Task implements Runnable {
+			ErrorLayer errorLayer;
+			DTFeature dtFeature;
+			List<DTFeature> reDtFeatureList;
+			List<ErrorFeature> errFeatures;
+			List<AttributeFilter> reAttrConditions;
+			String relationLayerId;
+			int index;
+
+			public Task(ErrorLayer errorLayer, DTFeature dtFeature, List<DTFeature> reDtFeatureList,
+					List<AttributeFilter> reAttrConditions, String relationLayerId, int index) {
+				super();
+				this.errorLayer = errorLayer;
+				this.dtFeature = dtFeature;
+				this.reDtFeatureList = reDtFeatureList;
+				this.reAttrConditions = reAttrConditions;
+				this.relationLayerId = relationLayerId;
+				this.index = index;
+			}
+
+			@Override
+			public void run() {
+				for (int j = this.index; j < reDtFeatureList.size(); j++) {
+					DTFeature reDtFeature = reDtFeatureList.get(j);
+					SimpleFeature reSf = reDtFeature.getSimefeature();
+					if (dtFeature.equals(reDtFeature))
+						continue;
+					DTFeature reFeature = new DTFeature(relationLayerId, reSf, reAttrConditions);
+					this.errFeatures = graphicValidator.validateSelfEntity(dtFeature, reFeature, tolerance);
+					if (errFeatures != null) {
+						for (ErrorFeature errFeature : errFeatures) {
+							errFeature.setLayerID(layerID);
+						}
+						errorLayer.addErrorFeatureList(errFeatures);
+					}
+				}
+
+			}
+		}
+		SimpleFeatureIterator reSfcIter = null;
+		// relation
 		if (relationLayers != null) {
 			for (int i = 0; i < relationLayers.size(); i++) {
 				DTLayer relationLayer = relationLayers.get(i);
@@ -533,26 +577,87 @@ public class LayerValidatorImpl implements LayerValidator {
 					reAttrConditions = optionFilter.getFilter();
 				}
 				SimpleFeatureCollection reSfc = relationLayer.getSimpleFeatureCollection();
-				while (sfcIter.hasNext()) {
-					SimpleFeature sf = sfcIter.next();
-					DTFeature feature = new DTFeature(layerID, sf, attrConditions);
-					SimpleFeatureIterator reSfcIter = reSfc.features();
-					while (reSfcIter.hasNext()) {
-						SimpleFeature reSf = reSfcIter.next();
-						if (sf.equals(reSf)) {
-							continue;
-						}
-						DTFeature reFeature = new DTFeature(relationLayerId, reSf, reAttrConditions);
-						List<ErrorFeature> errFeatures = graphicValidator.validateSelfEntity(feature, reFeature,
-								tolerance);
-						if (errFeatures != null) {
-							for (ErrorFeature errFeature : errFeatures) {
-								errFeature.setLayerID(layerID);
-								errorLayer.addErrorFeature(errFeature);
+				reSfcIter = reSfc.features();
+
+				// 자기 자신 처리 - 멀티스레딩
+				if (
+				// relationLayers.size() == 1
+				layerID.equals(relationLayerId)) {
+//					int core = Runtime.getRuntime().availableProcessors();
+					int core = 2;
+					ExecutorService executorService = Executors.newFixedThreadPool(core,
+							new ThreadFactoryBuilder().setNameFormat("self 검수-%d").build());
+					DTFeatureList dtFeatureListJ = new DTFeatureList();
+					List<Future<List<ErrorFeature>>> futures = new ArrayList<>();
+					int index = 0;
+					while (sfcIter.hasNext()) {
+						SimpleFeature sf = sfcIter.next(); // 행
+						// Geometry geom = (Geometry) sf.getDefaultGeometry();
+						DTFeature feature = new DTFeature(layerID, sf, attrConditions);
+
+						if (dtFeatureListJ.isEmpty()) {
+							while (reSfcIter.hasNext()) {
+								dtFeatureListJ.add(new DTFeature(layerID, reSfcIter.next(), attrConditions));
 							}
 						}
+
+						for (int j = 1; j <= core; j++) {
+							int listSize = dtFeatureListJ.size();
+							int front = (listSize / core) * (j - 1);
+							int end = (listSize / core) * j;
+							if (j == core) {
+								end = listSize;
+							}
+							List<ErrorFeature> errFeatures = new ArrayList<>();
+							Runnable task = new Task(errorLayer, feature, dtFeatureListJ.subList(front, end),
+									reAttrConditions, relationLayerId, index);
+							Future<List<ErrorFeature>> futureList = executorService.submit(task, errFeatures);
+							futures.add(futureList);
+						}
+						index++;
 					}
-					reSfcIter.close();
+					for (Future<List<ErrorFeature>> future : futures) {
+						try {
+							future.get();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+					executorService.shutdown();
+					// 복수 레이어 처리
+				} else {
+					FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2();
+					SimpleFeatureSource source = DataUtilities.source(reSfc);
+					SimpleFeatureCollection refilterSfc = null;
+					while (sfcIter.hasNext()) {
+						SimpleFeature sf = sfcIter.next();
+						Geometry geom = (Geometry) sf.getDefaultGeometry();
+						Filter filter = ff.intersects(ff.property("the_geom"), ff.literal(geom.getEnvelope()));
+						try {
+							refilterSfc = source.getFeatures(filter);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						DTFeature feature = new DTFeature(layerID, sf, attrConditions);
+						reSfcIter = refilterSfc.features();
+
+						while (reSfcIter.hasNext()) {
+							SimpleFeature reSf = reSfcIter.next();
+							if (sf.equals(reSf))
+								continue;
+							DTFeature reFeature = new DTFeature(relationLayerId, reSf, reAttrConditions);
+							List<ErrorFeature> errFeatures = graphicValidator.validateSelfEntity(feature, reFeature,
+									tolerance);
+							if (errFeatures != null) {
+								for (ErrorFeature errFeature : errFeatures) {
+									errFeature.setLayerID(layerID);
+									errorLayer.addErrorFeature(errFeature);
+								}
+							}
+						}
+						reSfcIter.close();
+					}
 				}
 			}
 		}
@@ -564,6 +669,61 @@ public class LayerValidatorImpl implements LayerValidator {
 			return null;
 		}
 	}
+
+//	@Override
+//	public ErrorLayer validateSelfEntity(DTLayerList relationLayers, OptionTolerance tolerance)
+//			throws SchemaException, IOException {
+//
+//		ErrorLayer errorLayer = new ErrorLayer();
+//		OptionFilter optionFilter = validatorLayer.getFilter();
+//		List<AttributeFilter> attrConditions = null;
+//		if (optionFilter != null) {
+//			attrConditions = optionFilter.getFilter();
+//		}
+//		String layerID = validatorLayer.getLayerID();
+//		SimpleFeatureCollection sfc = validatorLayer.getSimpleFeatureCollection();
+//		SimpleFeatureIterator sfcIter = sfc.features();
+//		if (relationLayers != null) {
+//			for (int i = 0; i < relationLayers.size(); i++) {
+//				DTLayer relationLayer = relationLayers.get(i);
+//				String relationLayerId = relationLayer.getLayerID();
+//				OptionFilter reFilter = relationLayer.getFilter();
+//				List<AttributeFilter> reAttrConditions = null;
+//				if (reFilter != null) {
+//					reAttrConditions = optionFilter.getFilter();
+//				}
+//				SimpleFeatureCollection reSfc = relationLayer.getSimpleFeatureCollection();
+//				while (sfcIter.hasNext()) {
+//					SimpleFeature sf = sfcIter.next();
+//					DTFeature feature = new DTFeature(layerID, sf, attrConditions);
+//					SimpleFeatureIterator reSfcIter = reSfc.features();
+//					while (reSfcIter.hasNext()) {
+//						SimpleFeature reSf = reSfcIter.next();
+//						if (sf.equals(reSf)) {
+//							continue;
+//						}
+//						DTFeature reFeature = new DTFeature(relationLayerId, reSf, reAttrConditions);
+//						List<ErrorFeature> errFeatures = graphicValidator.validateSelfEntity(feature, reFeature,
+//								tolerance);
+//						if (errFeatures != null) {
+//							for (ErrorFeature errFeature : errFeatures) {
+//								errFeature.setLayerID(layerID);
+//								errorLayer.addErrorFeature(errFeature);
+//							}
+//						}
+//					}
+//					reSfcIter.close();
+//				}
+//			}
+//		}
+//		sfcIter.close();
+//		if (errorLayer.getErrFeatureList().size() > 0) {
+//			errorLayer.setLayerID(validatorLayer.getLayerID());
+//			return errorLayer;
+//		} else {
+//			return null;
+//		}
+//	}
 
 	@Override
 	public ErrorLayer validateOutBoundary(DTLayerList relationLayers, OptionTolerance tole) throws SchemaException {

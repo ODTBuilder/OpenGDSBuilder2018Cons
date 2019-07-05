@@ -6,13 +6,6 @@ package com.gitrnd.qaconsumer.qareport.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-/**
- * @className FileValidateProgress.java
- * @description
- * @author DY.Oh
- * @since 2018. 2. 7. 오전 10:55:35
- */
-
 @Data
 @AllArgsConstructor
 public class QAReport {

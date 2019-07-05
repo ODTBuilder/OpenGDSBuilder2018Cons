@@ -5,15 +5,13 @@ package com.gitrnd.qaconsumer.qareport.details.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
- * @className FileValidateProgress.java
- * @description
+ * 세부 검수 결과 Report 정보.
+ * 
  * @author DY.Oh
- * @since 2018. 2. 7. 오전 10:55:35
+ *
  */
-
 @Data
 @AllArgsConstructor
 public class QADetailReport {
@@ -28,16 +26,6 @@ public class QADetailReport {
 	String comment;
 	Integer rIdx;
 
-	/**
-	 * @param refLayerId
-	 * @param featureId
-	 * @param reffeatureId
-	 * @param errType
-	 * @param errName
-	 * @param errPoint
-	 * @param comment
-	 * @param rIdx
-	 */
 	public QADetailReport(String refLayerId, String featureId, String reffeatureId, String errType, String errName,
 			String errPoint, String comment, Integer rIdx) {
 		super();

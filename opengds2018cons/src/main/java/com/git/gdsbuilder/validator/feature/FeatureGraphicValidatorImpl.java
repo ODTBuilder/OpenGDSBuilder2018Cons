@@ -681,6 +681,7 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 		}
 		// relation filter
 		SimpleFeature reSf = reFeature.getSimefeature();
+		System.out.println("selfentity : " + sf.getID() + " - " + reSf.getID());
 		List<AttributeFilter> refilters = reFeature.getFilter();
 		if (refilters != null) {
 			isTrue = FeatureFilter.filter(reSf, refilters);
@@ -1102,10 +1103,6 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 
 		SimpleFeature sfI = dtFeature.getSimefeature();
 		SimpleFeature sfJ = reFeature.getSimefeature();
-
-		if (sfI.getAttribute("NF_ID").toString().equals("BLD010000001FWVK1")) {
-			System.out.println("");
-		}
 
 		boolean isTrue = false;
 		List<AttributeFilter> filtersI = dtFeature.getFilter();
