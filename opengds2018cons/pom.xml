@@ -24,7 +24,6 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 		<geotools.version>16.5</geotools.version>
-
 	</properties>
 
 	<!-- repository 추가 -->

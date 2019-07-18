@@ -90,6 +90,7 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 
 		if (filters != null) {
 			isTrue = FeatureFilter.filter(sf, filters);
+			
 		} else {
 			isTrue = true;
 		}
@@ -681,7 +682,6 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 		}
 		// relation filter
 		SimpleFeature reSf = reFeature.getSimefeature();
-		System.out.println("selfentity : " + sf.getID() + " - " + reSf.getID());
 		List<AttributeFilter> refilters = reFeature.getFilter();
 		if (refilters != null) {
 			isTrue = FeatureFilter.filter(reSf, refilters);
