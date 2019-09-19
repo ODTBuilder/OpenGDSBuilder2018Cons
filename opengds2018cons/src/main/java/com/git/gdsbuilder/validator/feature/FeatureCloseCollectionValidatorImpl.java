@@ -111,7 +111,7 @@ public class FeatureCloseCollectionValidatorImpl implements FeatureCloseCollecti
 				return null;
 			}
 			ErrorFeature errFeature = new ErrorFeature(featureID, DMQAOptions.REFENTITYNONE.getErrCode(),
-					DMQAOptions.REFENTITYNONE.getErrTypeE(), DMQAOptions.REFENTITYNONE.getErrNameE(), "", minDistPt);
+					DMQAOptions.REFENTITYNONE.getErrType(), DMQAOptions.REFENTITYNONE.getErrName(), "", minDistPt);
 			return errFeature;
 		} else {
 			return null;
@@ -206,7 +206,7 @@ public class FeatureCloseCollectionValidatorImpl implements FeatureCloseCollecti
 				return null;
 			}
 			ErrorFeature errFeature = new ErrorFeature(featureID, DMQAOptions.REFENTITYNONE.getErrCode(),
-					DMQAOptions.REFENTITYNONE.getErrTypeE(), DMQAOptions.REFENTITYNONE.getErrNameE(), "", minDistPt);
+					DMQAOptions.REFENTITYNONE.getErrType(), DMQAOptions.REFENTITYNONE.getErrName(), "", minDistPt);
 			return errFeature;
 		} else {
 			return null;
@@ -314,8 +314,8 @@ public class FeatureCloseCollectionValidatorImpl implements FeatureCloseCollecti
 			String reLayerId = closeLayer.getLayerID();
 
 			ErrorFeature errFeature = new ErrorFeature(featureID, reLayerId, reFeatureID,
-					DMQAOptions.REFZVALUEMISS.getErrCode(), DMQAOptions.REFZVALUEMISS.getErrTypeE(),
-					DMQAOptions.REFZVALUEMISS.getErrNameE(), "", minDistPt);
+					DMQAOptions.REFZVALUEMISS.getErrCode(), DMQAOptions.REFZVALUEMISS.getErrType(),
+					DMQAOptions.REFZVALUEMISS.getErrName(), "", minDistPt);
 			return errFeature;
 		} else {
 			return null;
@@ -435,8 +435,8 @@ public class FeatureCloseCollectionValidatorImpl implements FeatureCloseCollecti
 			}
 			String reLayerId = closeLayer.getLayerID();
 			ErrorFeature errFeature = new ErrorFeature(featureID, reLayerId, reFeatureID,
-					DMQAOptions.REFATTRIBUTEMISS.getErrCode(), DMQAOptions.REFATTRIBUTEMISS.getErrTypeE(),
-					DMQAOptions.REFATTRIBUTEMISS.getErrNameE(), "", minDistPt);
+					DMQAOptions.REFATTRIBUTEMISS.getErrCode(), DMQAOptions.REFATTRIBUTEMISS.getErrType(),
+					DMQAOptions.REFATTRIBUTEMISS.getErrName(), "", minDistPt);
 			return errFeature;
 		} else {
 			return null;
