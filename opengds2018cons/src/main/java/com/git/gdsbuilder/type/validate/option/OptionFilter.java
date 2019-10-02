@@ -24,11 +24,10 @@ import lombok.NoArgsConstructor;
 
 /**
  * {@link com.git.gdsbuilder.type.validate.option.AttributeMiss} 또는
- * {@link com.git.gdsbuilder.type.validate.option.GraphicMiss} 수행 시
- * 사용되는 속성 필터
+ * {@link com.git.gdsbuilder.type.validate.option.GraphicMiss} 수행 시 사용되는 속성 필터
  * <p>
- * {@link com.git.gdsbuilder.type.validate.option.OptionFilter}에 따라 해당
- * 레이어의 특정 속성 값을 가진 객체만 검수 수행. 레이어의 모든 객체에 적용됨.
+ * {@link com.git.gdsbuilder.type.validate.option.OptionFilter}에 따라 해당 레이어의 특정
+ * 속성 값을 가진 객체만 검수 수행. 레이어의 모든 객체에 적용됨.
  * 
  * @author DY.Oh
  *

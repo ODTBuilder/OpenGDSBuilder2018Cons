@@ -22,6 +22,7 @@ import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * {@link com.git.gdsbuilder.type.validate.error.ErrorLayer} 정보를 담고 있는 클래스
@@ -37,6 +38,7 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class ErrorLayer {
 
 	/**
@@ -56,7 +58,7 @@ public class ErrorLayer {
 	/**
 	 * 오류 객체 리스트
 	 */
-	List<ErrorFeature> errFeatureList;
+	List<ErrorFeature> errFeatureList = new ArrayList<>();
 	/**
 	 * 검수를 수행한 모든 {@link com.git.gdsbuilder.type.dt.layer.DTLayer}의 수
 	 */
@@ -81,14 +83,6 @@ public class ErrorLayer {
 	 * 오류 세부 사항
 	 */
 	String comment;
-
-	public ErrorLayer() {
-		super();
-		this.layerID = "";
-		this.collectionName = "";
-		this.errFeatureList = new ArrayList<ErrorFeature>();
-		this.collectionType = "";
-	}
 
 	/**
 	 * {@link com.git.gdsbuilder.type.validate.error.ErrorLayer}에 오류 객체에 대한 검수 결과인

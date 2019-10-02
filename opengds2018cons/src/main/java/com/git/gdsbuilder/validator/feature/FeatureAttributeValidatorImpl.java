@@ -274,7 +274,7 @@ public class FeatureAttributeValidatorImpl implements FeatureAttributeValidator 
 			// fixed
 			String name = fix.getKey();
 			String type = fix.getType();
-			Long length = fix.getLength();
+			Long length = Long.valueOf(fix.getLength());
 			List<Object> valuesObj = fix.getValues();
 			Boolean flag = fix.isIsnull();
 

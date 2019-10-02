@@ -40,7 +40,7 @@ public class LayerFixMiss {
 	/**
 	 * 레이어 ID
 	 */
-	String layerID;
+	String code;
 	/**
 	 * 레이어 Geometry 타입
 	 */

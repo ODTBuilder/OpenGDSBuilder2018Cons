@@ -7,7 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import com.gitrnd.qaconsumer.qa.file.service.QAFileService;
+import com.gitrnd.qaconsumer.generalization.GeneralizationService;
+import com.gitrnd.qaconsumer.qa.file.service.open.OpenQAFileService;
 import com.gitrnd.qaconsumer.qa.mobile.service.QAMobileService;
 import com.gitrnd.qaconsumer.qa.web.service.QAService;
 
@@ -26,18 +27,20 @@ public class Consumer {
 	@Qualifier("webService")
 	QAService webService;
 
+//	@Autowired
+//	@Qualifier("fileService")
+//	QAFileService fileService;
 	@Autowired
-	@Qualifier("fileService")
-
-	QAFileService fileService;
+	@Qualifier("openfileService")
+	OpenQAFileService openfileService;
 
 	@Autowired
 	@Qualifier("mobileService")
 	QAMobileService mobileService;
 
-//	@Autowired
-//	@Qualifier("generalizationService")
-//	GeneralizationService generalizationService;
+	@Autowired
+	@Qualifier("generalService")
+	GeneralizationService generalizationService;
 
 	/**
 	 * Producer로부터 검수 Queue Message를 받는 메스드.
@@ -58,33 +61,11 @@ public class Consumer {
 		String type = (String) param.get("type");
 
 		if (type.equals("file")) {
-			fileService.validate(param);
+			openfileService.validate(param);
 		}
 		if (type.equals("web")) {
 			webService.validate(param);
 		}
-
-//		JSONParser p = new JSONParser();
-//		Object obj = null;
-//		try {
-//			obj = p.parse(new FileReader("D:\\일반화\\option.json"));
-//		} catch (FileNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (ParseException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		JSONObject fileObj = (JSONObject) obj;
-//		JSONObject preset = (JSONObject) fileObj.get("preset");
-//		JSONObject param = (JSONObject) p.parse(msg);
-//		
-//		
-//		
-
 	}
 
 	/**
@@ -114,14 +95,14 @@ public class Consumer {
 		}
 	}
 
-//	@RabbitListener(queues = "${gitrnd.rabbitmq.generalizationqueue}")
-//	public void recievedWebMessageGeneralization(String msg) throws Throwable {
-//
-//		System.out.println(msg);
-//		// parse parameter
-//		JSONParser jsonP = new JSONParser();
-//		JSONObject param = (JSONObject) jsonP.parse(msg);
-//
-//		generalizationService.excute(param);
-//	}
+	@RabbitListener(queues = "${gitrnd.rabbitmq.generalizationqueue}")
+	public void recievedWebMessageGeneralization(String msg) throws Throwable {
+
+		System.out.println(msg);
+		// parse parameter
+		JSONParser jsonP = new JSONParser();
+		JSONObject param = (JSONObject) jsonP.parse(msg);
+
+		generalizationService.excute(param);
+	}
 }

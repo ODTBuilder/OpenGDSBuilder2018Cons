@@ -519,7 +519,7 @@ public class QATypeParser {
 
 				LayerFixMiss fix = new LayerFixMiss();
 				fix.setOption("LayerFixMiss");
-				fix.setLayerID(code);
+				fix.setCode(code);
 				fix.setGeometry((String) layer.get("geometry"));
 
 				// attrFix
@@ -533,8 +533,7 @@ public class QATypeParser {
 						fixedValue.setKey((String) fixJson.get("name"));
 						fixedValue.setType((String) fixJson.get("type"));
 						fixedValue.setIsnull((Boolean) fixJson.get("isnull"));
-						fixedValue.setLength((Long) fixJson.get("length"));
-
+						fixedValue.setLength(fixJson.get("length").toString());
 						Object valueObj = fixJson.get("values");
 						if (valueObj != null) {
 							List<Object> values = new ArrayList<>();

@@ -30,7 +30,7 @@ server:
     context-path: /geodt
     port: 8088
 gitrnd:
-  serverhost: 175.116.181.42
+  serverhost: 175.116.181.32
   apache:
     basedir: gdofiles
     basedrive: C

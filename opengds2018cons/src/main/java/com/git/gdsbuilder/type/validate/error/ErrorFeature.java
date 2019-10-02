@@ -19,8 +19,8 @@ package com.git.gdsbuilder.type.validate.error;
 
 import com.vividsolutions.jts.geom.Geometry;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * {@link com.git.gdsbuilder.type.validate.error.ErrorFeature} 정보를 담고 있는 클래스
@@ -31,7 +31,7 @@ import lombok.Data;
  */
 
 @Data
-@AllArgsConstructor
+@NoArgsConstructor
 public class ErrorFeature {
 
 	/**

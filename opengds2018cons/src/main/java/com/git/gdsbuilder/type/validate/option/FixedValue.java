@@ -47,7 +47,7 @@ public class FixedValue {
 	/**
 	 * 속성값 길이
 	 */
-	Long length;
+	String length;
 	/**
 	 * 고정 속성값 List (해당 속성값만 가질 수 있음)
 	 */

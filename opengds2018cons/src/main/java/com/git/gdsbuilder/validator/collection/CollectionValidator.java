@@ -1694,7 +1694,7 @@ public class CollectionValidator {
 				ErrorLayer typeErrorLayer = null;
 				List<LayerFixMiss> layerFixMissArr = options.getLayerMissOptions();
 				for (LayerFixMiss layerFixMiss : layerFixMissArr) {
-					String code = layerFixMiss.getLayerID();
+					String code = layerFixMiss.getCode();
 					String option = layerFixMiss.getOption();
 					DTLayer codeLayer = layerCollection.getLayer(code);
 					if (codeLayer == null) {
