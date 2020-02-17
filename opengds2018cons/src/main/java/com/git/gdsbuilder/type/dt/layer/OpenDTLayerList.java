@@ -14,7 +14,7 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package com.git.gdsbuilder.validator.open;
+package com.git.gdsbuilder.type.dt.layer;
 
 import java.util.ArrayList;
 

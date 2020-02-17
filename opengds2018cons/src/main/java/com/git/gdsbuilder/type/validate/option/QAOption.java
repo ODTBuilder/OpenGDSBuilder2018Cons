@@ -29,14 +29,12 @@ import lombok.NoArgsConstructor;
  * 옵션에 대한 정보를 저장
  * <p>
  * 레이어 Geometry 타입, 속성 컬럼 구조 검수 항목인
- * {@link com.git.gdsbuilder.type.validate.option.LayerFixMiss}, 레이어 내
- * 객체의 속성 값 검수 항목인
- * {@link com.git.gdsbuilder.type.validate.option.AttributeMiss}, 레이어 내
+ * {@link com.git.gdsbuilder.type.validate.option.LayerFixMiss}, 레이어 내 객체의 속성 값
+ * 검수 항목인 {@link com.git.gdsbuilder.type.validate.option.AttributeMiss}, 레이어 내
  * 객체의 Geometry 검수 항목인
- * {@link com.git.gdsbuilder.type.validate.option.GraphicMiss}, 인접 검수
- * 영역의 레이어 간 검수 항목인
- * {@link com.git.gdsbuilder.type.validate.option.CloseMiss} 각각을 List
- * 형태로 저장
+ * {@link com.git.gdsbuilder.type.validate.option.GraphicMiss}, 인접 검수 영역의 레이어 간
+ * 검수 항목인 {@link com.git.gdsbuilder.type.validate.option.CloseMiss} 각각을 List 형태로
+ * 저장
  * 
  * @author DY.Oh
  *
@@ -68,5 +66,17 @@ public class QAOption {
 	 * 인접 검수 영역의 레이어 간 검수 항목 List
 	 */
 	List<CloseMiss> closeMissOptions;
+
+	public LayerFixMiss getLayerMissOption(String layerName) {
+
+		if (layerMissOptions != null) {
+			for (LayerFixMiss layfm : layerMissOptions) {
+				if (layfm.getCode().equals(layerName)) {
+					return layfm;
+				}
+			}
+		}
+		return null;
+	}
 
 }

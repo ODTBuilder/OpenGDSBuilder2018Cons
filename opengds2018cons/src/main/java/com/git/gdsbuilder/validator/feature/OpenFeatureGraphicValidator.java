@@ -1,4 +1,4 @@
-package com.git.gdsbuilder.validator.open;
+package com.git.gdsbuilder.validator.feature;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,18 +10,26 @@ import java.util.Set;
 
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
-import org.geotools.referencing.GeodeticCalculator;
+import org.geotools.geometry.jts.JTS;
+import org.geotools.referencing.CRS;
 import org.opengis.feature.simple.SimpleFeature;
+import org.opengis.geometry.MismatchedDimensionException;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.opengis.referencing.operation.MathTransform;
+import org.opengis.referencing.operation.TransformException;
 
 import com.git.gdsbuilder.type.dt.feature.DTFeature;
+import com.git.gdsbuilder.type.dt.layer.OpenDTLayer;
+import com.git.gdsbuilder.type.dt.layer.OpenDTLayerList;
 import com.git.gdsbuilder.type.validate.error.ErrorFeature;
 import com.git.gdsbuilder.type.validate.option.AttributeFigure;
 import com.git.gdsbuilder.type.validate.option.AttributeFilter;
 import com.git.gdsbuilder.type.validate.option.OptionFigure;
 import com.git.gdsbuilder.type.validate.option.OptionFilter;
 import com.git.gdsbuilder.type.validate.option.OptionTolerance;
-import com.git.gdsbuilder.validator.feature.FeatureFilter;
-import com.git.gdsbuilder.validator.open.OpenQAOptions.LangType;
+import com.git.gdsbuilder.type.validate.option.en.LangType;
+import com.git.gdsbuilder.type.validate.option.en.OpenDMQAOptions;
 import com.vividsolutions.jts.algorithm.Angle;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -40,7 +48,7 @@ public class OpenFeatureGraphicValidator {
 	}
 
 	// 허용범위 이하 길이 (SmallLength)
-	public List<ErrorFeature> validateSmallLength(DTFeature feature, OptionTolerance tolerance) {
+	public List<ErrorFeature> validateSmallLength(DTFeature feature, OptionTolerance tolerance, String epsg) {
 
 		SimpleFeature sf = feature.getSimefeature();
 		List<AttributeFilter> filters = feature.getFilter();
@@ -51,7 +59,26 @@ public class OpenFeatureGraphicValidator {
 		} else {
 			isTrue = true;
 		}
+		if (tolerance == null) {
+			return null;
+		}
 		Geometry geom = (Geometry) sf.getDefaultGeometry();
+		if (epsg.equals("EPSG:4326")) {
+			try {
+				CoordinateReferenceSystem dataCRS = CRS.decode("EPSG:4326");
+				CoordinateReferenceSystem worldCRS = CRS.decode("EPSG:32652");
+				MathTransform transform = CRS.findMathTransform(dataCRS, worldCRS, true);
+				try {
+					geom = JTS.transform(geom, transform);
+				} catch (MismatchedDimensionException | TransformException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} catch (FactoryException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		Double value = tolerance.getValue();
 		String conditon = tolerance.getCondition();
 		List<ErrorFeature> errList = new ArrayList<>();
@@ -93,9 +120,9 @@ public class OpenFeatureGraphicValidator {
 						String layerID = feature.getLayerID();
 						ErrorFeature errFeature = new ErrorFeature();
 						errFeature.setLayerID(layerID);
-						errFeature.setErrCode(OpenQAOptions.QAType.SMALLLENGTH.getErrCode());
-						errFeature.setErrType(OpenQAOptions.QAType.SMALLLENGTH.getErrType(langType));
-						errFeature.setErrName(OpenQAOptions.QAType.SMALLLENGTH.getErrName(langType));
+						errFeature.setErrCode(OpenDMQAOptions.QAType.SMALLLENGTH.getErrCode());
+						errFeature.setErrType(OpenDMQAOptions.QAType.SMALLLENGTH.getErrType(langType));
+						errFeature.setErrName(OpenDMQAOptions.QAType.SMALLLENGTH.getErrName(langType));
 						errFeature.setErrPoint(errPt);
 						errList.add(errFeature);
 					}
@@ -112,7 +139,7 @@ public class OpenFeatureGraphicValidator {
 	}
 
 	// 허용범위 이하 면적 (SmallArea)
-	public List<ErrorFeature> validateSmallArea(DTFeature feature, OptionTolerance tolerance) {
+	public List<ErrorFeature> validateSmallArea(DTFeature feature, OptionTolerance tolerance, String epsg) {
 
 		SimpleFeature sf = feature.getSimefeature();
 
@@ -123,7 +150,26 @@ public class OpenFeatureGraphicValidator {
 		} else {
 			isTrue = true;
 		}
+		if (tolerance == null) {
+			return null;
+		}
 		Geometry geom = (Geometry) sf.getDefaultGeometry();
+		if (epsg.equals("EPSG:4326")) {
+			try {
+				CoordinateReferenceSystem dataCRS = CRS.decode("EPSG:4326");
+				CoordinateReferenceSystem worldCRS = CRS.decode("EPSG:32652");
+				MathTransform transform = CRS.findMathTransform(dataCRS, worldCRS, true);
+				try {
+					geom = JTS.transform(geom, transform);
+				} catch (MismatchedDimensionException | TransformException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} catch (FactoryException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		Double value = tolerance.getValue();
 		String conditon = tolerance.getCondition();
 		List<ErrorFeature> errList = new ArrayList<>();
@@ -168,9 +214,9 @@ public class OpenFeatureGraphicValidator {
 						String layerID = feature.getLayerID();
 						ErrorFeature errFeature = new ErrorFeature();
 						errFeature.setLayerID(layerID);
-						errFeature.setErrCode(OpenQAOptions.QAType.SMALLAREA.getErrCode());
-						errFeature.setErrType(OpenQAOptions.QAType.SMALLAREA.getErrType(langType));
-						errFeature.setErrName(OpenQAOptions.QAType.SMALLAREA.getErrName(langType));
+						errFeature.setErrCode(OpenDMQAOptions.QAType.SMALLAREA.getErrCode());
+						errFeature.setErrType(OpenDMQAOptions.QAType.SMALLAREA.getErrType(langType));
+						errFeature.setErrName(OpenDMQAOptions.QAType.SMALLAREA.getErrName(langType));
 						errFeature.setErrPoint(errPt);
 						errList.add(errFeature);
 					}
@@ -186,10 +232,8 @@ public class OpenFeatureGraphicValidator {
 		}
 	}
 
-	// 문자의 정확성(Text Accuracy)
-
 	// 단독존재오류 (Self Entity)
-	public List<ErrorFeature> validateSelfEntity(DTFeature feature, DTFeature reFeature) {
+	public List<ErrorFeature> validateSelfEntity(DTFeature feature, DTFeature reFeature, OptionTolerance tolerance) {
 
 		boolean isTrue = false;
 		SimpleFeature sf = feature.getSimefeature();
@@ -230,42 +274,107 @@ public class OpenFeatureGraphicValidator {
 			if (returnGeom != null && !returnGeom.isEmpty()) {
 				String layerID = feature.getLayerID();
 				String refLayerID = reFeature.getLayerID();
-//				String typeName = feature.getTypeName();
-//				String retypeName = reFeature.getTypeName();
-//				String errName = typeName + "/" + retypeName;
-				String returnGeomType = returnGeom.getGeometryType().toUpperCase();
-				if (returnGeomType.equals("LINESTRING")) {
-					if (returnGeom.getLength() == 0.0 || returnGeom.getLength() == 0) {
-						Coordinate[] coordinates = returnGeom.getCoordinates();
-						Point startPoint = geometryFactory.createPoint(coordinates[0]);
+				int numGeom = reGeom.getNumGeometries();
+
+				String conditon = tolerance.getCondition();
+				Double value = tolerance.getValue();
+				for (int n = 0; n < numGeom; n++) {
+					Geometry innerGeom = returnGeom.getGeometryN(n);
+					String returnGeomType = innerGeom.getGeometryType();
+					if (conditon == null || value == null) {
 						ErrorFeature errFeature = new ErrorFeature();
 						errFeature.setLayerID(layerID);
 						errFeature.setRefLayerId(refLayerID);
-						errFeature.setErrCode(OpenQAOptions.QAType.SELFENTITY.getErrCode());
-						errFeature.setErrType(OpenQAOptions.QAType.SELFENTITY.getErrType(langType));
-						errFeature.setErrName(OpenQAOptions.QAType.SELFENTITY.getErrName(langType));
-						errFeature.setErrPoint(startPoint);
+						errFeature.setErrCode(OpenDMQAOptions.QAType.SELFENTITY.getErrCode());
+						errFeature.setErrType(OpenDMQAOptions.QAType.SELFENTITY.getErrType(langType));
+						errFeature.setErrName(OpenDMQAOptions.QAType.SELFENTITY.getErrName(langType));
+						errFeature.setErrPoint(innerGeom.getInteriorPoint());
 						errFeatures.add(errFeature);
 					} else {
-						ErrorFeature errFeature = new ErrorFeature();
-						errFeature.setLayerID(layerID);
-						errFeature.setRefLayerId(refLayerID);
-						errFeature.setErrCode(OpenQAOptions.QAType.SELFENTITY.getErrCode());
-						errFeature.setErrType(OpenQAOptions.QAType.SELFENTITY.getErrType(langType));
-						errFeature.setErrName(OpenQAOptions.QAType.SELFENTITY.getErrName(langType));
-						errFeature.setErrPoint(returnGeom.getInteriorPoint());
-						errFeatures.add(errFeature);
-					}
-				} else {
-					for (int i = 0; i < returnGeom.getNumGeometries(); i++) {
-						ErrorFeature errFeature = new ErrorFeature();
-						errFeature.setLayerID(layerID);
-						errFeature.setRefLayerId(refLayerID);
-						errFeature.setErrCode(OpenQAOptions.QAType.SELFENTITY.getErrCode());
-						errFeature.setErrType(OpenQAOptions.QAType.SELFENTITY.getErrType(langType));
-						errFeature.setErrName(OpenQAOptions.QAType.SELFENTITY.getErrName(langType));
-						errFeature.setErrPoint(returnGeom.getGeometryN(i).getInteriorPoint());
-						errFeatures.add(errFeature);
+						if (returnGeomType.equals("LineString")) {
+							boolean isError = false;
+							double geomLength = returnGeom.getLength();
+							if (conditon.equals("over")) {
+								if (geomLength <= value) {
+									isError = true;
+								}
+							} else if (conditon.equals("under")) {
+								if (geomLength >= value) {
+									isError = true;
+								}
+							} else if (conditon.equals("equal")) {
+								if (geomLength != value) {
+									isError = true;
+								}
+							} else if (conditon.equals("andover")) {
+								if (geomLength < value) {
+									isError = true;
+								}
+							} else if (conditon.equals("andunder")) {
+								if (geomLength > value) {
+									isError = true;
+								}
+							}
+							if (isError) {
+								Coordinate[] coordinates = innerGeom.getCoordinates();
+								Point startPoint = geometryFactory.createPoint(coordinates[0]);
+								ErrorFeature errFeature = new ErrorFeature();
+								errFeature.setLayerID(layerID);
+								errFeature.setRefLayerId(refLayerID);
+								errFeature.setErrCode(OpenDMQAOptions.QAType.SELFENTITY.getErrCode());
+								errFeature.setErrType(OpenDMQAOptions.QAType.SELFENTITY.getErrType(langType));
+								errFeature.setErrName(OpenDMQAOptions.QAType.SELFENTITY.getErrName(langType));
+								errFeature.setErrPoint(startPoint);
+								errFeatures.add(errFeature);
+							}
+						} else if (returnGeomType.equals("Point")) {
+							if (conditon.equals("equal") && value == 0) {
+								continue;
+							} else {
+								ErrorFeature errFeature = new ErrorFeature();
+								errFeature.setLayerID(layerID);
+								errFeature.setRefLayerId(refLayerID);
+								errFeature.setErrCode(OpenDMQAOptions.QAType.SELFENTITY.getErrCode());
+								errFeature.setErrType(OpenDMQAOptions.QAType.SELFENTITY.getErrType(langType));
+								errFeature.setErrName(OpenDMQAOptions.QAType.SELFENTITY.getErrName(langType));
+								errFeature.setErrPoint((Point) innerGeom);
+								errFeatures.add(errFeature);
+							}
+						} else if (returnGeomType.equals("Polygon")) {
+							boolean isError = false;
+							double geomLength = returnGeom.getArea();
+							if (conditon.equals("over")) {
+								if (geomLength <= value) {
+									isError = true;
+								}
+							} else if (conditon.equals("under")) {
+								if (geomLength >= value) {
+									isError = true;
+								}
+							} else if (conditon.equals("equal")) {
+								if (geomLength != value) {
+									isError = true;
+								}
+							} else if (conditon.equals("andover")) {
+								if (geomLength < value) {
+									isError = true;
+								}
+							} else if (conditon.equals("andunder")) {
+								if (geomLength > value) {
+									isError = true;
+								}
+							}
+							if (isError) {
+								ErrorFeature errFeature = new ErrorFeature();
+								errFeature.setLayerID(layerID);
+								errFeature.setRefLayerId(refLayerID);
+								errFeature.setErrCode(OpenDMQAOptions.QAType.SELFENTITY.getErrCode());
+								errFeature.setErrType(OpenDMQAOptions.QAType.SELFENTITY.getErrType(langType));
+								errFeature.setErrName(OpenDMQAOptions.QAType.SELFENTITY.getErrName(langType));
+								errFeature.setErrPoint(innerGeom.getInteriorPoint());
+								errFeatures.add(errFeature);
+							}
+						}
 					}
 				}
 			}
@@ -293,9 +402,9 @@ public class OpenFeatureGraphicValidator {
 		String layerID = feature.getLayerID();
 		ErrorFeature errFeature = new ErrorFeature();
 		errFeature.setLayerID(layerID);
-		errFeature.setErrCode(OpenQAOptions.QAType.SELFENTITY.getErrCode());
-		errFeature.setErrType(OpenQAOptions.QAType.SELFENTITY.getErrType(langType));
-		errFeature.setErrName(OpenQAOptions.QAType.SELFENTITY.getErrName(langType));
+		errFeature.setErrCode(OpenDMQAOptions.QAType.SELFENTITY.getErrCode());
+		errFeature.setErrType(OpenDMQAOptions.QAType.SELFENTITY.getErrType(langType));
+		errFeature.setErrName(OpenDMQAOptions.QAType.SELFENTITY.getErrName(langType));
 		errFeature.setErrPoint(errPt);
 		return errFeature;
 	}
@@ -358,9 +467,9 @@ public class OpenFeatureGraphicValidator {
 							Point errPoint = factory.createPoint(b);
 							ErrorFeature errFeature = new ErrorFeature();
 							errFeature.setLayerID(layerID);
-							errFeature.setErrCode(OpenQAOptions.QAType.CONOVERDEGREE.getErrCode());
-							errFeature.setErrType(OpenQAOptions.QAType.CONOVERDEGREE.getErrType(langType));
-							errFeature.setErrName(OpenQAOptions.QAType.CONOVERDEGREE.getErrName(langType));
+							errFeature.setErrCode(OpenDMQAOptions.QAType.CONOVERDEGREE.getErrCode());
+							errFeature.setErrType(OpenDMQAOptions.QAType.CONOVERDEGREE.getErrType(langType));
+							errFeature.setErrName(OpenDMQAOptions.QAType.CONOVERDEGREE.getErrName(langType));
 							errFeature.setErrPoint(errPoint);
 							errFeatures.add(errFeature);
 						}
@@ -415,9 +524,9 @@ public class OpenFeatureGraphicValidator {
 					Geometry errPoint = geometryFactory.createPoint(coordinate);
 					ErrorFeature errFeature = new ErrorFeature();
 					errFeature.setLayerID(layerID);
-					errFeature.setErrCode(OpenQAOptions.QAType.CONINTERSECTED.getErrCode());
-					errFeature.setErrType(OpenQAOptions.QAType.CONINTERSECTED.getErrType(langType));
-					errFeature.setErrName(OpenQAOptions.QAType.CONINTERSECTED.getErrName(langType));
+					errFeature.setErrCode(OpenDMQAOptions.QAType.CONINTERSECTED.getErrCode());
+					errFeature.setErrType(OpenDMQAOptions.QAType.CONINTERSECTED.getErrType(langType));
+					errFeature.setErrName(OpenDMQAOptions.QAType.CONINTERSECTED.getErrName(langType));
 					errFeature.setErrPoint(errPoint);
 					errFeatures.add(errFeature);
 				}
@@ -516,9 +625,9 @@ public class OpenFeatureGraphicValidator {
 								if (atrrErr) {
 									ErrorFeature errFeature = new ErrorFeature();
 									errFeature.setLayerID(layerID);
-									errFeature.setErrCode(OpenQAOptions.QAType.CONBREAK.getErrCode());
-									errFeature.setErrType(OpenQAOptions.QAType.CONBREAK.getErrType(langType));
-									errFeature.setErrName(OpenQAOptions.QAType.CONBREAK.getErrName(langType));
+									errFeature.setErrCode(OpenDMQAOptions.QAType.CONBREAK.getErrCode());
+									errFeature.setErrType(OpenDMQAOptions.QAType.CONBREAK.getErrType(langType));
+									errFeature.setErrName(OpenDMQAOptions.QAType.CONBREAK.getErrName(langType));
 									errFeature.setErrPoint(firPt);
 									errFeatures.add(errFeature);
 								}
@@ -529,9 +638,9 @@ public class OpenFeatureGraphicValidator {
 								if (atrrErr) {
 									ErrorFeature errFeature = new ErrorFeature();
 									errFeature.setLayerID(layerID);
-									errFeature.setErrCode(OpenQAOptions.QAType.CONBREAK.getErrCode());
-									errFeature.setErrType(OpenQAOptions.QAType.CONBREAK.getErrType(langType));
-									errFeature.setErrName(OpenQAOptions.QAType.CONBREAK.getErrName(langType));
+									errFeature.setErrCode(OpenDMQAOptions.QAType.CONBREAK.getErrCode());
+									errFeature.setErrType(OpenDMQAOptions.QAType.CONBREAK.getErrType(langType));
+									errFeature.setErrName(OpenDMQAOptions.QAType.CONBREAK.getErrName(langType));
 									errFeature.setErrPoint(firPt);
 									errFeatures.add(errFeature);
 								}
@@ -598,18 +707,18 @@ public class OpenFeatureGraphicValidator {
 			if (firErr) {
 				ErrorFeature errFeature = new ErrorFeature();
 				errFeature.setLayerID(layerID);
-				errFeature.setErrCode(OpenQAOptions.QAType.CONBREAK.getErrCode());
-				errFeature.setErrType(OpenQAOptions.QAType.CONBREAK.getErrType(langType));
-				errFeature.setErrName(OpenQAOptions.QAType.CONBREAK.getErrName(langType));
+				errFeature.setErrCode(OpenDMQAOptions.QAType.CONBREAK.getErrCode());
+				errFeature.setErrType(OpenDMQAOptions.QAType.CONBREAK.getErrType(langType));
+				errFeature.setErrName(OpenDMQAOptions.QAType.CONBREAK.getErrName(langType));
 				errFeature.setErrPoint(firPt);
 				errFeatures.add(errFeature);
 			}
 			if (lasErr) {
 				ErrorFeature errFeature = new ErrorFeature();
 				errFeature.setLayerID(layerID);
-				errFeature.setErrCode(OpenQAOptions.QAType.CONBREAK.getErrCode());
-				errFeature.setErrType(OpenQAOptions.QAType.CONBREAK.getErrType(langType));
-				errFeature.setErrName(OpenQAOptions.QAType.CONBREAK.getErrName(langType));
+				errFeature.setErrCode(OpenDMQAOptions.QAType.CONBREAK.getErrCode());
+				errFeature.setErrType(OpenDMQAOptions.QAType.CONBREAK.getErrType(langType));
+				errFeature.setErrName(OpenDMQAOptions.QAType.CONBREAK.getErrName(langType));
 				errFeature.setErrPoint(lasPt);
 				errFeatures.add(errFeature);
 			}
@@ -631,57 +740,61 @@ public class OpenFeatureGraphicValidator {
 		SimpleFeature sf = dtFeature.getSimefeature();
 		List<AttributeFilter> filters = dtFeature.getFilter();
 		boolean isTrue = false;
-
 		if (filters != null) {
 			isTrue = FeatureFilter.filter(sf, filters);
 		} else {
 			isTrue = true;
 		}
-
 		if (isTrue) {
-			GeodeticCalculator gc = new GeodeticCalculator();
 			String layerID = dtFeature.getLayerID();
 			Geometry geometry = (Geometry) sf.getDefaultGeometry();
 			Coordinate[] coors = geometry.getCoordinates();
-			int coorsSize = coors.length;
-			for (int i = 0; i < coorsSize - 1; i++) {
-				Coordinate a = coors[i];
-				Coordinate b = coors[i + 1];
-				if (a.equals2D(b)) {
-					continue;
-				}
-				boolean isAngError = false;
-				if (i < coorsSize - 2) {
-					// 각도 조건
-					Coordinate c = coors[i + 2];
-					if (!a.equals2D(b) && !b.equals2D(c) && !c.equals2D(a)) {
-						double angle = Angle.toDegrees(Angle.angleBetween(a, b, c));
-						if (180 - angle < 6) {
-							isAngError = true;
+
+			CoordinateReferenceSystem crs;
+			try {
+				crs = CRS.decode("EPSG:32652");
+				int coorsSize = coors.length;
+				for (int i = 0; i < coorsSize - 1; i++) {
+					Coordinate a = coors[i];
+					Coordinate b = coors[i + 1];
+					if (a.equals2D(b)) {
+						continue;
+					}
+					boolean isAngError = false;
+					if (i < coorsSize - 2) {
+						// 각도 조건
+						Coordinate c = coors[i + 2];
+						if (!a.equals2D(b) && !b.equals2D(c) && !c.equals2D(a)) {
+							double angle = Angle.toDegrees(Angle.angleBetween(a, b, c));
+							if (180 - angle < 6) {
+								isAngError = true;
+							}
 						}
 					}
-				}
-				boolean isDistError = false;
-				if (isAngError) {
-					// 길이 조건
-					gc.setStartingGeographicPoint(a.x, a.y);
-					gc.setDestinationGeographicPoint(b.x, b.y);
-					double distance = gc.getOrthodromicDistance();
-					if (distance < 0.01) {
-						isDistError = true;
+					boolean isDistError = false;
+					if (isAngError) {
+						// 길이 조건
+						double tmpLength = a.distance(b);
+						double distance = JTS.orthodromicDistance(a, b, crs);
+						if (tmpLength < 0.01) {
+							isDistError = true;
+						}
+					}
+					if (isDistError && isAngError) {
+						GeometryFactory gFactory = new GeometryFactory();
+						Geometry returnGeom = gFactory.createPoint(b);
+						ErrorFeature errFeature = new ErrorFeature();
+						errFeature.setLayerID(layerID);
+						errFeature.setErrCode(OpenDMQAOptions.QAType.USELESSPOINT.getErrCode());
+						errFeature.setErrType(OpenDMQAOptions.QAType.USELESSPOINT.getErrType(langType));
+						errFeature.setErrName(OpenDMQAOptions.QAType.USELESSPOINT.getErrName(langType));
+						errFeature.setErrPoint(returnGeom);
+						errFeatures.add(errFeature);
 					}
 				}
-				if (isDistError && isAngError) {
-					GeometryFactory gFactory = new GeometryFactory();
-					Geometry returnGeom = gFactory.createPoint(b);
-					ErrorFeature errFeature = new ErrorFeature();
-					errFeature.setLayerID(layerID);
-					errFeature.setErrCode(OpenQAOptions.QAType.USELESSPOINT.getErrCode());
-					errFeature.setErrType(OpenQAOptions.QAType.USELESSPOINT.getErrType(langType));
-					errFeature.setErrName(OpenQAOptions.QAType.USELESSPOINT.getErrName(langType));
-					errFeature.setErrPoint(returnGeom);
-					errFeatures.add(errFeature);
-				}
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
 		}
 		if (errFeatures.size() != 0) {
@@ -695,6 +808,11 @@ public class OpenFeatureGraphicValidator {
 	public List<ErrorFeature> validatePointDuplicated(DTFeature feature) {
 
 		SimpleFeature sf = feature.getSimefeature();
+
+		if (sf.getAttribute("osm_id").toString().equals("310762455")) {
+			System.out.println("");
+		}
+
 		boolean isTrue = false;
 		List<AttributeFilter> filters = feature.getFilter();
 
@@ -746,9 +864,9 @@ public class OpenFeatureGraphicValidator {
 				Geometry errLasPt = new GeometryFactory().createPoint(coor1);
 				ErrorFeature errFeature = new ErrorFeature();
 				errFeature.setLayerID(layerID);
-				errFeature.setErrCode(OpenQAOptions.QAType.POINTDUPLICATED.getErrCode());
-				errFeature.setErrType(OpenQAOptions.QAType.POINTDUPLICATED.getErrType(langType));
-				errFeature.setErrName(OpenQAOptions.QAType.POINTDUPLICATED.getErrName(langType));
+				errFeature.setErrCode(OpenDMQAOptions.QAType.POINTDUPLICATED.getErrCode());
+				errFeature.setErrType(OpenDMQAOptions.QAType.POINTDUPLICATED.getErrType(langType));
+				errFeature.setErrName(OpenDMQAOptions.QAType.POINTDUPLICATED.getErrName(langType));
 				errFeature.setErrPoint(errLasPt);
 				errFeatures.add(errFeature);
 			}
@@ -764,17 +882,17 @@ public class OpenFeatureGraphicValidator {
 
 					ErrorFeature errFir = new ErrorFeature();
 					errFir.setLayerID(layerID);
-					errFir.setErrCode(OpenQAOptions.QAType.POINTDUPLICATED.getErrCode());
-					errFir.setErrType(OpenQAOptions.QAType.POINTDUPLICATED.getErrType(langType));
-					errFir.setErrName(OpenQAOptions.QAType.POINTDUPLICATED.getErrName(langType));
+					errFir.setErrCode(OpenDMQAOptions.QAType.POINTDUPLICATED.getErrCode());
+					errFir.setErrType(OpenDMQAOptions.QAType.POINTDUPLICATED.getErrType(langType));
+					errFir.setErrName(OpenDMQAOptions.QAType.POINTDUPLICATED.getErrName(langType));
 					errFir.setErrPoint(errFirPt);
 					errFeatures.add(errFir);
 
 					ErrorFeature errLas = new ErrorFeature();
 					errLas.setLayerID(layerID);
-					errLas.setErrCode(OpenQAOptions.QAType.POINTDUPLICATED.getErrCode());
-					errLas.setErrType(OpenQAOptions.QAType.POINTDUPLICATED.getErrType(langType));
-					errLas.setErrName(OpenQAOptions.QAType.POINTDUPLICATED.getErrName(langType));
+					errLas.setErrCode(OpenDMQAOptions.QAType.POINTDUPLICATED.getErrCode());
+					errLas.setErrType(OpenDMQAOptions.QAType.POINTDUPLICATED.getErrType(langType));
+					errLas.setErrName(OpenDMQAOptions.QAType.POINTDUPLICATED.getErrName(langType));
 					errLas.setErrPoint(errLasPt);
 
 					errMap.put(String.valueOf(c), errFir);
@@ -795,9 +913,86 @@ public class OpenFeatureGraphicValidator {
 	}
 
 	// 경계초과오류 (OutBoundary)
-	public ErrorFeature validateOutBoundary(DTFeature feature, OptionTolerance tolerance, OpenDTLayerList reDTLayers) {
+//	public ErrorFeature validateOutBoundary(DTFeature feature, OptionTolerance tolerance, BasicDTLayerList reDTLayers) {
+//
+//		// simplefeature : 터널, 지하도, 교량.....
+//		// relationSfc : 도로경계
+//		SimpleFeature sf = feature.getSimefeature();
+//		boolean isTrue = true;
+//		List<AttributeFilter> filters = feature.getFilter();
+//		if (filters != null) {
+//			isTrue = FeatureFilter.filter(sf, filters);
+//		}
+//		if (isTrue) {
+//			Geometry geom = (Geometry) sf.getDefaultGeometry();
+//			Coordinate[] geomCoors = geom.getCoordinates();
+//			int geomCoorsLength = geomCoors.length;
+//			Double value = tolerance.getValue();
+//			String layerID = feature.getLayerID();
+//
+//			boolean isErr = true;
+//			reFor: for (BasicDTLayer reDTLayer : reDTLayers) {
+//				SimpleFeatureCollection reSfc = reDTLayer.getSimpleFeatureCollection();
+//				SimpleFeatureIterator iterator = reSfc.features();
+//				OptionFilter reFilter = reDTLayer.getFilter();
+//				List<AttributeFilter> reAttrFilters = null;
+//				if (reFilter != null) {
+//					reAttrFilters = reFilter.getFilter();
+//				}
+//				while (iterator.hasNext()) {
+//					// A001
+//					SimpleFeature relationSf = iterator.next();
+//					if (FeatureFilter.filter(relationSf, reAttrFilters)) {
+//						Geometry relationGeom = (Geometry) relationSf.getDefaultGeometry();
+//						if (relationGeom == null) {
+//							continue;
+//						}
+//						boolean allContains = true;
+//						if (geom.intersects(relationGeom)) {
+//							for (int j = 0; j < geomCoorsLength; j++) {
+//								Coordinate coor = geomCoors[j];
+//								Geometry pt = new GeometryFactory().createPoint(coor);
+//								if (!pt.intersects(relationGeom.buffer(value))) {
+//									allContains = false;
+//								}
+//							}
+//						} else {
+//							allContains = false;
+//						}
+//						if (allContains) {
+//							isErr = false;
+//							break reFor;
+//						}
+//					}
+//				}
+//				iterator.close();
+//			}
+//			if (isErr) {
+//				Geometry errPt = null;
+//				try {
+//					errPt = geom.getInteriorPoint();
+//				} catch (TopologyException e) {
+//					Coordinate[] coors = geom.getCoordinates();
+//					errPt = new GeometryFactory().createPoint(coors[0]);
+//				}
+//				ErrorFeature errFeature = new ErrorFeature();
+//				errFeature.setLayerID(layerID);
+//				errFeature.setErrCode(OpenDMQAOptions.QAType.OUTBOUNDARY.getErrCode());
+//				errFeature.setErrType(OpenDMQAOptions.QAType.OUTBOUNDARY.getErrType(langType));
+//				errFeature.setErrName(OpenDMQAOptions.QAType.OUTBOUNDARY.getErrName(langType));
+//				errFeature.setErrPoint(errPt);
+//				return errFeature;
+//			} else {
+//				return null;
+//			}
+//		} else {
+//			return null;
+//		}
+//	}
 
-		// simplefeature : 터널, 지하도, 교량.....
+	public ErrorFeature validateOutBoundary(DTFeature feature, OptionTolerance tolerance,
+			SimpleFeatureCollection reValSfc) {
+
 		// relationSfc : 도로경계
 		SimpleFeature sf = feature.getSimefeature();
 		boolean isTrue = true;
@@ -809,47 +1004,45 @@ public class OpenFeatureGraphicValidator {
 			Geometry geom = (Geometry) sf.getDefaultGeometry();
 			Coordinate[] geomCoors = geom.getCoordinates();
 			int geomCoorsLength = geomCoors.length;
-			Double value = tolerance.getValue();
 			String layerID = feature.getLayerID();
-			String type = feature.getTypeName();
+
+			String condition = tolerance.getCondition();
+			Double value = tolerance.getValue();
 
 			boolean isErr = true;
-			reFor: for (OpenDTLayer reDTLayer : reDTLayers) {
-				SimpleFeatureCollection reSfc = reDTLayer.getSimpleFeatureCollection();
-				SimpleFeatureIterator iterator = reSfc.features();
-				OptionFilter reFilter = reDTLayer.getFilter();
-				List<AttributeFilter> reAttrFilters = null;
-				if (reFilter != null) {
-					reAttrFilters = reFilter.getFilter();
+			SimpleFeatureIterator reIterator = reValSfc.features();
+			while (reIterator.hasNext()) {
+				// A001
+				SimpleFeature relationSf = reIterator.next();
+				Geometry relationGeom = (Geometry) relationSf.getDefaultGeometry();
+				if (relationGeom == null) {
+					continue;
 				}
-				while (iterator.hasNext()) {
-					// A001
-					SimpleFeature relationSf = iterator.next();
-					if (FeatureFilter.filter(relationSf, reAttrFilters)) {
-						Geometry relationGeom = (Geometry) relationSf.getDefaultGeometry();
-						if (relationGeom == null) {
-							continue;
-						}
-						boolean allContains = true;
-						if (geom.intersects(relationGeom)) {
-							for (int j = 0; j < geomCoorsLength; j++) {
-								Coordinate coor = geomCoors[j];
-								Geometry pt = new GeometryFactory().createPoint(coor);
-								if (!pt.intersects(relationGeom.buffer(value))) {
-									allContains = false;
-								}
+				boolean allContains = true;
+				if (condition == null || value == null) {
+					if (!geom.equals(relationGeom)) {
+						allContains = false;
+					}
+				} else {
+					Geometry bufferGeom = relationGeom.buffer(value);
+					if (geom.intersects(relationGeom)) {
+						for (int j = 0; j < geomCoorsLength; j++) {
+							Coordinate coor = geomCoors[j];
+							Geometry pt = new GeometryFactory().createPoint(coor);
+							if (!pt.intersects(bufferGeom)) {
+								allContains = false;
 							}
-						} else {
-							allContains = false;
 						}
-						if (allContains) {
-							isErr = false;
-							break reFor;
-						}
+					} else {
+						allContains = false;
+					}
+					if (allContains) {
+						isErr = false;
+						break;
 					}
 				}
-				iterator.close();
 			}
+			reIterator.close();
 			if (isErr) {
 				Geometry errPt = null;
 				try {
@@ -860,9 +1053,10 @@ public class OpenFeatureGraphicValidator {
 				}
 				ErrorFeature errFeature = new ErrorFeature();
 				errFeature.setLayerID(layerID);
-				errFeature.setErrCode(OpenQAOptions.QAType.OUTBOUNDARY.getErrCode());
-				errFeature.setErrType(OpenQAOptions.QAType.OUTBOUNDARY.getErrType(langType));
-				errFeature.setErrName(OpenQAOptions.QAType.OUTBOUNDARY.getErrName(langType));
+				errFeature.setRefLayerId(reValSfc.getSchema().getName().getLocalPart());
+				errFeature.setErrCode(OpenDMQAOptions.QAType.OUTBOUNDARY.getErrCode());
+				errFeature.setErrType(OpenDMQAOptions.QAType.OUTBOUNDARY.getErrType(langType));
+				errFeature.setErrName(OpenDMQAOptions.QAType.OUTBOUNDARY.getErrName(langType));
 				errFeature.setErrPoint(errPt);
 				return errFeature;
 			} else {
@@ -897,7 +1091,6 @@ public class OpenFeatureGraphicValidator {
 			Geometry geom = (Geometry) sf.getDefaultGeometry();
 
 			String layerID = feature.getLayerID();
-			String typeName = feature.getTypeName();
 
 			String refLayerID = reLayer.getLayerID();
 			Coordinate[] tCoors = geom.getCoordinates();
@@ -999,9 +1192,9 @@ public class OpenFeatureGraphicValidator {
 					ErrorFeature errFeature = new ErrorFeature();
 					errFeature.setLayerID(layerID);
 					errFeature.setRefLayerId(refLayerID);
-					errFeature.setErrCode(OpenQAOptions.QAType.NODEMISS.getErrCode());
-					errFeature.setErrType(OpenQAOptions.QAType.NODEMISS.getErrType(langType));
-					errFeature.setErrName(OpenQAOptions.QAType.NODEMISS.getErrName(langType));
+					errFeature.setErrCode(OpenDMQAOptions.QAType.NODEMISS.getErrCode());
+					errFeature.setErrType(OpenDMQAOptions.QAType.NODEMISS.getErrType(langType));
+					errFeature.setErrName(OpenDMQAOptions.QAType.NODEMISS.getErrName(langType));
 					errFeature.setErrPoint(innerPt);
 					errFeatures.add(errFeature);
 					return errFeatures;
@@ -1081,9 +1274,9 @@ public class OpenFeatureGraphicValidator {
 					ErrorFeature errFeature = new ErrorFeature();
 					errFeature.setLayerID(layerID);
 					errFeature.setRefLayerId(refLayerID);
-					errFeature.setErrCode(OpenQAOptions.QAType.NODEMISS.getErrCode());
-					errFeature.setErrType(OpenQAOptions.QAType.NODEMISS.getErrType(langType));
-					errFeature.setErrName(OpenQAOptions.QAType.NODEMISS.getErrName(langType));
+					errFeature.setErrCode(OpenDMQAOptions.QAType.NODEMISS.getErrCode());
+					errFeature.setErrType(OpenDMQAOptions.QAType.NODEMISS.getErrType(langType));
+					errFeature.setErrName(OpenDMQAOptions.QAType.NODEMISS.getErrName(langType));
 					errFeature.setErrPoint(firPt);
 					errFeatures.add(errFeature);
 				}
@@ -1091,9 +1284,9 @@ public class OpenFeatureGraphicValidator {
 					ErrorFeature errFeature = new ErrorFeature();
 					errFeature.setLayerID(layerID);
 					errFeature.setRefLayerId(refLayerID);
-					errFeature.setErrCode(OpenQAOptions.QAType.NODEMISS.getErrCode());
-					errFeature.setErrType(OpenQAOptions.QAType.NODEMISS.getErrType(langType));
-					errFeature.setErrName(OpenQAOptions.QAType.NODEMISS.getErrName(langType));
+					errFeature.setErrCode(OpenDMQAOptions.QAType.NODEMISS.getErrCode());
+					errFeature.setErrType(OpenDMQAOptions.QAType.NODEMISS.getErrType(langType));
+					errFeature.setErrName(OpenDMQAOptions.QAType.NODEMISS.getErrName(langType));
 					errFeature.setErrPoint(lasPt);
 					errFeatures.add(errFeature);
 				}
@@ -1102,9 +1295,9 @@ public class OpenFeatureGraphicValidator {
 					ErrorFeature errFeature = new ErrorFeature();
 					errFeature.setLayerID(layerID);
 					errFeature.setRefLayerId(refLayerID);
-					errFeature.setErrCode(OpenQAOptions.QAType.NODEMISS.getErrCode());
-					errFeature.setErrType(OpenQAOptions.QAType.NODEMISS.getErrType(langType));
-					errFeature.setErrName(OpenQAOptions.QAType.NODEMISS.getErrName(langType));
+					errFeature.setErrCode(OpenDMQAOptions.QAType.NODEMISS.getErrCode());
+					errFeature.setErrType(OpenDMQAOptions.QAType.NODEMISS.getErrType(langType));
+					errFeature.setErrName(OpenDMQAOptions.QAType.NODEMISS.getErrName(langType));
 					errFeature.setErrPoint(firPt);
 					errFeatures.add(errFeature);
 				}
@@ -1112,9 +1305,9 @@ public class OpenFeatureGraphicValidator {
 					ErrorFeature errFeature = new ErrorFeature();
 					errFeature.setLayerID(layerID);
 					errFeature.setRefLayerId(refLayerID);
-					errFeature.setErrCode(OpenQAOptions.QAType.NODEMISS.getErrCode());
-					errFeature.setErrType(OpenQAOptions.QAType.NODEMISS.getErrType(langType));
-					errFeature.setErrName(OpenQAOptions.QAType.NODEMISS.getErrName(langType));
+					errFeature.setErrCode(OpenDMQAOptions.QAType.NODEMISS.getErrCode());
+					errFeature.setErrType(OpenDMQAOptions.QAType.NODEMISS.getErrType(langType));
+					errFeature.setErrName(OpenDMQAOptions.QAType.NODEMISS.getErrName(langType));
 					errFeature.setErrPoint(lasPt);
 					errFeatures.add(errFeature);
 				}
@@ -1149,9 +1342,9 @@ public class OpenFeatureGraphicValidator {
 			String layerID = feature.getLayerID();
 			ErrorFeature errFeature = new ErrorFeature();
 			errFeature.setLayerID(layerID);
-			errFeature.setErrCode(OpenQAOptions.QAType.LAYERMISS.getErrCode());
-			errFeature.setErrType(OpenQAOptions.QAType.LAYERMISS.getErrType(langType));
-			errFeature.setErrName(OpenQAOptions.QAType.LAYERMISS.getErrName(langType));
+			errFeature.setErrCode(OpenDMQAOptions.QAType.LAYERMISS.getErrCode());
+			errFeature.setErrType(OpenDMQAOptions.QAType.LAYERMISS.getErrType(langType));
+			errFeature.setErrName(OpenDMQAOptions.QAType.LAYERMISS.getErrName(langType));
 			errFeature.setErrPoint(errPt);
 			return errFeature;
 		} else {
@@ -1262,18 +1455,18 @@ public class OpenFeatureGraphicValidator {
 			if (firErr) {
 				ErrorFeature errFeature = new ErrorFeature();
 				errFeature.setLayerID(layerID);
-				errFeature.setErrCode(OpenQAOptions.QAType.OVERSHOOT.getErrCode());
-				errFeature.setErrType(OpenQAOptions.QAType.OVERSHOOT.getErrType(langType));
-				errFeature.setErrName(OpenQAOptions.QAType.OVERSHOOT.getErrName(langType));
+				errFeature.setErrCode(OpenDMQAOptions.QAType.OVERSHOOT.getErrCode());
+				errFeature.setErrType(OpenDMQAOptions.QAType.OVERSHOOT.getErrType(langType));
+				errFeature.setErrName(OpenDMQAOptions.QAType.OVERSHOOT.getErrName(langType));
 				errFeature.setErrPoint(firPt);
 				errFeatures.add(errFeature);
 			}
 			if (lasErr) {
 				ErrorFeature errFeature = new ErrorFeature();
 				errFeature.setLayerID(layerID);
-				errFeature.setErrCode(OpenQAOptions.QAType.OVERSHOOT.getErrCode());
-				errFeature.setErrType(OpenQAOptions.QAType.OVERSHOOT.getErrType(langType));
-				errFeature.setErrName(OpenQAOptions.QAType.OVERSHOOT.getErrName(langType));
+				errFeature.setErrCode(OpenDMQAOptions.QAType.OVERSHOOT.getErrCode());
+				errFeature.setErrType(OpenDMQAOptions.QAType.OVERSHOOT.getErrType(langType));
+				errFeature.setErrName(OpenDMQAOptions.QAType.OVERSHOOT.getErrName(langType));
 				errFeature.setErrPoint(lasPt);
 				errFeatures.add(errFeature);
 			}
@@ -1388,9 +1581,9 @@ public class OpenFeatureGraphicValidator {
 						errPt = new GeometryFactory().createPoint(coors[0]);
 					}
 					ErrorFeature errFeature = new ErrorFeature();
-					errFeature.setErrCode(OpenQAOptions.QAType.TWISTEDPOLYGON.getErrCode());
-					errFeature.setErrType(OpenQAOptions.QAType.TWISTEDPOLYGON.getErrType(langType));
-					errFeature.setErrName(OpenQAOptions.QAType.TWISTEDPOLYGON.getErrName(langType));
+					errFeature.setErrCode(OpenDMQAOptions.QAType.ENTITYTWISTED.getErrCode());
+					errFeature.setErrType(OpenDMQAOptions.QAType.ENTITYTWISTED.getErrType(langType));
+					errFeature.setErrName(OpenDMQAOptions.QAType.ENTITYTWISTED.getErrName(langType));
 					errFeature.setErrPoint(errPt);
 					errList.add(errFeature);
 				}
@@ -1544,18 +1737,18 @@ public class OpenFeatureGraphicValidator {
 			if (firErr) {
 				ErrorFeature errFeature = new ErrorFeature();
 				errFeature.setLayerID(layerID);
-				errFeature.setErrCode(OpenQAOptions.QAType.REFENTITYNONE.getErrCode());
-				errFeature.setErrType(OpenQAOptions.QAType.REFENTITYNONE.getErrType(langType));
-				errFeature.setErrName(OpenQAOptions.QAType.REFENTITYNONE.getErrName(langType));
+				errFeature.setErrCode(OpenDMQAOptions.QAType.REFENTITYNONE.getErrCode());
+				errFeature.setErrType(OpenDMQAOptions.QAType.REFENTITYNONE.getErrType(langType));
+				errFeature.setErrName(OpenDMQAOptions.QAType.REFENTITYNONE.getErrName(langType));
 				errFeature.setErrPoint(firPt);
 				errFeatures.add(errFeature);
 			}
 			if (lasErr) {
 				ErrorFeature errFeature = new ErrorFeature();
 				errFeature.setLayerID(layerID);
-				errFeature.setErrCode(OpenQAOptions.QAType.REFENTITYNONE.getErrCode());
-				errFeature.setErrType(OpenQAOptions.QAType.REFENTITYNONE.getErrType(langType));
-				errFeature.setErrName(OpenQAOptions.QAType.REFENTITYNONE.getErrName(langType));
+				errFeature.setErrCode(OpenDMQAOptions.QAType.REFENTITYNONE.getErrCode());
+				errFeature.setErrType(OpenDMQAOptions.QAType.REFENTITYNONE.getErrType(langType));
+				errFeature.setErrName(OpenDMQAOptions.QAType.REFENTITYNONE.getErrName(langType));
 				errFeature.setErrPoint(lasPt);
 				errFeatures.add(errFeature);
 			}

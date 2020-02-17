@@ -38,6 +38,8 @@ public interface GeoserverDataConverter {
 	 */
 	public int forestExport(String nearLine);
 
+	public int basicExport();
+
 	public int generalizationExport();
 
 }

@@ -14,53 +14,24 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package com.git.gdsbuilder.validator.open;
+package com.git.gdsbuilder.type.validate.option.en;
 
 /**
- * 수치지도 검수 항목 32가지에 대한 영문 검수 항목명, 한글 검수 항목명, 오류 타입 등의 정보를 저장하는 Enum 클래스
+ * 수치지도 검수 항목 20가지에 대한 영문 검수 항목명, 한글 검수 항목명, 오류 타입 등의 정보를 저장하는 Enum 클래스
  * 
  * @author DY.Oh
  *
  */
 
-public class OpenQAOptions {
-
-	public enum LangType {
-
-		EN("en"), KO("ko");
-
-		String lang;
-
-		private LangType(String lang) {
-			this.lang = lang;
-		}
-
-		public String getLang() {
-			return lang;
-		}
-
-		public void setLang(String lang) {
-			this.lang = lang;
-		}
-
-		public static LangType getLang(String lang) {
-
-			for (LangType langType : values()) {
-				if (lang.contains(langType.lang)) {
-					return langType;
-				}
-			}
-			throw new IllegalArgumentException("No matching constant for [" + lang + "]");
-		}
-	}
+public class OpenDMQAOptions {
 
 	public enum QAType {
 
 		SMALLLENGTH("SmallLength", "Segments between length tolerance limit", "허용범위이하길이오류", "GraphicError", "그래픽오류"),
 		SMALLAREA("SmallArea", "Areas between tolerance limit", "허용범위이하면적오류", "GraphicError", "그래픽오류"),
-		// 문자의 정확성
+		FIXEDVALUE("FixedValue", "Overlapping features", "문자의정확성", "AttributeError", "속성오류"),
 		SELFENTITY("SelfEntity", "Overlapping features", "단독존재오류", "GraphicError", "그래픽오류"),
-		ATTRIBUTEFIXMISS("AttributeFixMiss", "Feature with wrong attribute field", "속성오류", "AttributeError", "속성오류"),
+		ATTRIBUTEFIXMISS("AttributeFixMiss", "Feature with wrong attribute field", "필수속성오류", "AttributeError", "속성오류"),
 		ENTITYDUPLICATED("EntityDuplicated", "Duplicated features", "요소중복오류", "GraphicError", "그래픽오류"),
 		CONOVERDEGREE("ConOverDegree", "Unsmooth contour line curves", "등고선꺾임오류", "GraphicError", "그래픽오류"),
 		CONINTERSECTED("ConIntersected", "Contour line intersections", "등고선교차오류", "GraphicError", "그래픽오류"),
@@ -75,8 +46,8 @@ public class OpenQAOptions {
 				"인접오류"),
 		LAYERMISS("LayerMiss", "Feature with wrong geometry type", "계층오류", "GraphicError", "그래픽오류"),
 		OVERSHOOT("Overshoot", "Feature crossing the sheet", "기준점초과오류", "GraphicError", "그래픽오류"),
-		TWISTEDPOLYGON("TwistedPolygon", "Twisted polygons", "폴리곤꼬임오류", "GraphicError", "그래픽오류"),
-		ATTRIBUTEMISS("AttributeMiss", "Feature with wrong attribute value", "필수속성오류", "AttributeError", "속성오류");
+		ENTITYTWISTED("EntityTwisted", "Twisted entity", "폴리곤꼬임오류", "GraphicError", "그래픽오류"),
+		ATTRIBUTEMISS("AttributeMiss", "Feature with wrong attribute value", "속성오류", "AttributeError", "속성오류");
 
 		/**
 		 * 검수옵션 생성 및 오류 레이어 생성 시 사용되는 에러코드
@@ -167,6 +138,18 @@ public class OpenQAOptions {
 
 		public void setErrTypeE(String errTypeE) {
 			this.errTypeE = errTypeE;
+		}
+
+		public static String getName(String optionName, LangType langType) {
+
+			String name = null;
+			for (QAType type : values()) {
+				if (optionName.contains(type.errCode)) {
+					name = type.getErrName(langType);
+					break;
+				}
+			}
+			return name;
 		}
 	}
 

@@ -15,7 +15,7 @@
  *    Lesser General Public License for more details.
  */
 
-package com.gitrnd.qaconsumer.qa.file.service;
+package com.gitrnd.qaconsumer.qa.file.service.open;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -46,6 +47,7 @@ import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.geotools.feature.SchemaException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -65,7 +67,9 @@ import com.git.gdsbuilder.type.dt.collection.DTLayerCollection;
 import com.git.gdsbuilder.type.dt.collection.DTLayerCollectionList;
 import com.git.gdsbuilder.type.validate.error.ErrorLayer;
 import com.git.gdsbuilder.type.validate.layer.QALayerTypeList;
+import com.git.gdsbuilder.type.validate.option.en.LangType;
 import com.git.gdsbuilder.validator.collection.CollectionValidator;
+import com.git.gdsbuilder.validator.collection.OpenCollectionValidator;
 import com.gitrnd.qaconsumer.filestatus.domain.FileStatus;
 import com.gitrnd.qaconsumer.filestatus.service.FileStatusService;
 import com.gitrnd.qaconsumer.preset.domain.Preset;
@@ -119,21 +123,28 @@ public class QAFileServiceImpl implements QAFileService {
 
 		boolean isSuccess = false;
 
+		// qa
 		String qaVer = (String) param.get("qaVer");
 		String qaType = (String) param.get("qaType");
-		String prid = (String) param.get("prid");
 		String fileformat = (String) param.get("fileformat");
-
+		// preset
+		String prid = (String) param.get("prid");
+		// category
 		Long catetoryIdx = (Long) param.get("category");
 		int cIdx = catetoryIdx.intValue();
-
-		Long pid = (Long) param.get("pid");
-		int pIdx = pid.intValue();
-
-		String epsg = (String) param.get("crs");
-
+		// epsg
+		// String epsg = (String) param.get("crs");
+		String epsg = "EPSG:5179";
+		// file
 		Long fileIdx = (Long) param.get("file");
 		int fIdx = fileIdx.intValue();
+		// progress
+		Long pid = (Long) param.get("pid");
+		int pIdx = pid.intValue();
+		// langtype
+		// String langType = (String) param.get("langtype");
+		String langTypeStr = "ko";
+		LangType langType = LangType.getLang(langTypeStr);
 
 		QAProgress progress = qapgService.retrieveQAProgressById(pIdx);
 		String type = progress.getFileType();
@@ -141,7 +152,6 @@ public class QAFileServiceImpl implements QAFileService {
 		// start
 		progress.setQaState(VALIDATEPROGRESING);
 		qapgService.updateQAState(progress);
-
 		Preset prst = null;
 		// preset
 		if (prid.equals("nonset")) {
@@ -249,14 +259,6 @@ public class QAFileServiceImpl implements QAFileService {
 			UnZipFile unZipFile = new UnZipFile(fileunzipPath);
 			unZipFile.decompress(new File(zipfilePath + File.separator + fileName), catetoryIdx);
 			String comment = unZipFile.getFileState();
-
-			// // 임상도일 경우 폴더 재생성
-			// File unzipFolder = new File(fileunzipPath + File.separator +
-			// unZipFile.getEntryName());
-			// if (catetoryIdx == 5) {
-			// File[] dFiles = createCollectionFolders(unzipFolder);
-			// }
-
 			if (!comment.equals("")) {
 				progress.setComment(comment);
 				qapgService.updateQAState(progress);
@@ -273,38 +275,21 @@ public class QAFileServiceImpl implements QAFileService {
 				neatLineCode = (String) neatLineObj.get("code");
 			}
 
-			// files
-			QAFileParser parser = new QAFileParser(epsg, cIdx, type, unZipFile, neatLineCode);
-			boolean parseTrue = parser.isTrue();
-			if (!parseTrue) {
-				comment += parser.getStatus();
-				if (!comment.equals("")) {
-					progress.setComment(comment);
+			JSONArray attrFilterArry = null;
+			JSONArray stateFilterArry = null;
+			Object filterObj = option.get("filter");
+			if (filterObj != null) {
+				JSONObject filterJson = (JSONObject) filterObj;
+				Object attrObj = filterJson.get("attribute");
+				if (attrObj != null) {
+					attrFilterArry = (JSONArray) attrObj;
 				}
-				progress.setQaState(VALIDATEFAIL);
-				qapgService.updateQAState(progress);
-				deleteDirectory(baseDirFile);
-				return isSuccess;
+				Object stateObj = filterJson.get("state");
+				if (stateObj != null) {
+					stateFilterArry = (JSONArray) stateObj;
+				}
 			}
-			DTLayerCollectionList collectionList = parser.getCollectionList();
-			if (collectionList == null) {
-				// 파일 다 에러
-				comment += parser.getStatus();
-				if (!comment.equals("")) {
-					progress.setComment(comment);
-				}
-				progress.setQaState(VALIDATEFAIL);
-				qapgService.updateQAState(progress);
-				deleteDirectory(baseDirFile);
-				return isSuccess;
-			} else {
-				// 몇개만 에러
-				comment += parser.getStatus();
-				if (!comment.equals("")) {
-					progress.setComment(comment);
-				}
-				qapgService.updateQAState(progress);
-			}
+
 			JSONArray typeValidate = (JSONArray) option.get("definition");
 			for (int j = 0; j < layers.size(); j++) {
 				JSONObject lyrItem = (JSONObject) layers.get(j);
@@ -324,43 +309,79 @@ public class QAFileServiceImpl implements QAFileService {
 					typeValidate.add(obj);
 				}
 			}
-
 			// options
 			QATypeParser validateTypeParser = new QATypeParser(typeValidate);
 			QALayerTypeList validateLayerTypeList = validateTypeParser.getValidateLayerTypeList();
 			if (validateLayerTypeList == null) {
 				comment += validateTypeParser.getComment();
 				if (!comment.equals("")) {
-					progress.setComment(comment);
+					// logger.info(comment);
+					System.out.println(comment);
 				}
-				progress.setQaState(VALIDATEFAIL);
-				qapgService.updateQAState(progress);
-				deleteDirectory(baseDirFile);
 				return isSuccess;
 			}
 			validateLayerTypeList.setCategory(cIdx);
+
 			// set err directory
 			ERR_OUTPUT_DIR = basePath + File.separator + "error";
+
 			String entryName = unZipFile.getEntryName();
 			ERR_OUTPUT_NAME = entryName + "_" + cTimeStr;
+
 			ERR_FILE_DIR = ERR_OUTPUT_DIR + File.separator + ERR_OUTPUT_NAME;
 			createFileDirectory(ERR_FILE_DIR);
 
 			// excute validation
-			isSuccess = executorValidate(collectionList, validateLayerTypeList, epsg, ERR_OUTPUT_NAME, pIdx);
+			if (cIdx == 8) { // open - 대용량
+				String fileDir = unZipFile.getUpzipPath();
+				isSuccess = executorValidate(fileDir, validateLayerTypeList, epsg, attrFilterArry, stateFilterArry,
+						langType);
+			} else { // 기존 - 수치지도 1.0, 2.0, 임상도, 지하시설물
+				QAFileParser parser = new QAFileParser(epsg, cIdx, type, unZipFile, neatLineCode);
+				boolean parseTrue = parser.isTrue();
+				if (!parseTrue) {
+					comment += parser.getStatus();
+					if (!comment.equals("")) {
+						progress.setComment(comment);
+					}
+					progress.setQaState(VALIDATEFAIL);
+					qapgService.updateQAState(progress);
+					deleteDirectory(baseDirFile);
+					return isSuccess;
+				}
+				DTLayerCollectionList collectionList = parser.getCollectionList();
+				if (collectionList == null) {
+					// 파일 다 에러
+					comment += parser.getStatus();
+					if (!comment.equals("")) {
+						progress.setComment(comment);
+					}
+					progress.setQaState(VALIDATEFAIL);
+					qapgService.updateQAState(progress);
+					deleteDirectory(baseDirFile);
+					return isSuccess;
+				} else {
+					// 몇개만 에러
+					comment += parser.getStatus();
+					if (!comment.equals("")) {
+						progress.setComment(comment);
+					}
+					qapgService.updateQAState(progress);
+				}
+				isSuccess = executorValidate(collectionList, validateLayerTypeList, epsg, ERR_OUTPUT_NAME, langType);
+				parser = null;
+				collectionList = null;
+			}
 			// isSuccess = true;
 			if (isSuccess) {
 				// insert validate state
 				progress.setQaState(VALIDATESUCCESS);
 				qapgService.updateQAState(progress);
-
 				// zip err shp directory
 				boolean isTrue = zipFileDirectory();
 				if (isTrue) {
-					// err 파일이 있는 경우
-					// String destination = "http://" + serverhost + ":" + port + "/" + contextPath
-					// + "/uploaderror.do";
-					String destination = "http://" + serverhost + ":" + port + "/uploaderror.do";
+//					String destination = "http://" + serverhost + ":" + port + "/uploaderror.do";
+					String destination = "http://" + serverhost + ":" + port + contextPath + "/uploaderror.do";
 					HttpPost post = new HttpPost(destination);
 					InputStream inputStream = new FileInputStream(ERR_FILE_DIR + ".zip");
 					MultipartEntityBuilder builder = MultipartEntityBuilder.create();
@@ -382,10 +403,6 @@ public class QAFileServiceImpl implements QAFileService {
 
 					String encodeName = URLEncoder.encode(ERR_OUTPUT_NAME, "UTF-8");
 					if (response.getStatusLine().getStatusCode() == 200) {
-						// String errDir = "http://" + serverhost + ":" + port +
-						// contextPath + "/downloaderror.do?"
-						// + "time=" + cTimeStr + "&" + "file=" + encodeName +
-						// ".zip";
 						String errDir = "downloaderror.do?" + "time=" + cTimeStr + "&" + "file=" + encodeName + ".zip";
 						progress.setErrdirectory(errDir);
 						progress.setErrFileName(fname);
@@ -406,8 +423,33 @@ public class QAFileServiceImpl implements QAFileService {
 		}
 	}
 
+	private boolean executorValidate(String fileDir, QALayerTypeList validateLayerTypeList, String epsg,
+			JSONArray attrFilter, JSONArray stateFilter, LangType langType) throws SchemaException {
+
+		boolean isSuccess = false;
+		try {
+			OpenCollectionValidator validator = new OpenCollectionValidator(fileDir, validateLayerTypeList, epsg,
+					attrFilter, stateFilter, langType);
+
+			long time = System.currentTimeMillis();
+			SimpleDateFormat dayTime = new SimpleDateFormat("yyMMdd_HHmmss");
+			String cTimeStr = dayTime.format(new Date(time));
+			String fileName = ERR_FILE_DIR + "\\" + cTimeStr;
+
+			// layerFixMiss
+			isSuccess = writeErrShp(epsg, validator.collectionAttributeValidate(), fileName + "_attribute_err.shp",
+					"Attribute");
+			// other
+			isSuccess = writeErrShp(epsg, validator.collectionGraphicValidate(), fileName + "_graphic_err.shp",
+					"Graphic");
+		} catch (IOException e) {
+			System.out.println("검수 요청이 실패했습니다.");
+		}
+		return isSuccess;
+	}
+
 	private boolean executorValidate(DTLayerCollectionList collectionList, QALayerTypeList validateLayerTypeList,
-			String epsg, String errLayerName, int pIdx) {
+			String epsg, String errLayerName, LangType langType) {
 
 		// 도엽별 검수 쓰레드 생성
 		List<Future> futures = new ArrayList<>();
@@ -420,7 +462,8 @@ public class QAFileServiceImpl implements QAFileService {
 					try {
 						DTLayerCollectionList closeCollections = collectionList
 								.getCloseLayerCollections(collection.getMapRule());
-						validator = new CollectionValidator(collection, closeCollections, validateLayerTypeList);
+						validator = new CollectionValidator(collection, closeCollections, validateLayerTypeList,
+								langType);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -521,6 +564,27 @@ public class QAFileServiceImpl implements QAFileService {
 			SHPFileWriter.writeSHP(epsg, errLayer, ERR_FILE_DIR + "\\" + errLayer.getCollectionName() + "_err.shp");
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	private boolean writeErrShp(String epsg, ErrorLayer errLayer, String fileName, String qaType) {
+		try {
+			// 오류레이어 발행
+			if (errLayer != null) {
+				int errSize = errLayer.getErrFeatureList().size();
+				if (errSize > 0) {
+					SHPFileWriter.writeSHP(epsg, errLayer, fileName);
+				} else {
+					System.out.println(qaType + " 오류 객체가 없습니다.");
+				}
+			} else {
+				System.out.println(qaType + " 오류 객체가 없습니다.");
+			}
+			System.out.println(qaType + " 검수 요청이 성공적으로 완료되었습니다.");
+			return true;
+		} catch (Exception e) {
+			System.out.println(qaType + " 검수 요청이 실패했습니다.");
+			return false;
 		}
 	}
 
@@ -642,89 +706,6 @@ public class QAFileServiceImpl implements QAFileService {
 		// 파일 사용후 객체초기화
 		fileList = null;
 		indexFiles = null;
-	}
-
-	/**
-	 * 임상도 폴더 재생성
-	 * 
-	 * @author SG.Lee
-	 * @since 2018. 4. 18. 오후 1:24:16
-	 * @param unzipFolder void
-	 */
-	private static File[] createCollectionFolders(File unzipFolder) {
-		boolean equalFlag = false; // 파일명이랑 압축파일명이랑 같을시 대비 flag값
-		String unzipName = unzipFolder.getName();
-
-		if (unzipFolder.exists() == false) {
-			System.out.println("경로가 존재하지 않습니다");
-		}
-
-		File[] fileList = unzipFolder.listFiles();
-		List<File> indexFiles = new ArrayList<File>();
-		String parentPath = unzipFolder.getParent(); // 상위 폴더 경로
-
-		for (int i = 0; i < fileList.length; i++) {
-			if (fileList[i].isDirectory()) {
-				/*
-				 * String message = "[디렉토리] "; message = fileList[ i ].getName();
-				 * System.out.println( message );
-				 * 
-				 * subDirList( fileList[ i ].getPath());//하위 폴더 탐색
-				 */ } else {
-				String filePath = fileList[i].getPath();
-				String fFullName = fileList[i].getName();
-
-				int Idx = fFullName.lastIndexOf(".");
-				String _fileName = fFullName.substring(0, Idx);
-
-				if (_fileName.equals(unzipName)) {
-					equalFlag = true;
-				}
-
-				if (_fileName.endsWith("index")) {
-					indexFiles.add(fileList[i]);// 도곽파일 리스트 add(shp,shx...)
-				} else {
-					if (_fileName.contains(".")) {
-						moveDirectory(_fileName.substring(0, _fileName.lastIndexOf(".")), fFullName, filePath,
-								parentPath);
-					} else {
-						moveDirectory(_fileName, fFullName, filePath, parentPath);
-					}
-				}
-			}
-		}
-
-		fileList = unzipFolder.listFiles();
-
-		// 도엽별 폴더 생성후 도곽파일 이동복사
-		for (int i = 0; i < fileList.length; i++) {
-			if (fileList[i].isDirectory()) {
-				for (File iFile : indexFiles) {
-					try {
-						FileNio2Copy(iFile.getPath(), fileList[i].getPath() + File.separator + iFile.getName());
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						System.out.println(e.getMessage());
-					}
-				}
-			}
-		}
-
-		// index파일 삭제
-		for (File iFile : indexFiles) {
-			iFile.delete();
-		}
-
-		// 원래 폴더 삭제
-		if (!equalFlag) {
-			unzipFolder.delete();
-		}
-
-		// 파일 사용후 객체초기화
-		fileList = null;
-		indexFiles = null;
-
-		return new File(parentPath).listFiles();
 	}
 
 	/**

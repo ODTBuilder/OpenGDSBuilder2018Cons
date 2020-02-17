@@ -16,6 +16,8 @@ import com.git.gdsbuilder.type.dt.layer.DTLayer;
 import com.git.gdsbuilder.type.dt.layer.DTLayerList;
 import com.git.gdsbuilder.type.validate.error.ErrorLayer;
 import com.git.gdsbuilder.type.validate.layer.QALayerTypeList;
+import com.git.gdsbuilder.type.validate.option.en.LangType;
+import com.git.gdsbuilder.type.validate.option.en.OpenDMQAOptions;
 import com.git.gdsbuilder.validator.collection.CollectionValidator;
 
 /**
@@ -50,6 +52,9 @@ public class QAMobileServiceImpl implements QAMobileService {
 			// options
 			JSONArray typeValidate = (JSONArray) options.get("definition");
 
+			String langTypeStr = (String) param.get("langtype");
+			LangType langType = LangType.getLang(langTypeStr);
+
 			DTLayerList dtLayers = new DTLayerList();
 			for (int i = 0; i < geoLayers.size(); i++) {
 				String geoLayer = (String) geoLayers.get(i);
@@ -82,7 +87,7 @@ public class QAMobileServiceImpl implements QAMobileService {
 			}
 			QATypeParser validateTypeParser = new QATypeParser(typeValidate);
 			QALayerTypeList validateLayerTypeList = validateTypeParser.getValidateLayerTypeList();
-			errorLayer = executorValidate(dtCollection, validateLayerTypeList);
+			errorLayer = executorValidate(dtCollection, validateLayerTypeList, langType);
 			// if (errorLayer != null) {
 			ErrorLayerParser errLayerP = new ErrorLayerParser();
 			JSONObject errLayerJson = errLayerP.parseGeoJSON(errorLayer);
@@ -99,10 +104,12 @@ public class QAMobileServiceImpl implements QAMobileService {
 	/**
 	 * @param dtCollection
 	 * @param validateLayerTypeList
+	 * @param langType
 	 */
-	private ErrorLayer executorValidate(DTLayerCollection dtCollection, QALayerTypeList validateLayerTypeList) {
+	private ErrorLayer executorValidate(DTLayerCollection dtCollection, QALayerTypeList validateLayerTypeList,
+			LangType langType) {
 
-		CollectionValidator validator = new CollectionValidator(dtCollection, null, validateLayerTypeList);
+		CollectionValidator validator = new CollectionValidator(dtCollection, null, validateLayerTypeList, langType);
 		ErrorLayer errorLayer = validator.getErrLayer();
 		int errSize = errorLayer.getErrFeatureList().size();
 		if (errorLayer != null && errSize > 0) {

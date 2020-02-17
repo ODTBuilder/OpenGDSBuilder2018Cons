@@ -1,4 +1,4 @@
-package com.git.gdsbuilder.validator.open;
+package com.git.gdsbuilder.type.dt.layer;
 
 import java.io.IOException;
 
@@ -12,7 +12,7 @@ import org.opengis.feature.simple.SimpleFeature;
 import com.git.gdsbuilder.type.dt.collection.MapSystemRule;
 import com.git.gdsbuilder.type.validate.option.OptionFigure;
 import com.git.gdsbuilder.type.validate.option.OptionFilter;
-import com.git.gdsbuilder.validator.open.quad.Quadtree;
+import com.git.gdsbuilder.validator.quad.Quadtree;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 

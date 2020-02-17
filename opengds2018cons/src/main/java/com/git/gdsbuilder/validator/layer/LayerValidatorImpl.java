@@ -66,6 +66,7 @@ import com.git.gdsbuilder.type.validate.option.FixedValue;
 import com.git.gdsbuilder.type.validate.option.OptionFigure;
 import com.git.gdsbuilder.type.validate.option.OptionFilter;
 import com.git.gdsbuilder.type.validate.option.OptionTolerance;
+import com.git.gdsbuilder.type.validate.option.en.LangType;
 import com.git.gdsbuilder.validator.feature.FeatureAttributeValidator;
 import com.git.gdsbuilder.validator.feature.FeatureAttributeValidatorImpl;
 import com.git.gdsbuilder.validator.feature.FeatureCloseCollectionValidator;
@@ -78,13 +79,19 @@ import com.vividsolutions.jts.geom.Geometry;
 public class LayerValidatorImpl implements LayerValidator {
 
 	DTLayer validatorLayer;
-	FeatureGraphicValidator graphicValidator = new FeatureGraphicValidatorImpl();
-	FeatureAttributeValidator attributeValidator = new FeatureAttributeValidatorImpl();
-	FeatureCloseCollectionValidator closeCollectionValidator = new FeatureCloseCollectionValidatorImpl();
+	LangType langType;
 
-	public LayerValidatorImpl(DTLayer validatorLayer) {
+	FeatureGraphicValidator graphicValidator;
+	FeatureAttributeValidator attributeValidator;
+	FeatureCloseCollectionValidator closeCollectionValidator;
+
+	public LayerValidatorImpl(DTLayer validatorLayer, LangType langType) {
 		super();
 		this.validatorLayer = validatorLayer;
+		this.langType = langType;
+		this.graphicValidator = new FeatureGraphicValidatorImpl(langType);
+		this.attributeValidator = new FeatureAttributeValidatorImpl(langType);
+		this.closeCollectionValidator = new FeatureCloseCollectionValidatorImpl(langType);
 	}
 
 	public DTLayer getValidatorLayer() {

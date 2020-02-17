@@ -101,21 +101,21 @@ public class QATypeParser {
 			validateLayerTypeList = null;
 		}
 		if (validateTypeArray.size() != 0) {
-			try {
-				this.validateLayerTypeList = new QALayerTypeList();
-				for (int j = 0; j < validateTypeArray.size(); j++) {
-					JSONObject layerType = (JSONObject) validateTypeArray.get(j);
-					QALayerType type = typeOptionParserT(layerType);
-					validateLayerTypeList.add(type);
-					validateLayerTypeList.addAllLayerIdList(type.getLayerIDList());
-				}
-				if (validateLayerTypeList.size() < 0) {
-					this.comment += "옵션 미존재" + "<br>";
-				}
-			} catch (Exception e) {
-				this.comment += "옵션 설정 오류" + "<br>";
-				validateLayerTypeList = null;
+//			try {
+			this.validateLayerTypeList = new QALayerTypeList();
+			for (int j = 0; j < validateTypeArray.size(); j++) {
+				JSONObject layerType = (JSONObject) validateTypeArray.get(j);
+				QALayerType type = typeOptionParserT(layerType);
+				validateLayerTypeList.add(type);
+				validateLayerTypeList.addAllLayerIdList(type.getLayerIDList());
 			}
+			if (validateLayerTypeList.size() < 0) {
+				this.comment += "옵션 미존재" + "<br>";
+			}
+//			} catch (Exception e) {
+//				this.comment += "옵션 설정 오류" + "<br>";
+//				validateLayerTypeList = null;
+//			}
 		}
 	}
 
@@ -132,8 +132,11 @@ public class QATypeParser {
 		// layers
 		JSONArray typeLayers = (JSONArray) layerType.get("layers");
 		Map<String, Object> layerFixMap = parseLayerFix(typeLayers);
-		qaOption.setLayerMissOptions((List<LayerFixMiss>) layerFixMap.get("layerFix"));
-		type.setLayerIDList((List<String>) layerFixMap.get("layerCodes"));
+
+		if (layerFixMap.get("layerFix") != null) {
+			qaOption.setLayerMissOptions((List<LayerFixMiss>) layerFixMap.get("layerFix"));
+			type.setLayerIDList((List<String>) layerFixMap.get("layerCodes"));
+		}
 
 		// option
 		Object optionsObj = layerType.get("options");

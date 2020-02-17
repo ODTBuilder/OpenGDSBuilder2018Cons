@@ -85,6 +85,29 @@ public class SHPFileLayerParser {
 		return collection;
 	}
 
+	public SimpleFeatureCollection getShpObject(File file) {
+
+		ShapefileDataStore beforeStore = null;
+		SimpleFeatureCollection collection = null;
+		try {
+			Map<String, Object> beforeMap = new HashMap<String, Object>();
+			beforeMap.put("url", file.toURI().toURL());
+			beforeStore = (ShapefileDataStore) DataStoreFinder.getDataStore(beforeMap);
+			Charset euckr = Charset.forName("EUC-KR");
+			beforeStore.setCharset(euckr);
+			String typeName = beforeStore.getTypeNames()[0];
+			SimpleFeatureSource source = beforeStore.getFeatureSource(typeName);
+			Filter filter = Filter.INCLUDE;
+			collection = source.getFeatures(filter);
+			beforeStore.dispose();
+			beforeStore = null;
+			source = null;
+			return collection;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
 	/**
 	 * 특정 경로의 1개 SHP 파일을 {@link DTLayer} 객체로 변환하는 클래스.
 	 * 

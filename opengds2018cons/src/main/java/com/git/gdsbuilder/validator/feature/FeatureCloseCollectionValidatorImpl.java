@@ -12,16 +12,23 @@ import com.git.gdsbuilder.type.dt.layer.DTLayer;
 import com.git.gdsbuilder.type.validate.error.ErrorFeature;
 import com.git.gdsbuilder.type.validate.option.AttributeFigure;
 import com.git.gdsbuilder.type.validate.option.AttributeFilter;
-import com.git.gdsbuilder.type.validate.option.DMQAOptions;
 import com.git.gdsbuilder.type.validate.option.OptionFigure;
 import com.git.gdsbuilder.type.validate.option.OptionFilter;
 import com.git.gdsbuilder.type.validate.option.OptionTolerance;
+import com.git.gdsbuilder.type.validate.option.en.DMQAOptions;
+import com.git.gdsbuilder.type.validate.option.en.LangType;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 
 public class FeatureCloseCollectionValidatorImpl implements FeatureCloseCollectionValidator {
+
+	LangType langType;
+
+	public FeatureCloseCollectionValidatorImpl(LangType langType) {
+		this.langType = langType;
+	}
 
 	@Override
 	public ErrorFeature validateFRefEntityNone(DTFeature feature, DTLayer closeLayer, Geometry closeBoundary,
@@ -110,8 +117,9 @@ public class FeatureCloseCollectionValidatorImpl implements FeatureCloseCollecti
 			if (minDistPt == null) {
 				return null;
 			}
-			ErrorFeature errFeature = new ErrorFeature(featureID, DMQAOptions.REFENTITYNONE.getErrCode(),
-					DMQAOptions.REFENTITYNONE.getErrType(), DMQAOptions.REFENTITYNONE.getErrName(), "", minDistPt);
+			ErrorFeature errFeature = new ErrorFeature(featureID, DMQAOptions.QAType.REFENTITYNONE.getErrCode(),
+					DMQAOptions.QAType.REFENTITYNONE.getErrType(langType),
+					DMQAOptions.QAType.REFENTITYNONE.getErrName(langType), "", minDistPt);
 			return errFeature;
 		} else {
 			return null;
@@ -205,8 +213,9 @@ public class FeatureCloseCollectionValidatorImpl implements FeatureCloseCollecti
 			if (minDistPt == null) {
 				return null;
 			}
-			ErrorFeature errFeature = new ErrorFeature(featureID, DMQAOptions.REFENTITYNONE.getErrCode(),
-					DMQAOptions.REFENTITYNONE.getErrType(), DMQAOptions.REFENTITYNONE.getErrName(), "", minDistPt);
+			ErrorFeature errFeature = new ErrorFeature(featureID, DMQAOptions.QAType.REFENTITYNONE.getErrCode(),
+					DMQAOptions.QAType.REFENTITYNONE.getErrType(langType),
+					DMQAOptions.QAType.REFENTITYNONE.getErrName(langType), "", minDistPt);
 			return errFeature;
 		} else {
 			return null;
@@ -314,8 +323,9 @@ public class FeatureCloseCollectionValidatorImpl implements FeatureCloseCollecti
 			String reLayerId = closeLayer.getLayerID();
 
 			ErrorFeature errFeature = new ErrorFeature(featureID, reLayerId, reFeatureID,
-					DMQAOptions.REFZVALUEMISS.getErrCode(), DMQAOptions.REFZVALUEMISS.getErrType(),
-					DMQAOptions.REFZVALUEMISS.getErrName(), "", minDistPt);
+					DMQAOptions.QAType.REFZVALUEMISS.getErrCode(),
+					DMQAOptions.QAType.REFZVALUEMISS.getErrType(langType),
+					DMQAOptions.QAType.REFZVALUEMISS.getErrName(langType), "", minDistPt);
 			return errFeature;
 		} else {
 			return null;
@@ -435,8 +445,9 @@ public class FeatureCloseCollectionValidatorImpl implements FeatureCloseCollecti
 			}
 			String reLayerId = closeLayer.getLayerID();
 			ErrorFeature errFeature = new ErrorFeature(featureID, reLayerId, reFeatureID,
-					DMQAOptions.REFATTRIBUTEMISS.getErrCode(), DMQAOptions.REFATTRIBUTEMISS.getErrType(),
-					DMQAOptions.REFATTRIBUTEMISS.getErrName(), "", minDistPt);
+					DMQAOptions.QAType.REFATTRIBUTEMISS.getErrCode(),
+					DMQAOptions.QAType.REFATTRIBUTEMISS.getErrType(langType),
+					DMQAOptions.QAType.REFATTRIBUTEMISS.getErrName(langType), "", minDistPt);
 			return errFeature;
 		} else {
 			return null;

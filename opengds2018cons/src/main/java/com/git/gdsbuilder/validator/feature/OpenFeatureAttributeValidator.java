@@ -1,4 +1,4 @@
-package com.git.gdsbuilder.validator.open;
+package com.git.gdsbuilder.validator.feature;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.AttributeType;
 
 import com.git.gdsbuilder.type.dt.feature.DTFeature;
-import com.git.gdsbuilder.type.dt.layer.DTLayer;
+import com.git.gdsbuilder.type.dt.layer.OpenDTLayer;
 import com.git.gdsbuilder.type.validate.error.ErrorFeature;
 import com.git.gdsbuilder.type.validate.option.AttributeFigure;
 import com.git.gdsbuilder.type.validate.option.AttributeFilter;
@@ -19,8 +19,8 @@ import com.git.gdsbuilder.type.validate.option.FixedValue;
 import com.git.gdsbuilder.type.validate.option.OptionFigure;
 import com.git.gdsbuilder.type.validate.option.OptionFilter;
 import com.git.gdsbuilder.type.validate.option.OptionTolerance;
-import com.git.gdsbuilder.validator.feature.FeatureFilter;
-import com.git.gdsbuilder.validator.open.OpenQAOptions.LangType;
+import com.git.gdsbuilder.type.validate.option.en.LangType;
+import com.git.gdsbuilder.type.validate.option.en.OpenDMQAOptions;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -34,8 +34,8 @@ public class OpenFeatureAttributeValidator {
 		this.langType = langType;
 	}
 
-	// 속성오류 (Attribute Fix)
-	public ErrorFeature validateAttributeFixMiss(DTFeature feature, List<FixedValue> fixArry) {
+	// 속성오류 (AttributeMiss)
+	public ErrorFeature validateAttributeMiss(DTFeature feature, List<FixedValue> fixArry) {
 
 		SimpleFeature sf = feature.getSimefeature();
 		String comment = null;
@@ -55,24 +55,23 @@ public class OpenFeatureAttributeValidator {
 			}
 			// 컬럼타입 불일치
 			if (type != null) {
-				AttributeType attrType = attrDesc.getType();
-				String typeStr = attrType.getBinding().getSimpleName();
-				String innerType = null;
-				if (type.equals("VARCHAR")) {
-					innerType = "String";
-				}
-				if (type.equals("NUMERIC")) {
-					innerType = "Integer/Double";
-				}
-				if (type.equals("TIMESTAMP")) {
-					innerType = "Date";
-				}
-				if (typeStr.equals("Long")) {
-					typeStr = "Integer";
-				}
-				if (!innerType.contains(typeStr)) {
-					comment = "ERR_CLUNM_TYPE" + "(" + key + ")";
-					break;
+				if (!type.equals("null")) {
+					AttributeType attrType = attrDesc.getType();
+					String typeStr = attrType.getBinding().getSimpleName();
+					String innerType = null;
+					if (type.equals("VARCHAR")) {
+						innerType = "String";
+					} else if (type.equals("NUMERIC")) {
+						innerType = "Integer/Double";
+					} else if (type.equals("TIMESTAMP")) {
+						innerType = "Date";
+					} else if (typeStr.equals("Long")) {
+						typeStr = "Integer";
+					}
+					if (!innerType.contains(typeStr)) {
+						comment = "ERR_CLUNM_TYPE" + "(" + key + ")";
+						break;
+					}
 				}
 			}
 			// 필수 컬럼 속성 누락
@@ -184,9 +183,9 @@ public class OpenFeatureAttributeValidator {
 			String layerID = feature.getLayerID();
 			ErrorFeature errFeature = new ErrorFeature();
 			errFeature.setLayerID(layerID);
-			errFeature.setErrCode(OpenQAOptions.QAType.ATTRIBUTEFIXMISS.getErrCode());
-			errFeature.setErrType(OpenQAOptions.QAType.ATTRIBUTEFIXMISS.getErrType(langType));
-			errFeature.setErrName(OpenQAOptions.QAType.ATTRIBUTEFIXMISS.getErrName(langType));
+			errFeature.setErrCode(OpenDMQAOptions.QAType.ATTRIBUTEFIXMISS.getErrCode());
+			errFeature.setErrType(OpenDMQAOptions.QAType.ATTRIBUTEFIXMISS.getErrType(langType));
+			errFeature.setErrName(OpenDMQAOptions.QAType.ATTRIBUTEFIXMISS.getErrName(langType));
 			errFeature.setComment(comment);
 			errFeature.setErrPoint(errPt);
 			return errFeature;
@@ -195,8 +194,8 @@ public class OpenFeatureAttributeValidator {
 		}
 	}
 
-	// 필수속성오류 (Attribute)
-	public ErrorFeature validateAttributeMiss(DTFeature feature, List<FixedValue> fixArry) {
+	// 필수속성오류 (AttributeFixMiss)
+	public ErrorFeature validateAttributeFixMiss(DTFeature feature, List<FixedValue> fixArry) {
 
 		SimpleFeature sf = feature.getSimefeature();
 		String comment = null;
@@ -248,9 +247,9 @@ public class OpenFeatureAttributeValidator {
 			String layerID = feature.getLayerID();
 			ErrorFeature errFeature = new ErrorFeature();
 			errFeature.setLayerID(layerID);
-			errFeature.setErrCode(OpenQAOptions.QAType.ATTRIBUTEMISS.getErrCode());
-			errFeature.setErrType(OpenQAOptions.QAType.ATTRIBUTEMISS.getErrType(langType));
-			errFeature.setErrName(OpenQAOptions.QAType.ATTRIBUTEMISS.getErrName(langType));
+			errFeature.setErrCode(OpenDMQAOptions.QAType.ATTRIBUTEMISS.getErrCode());
+			errFeature.setErrType(OpenDMQAOptions.QAType.ATTRIBUTEMISS.getErrType(langType));
+			errFeature.setErrName(OpenDMQAOptions.QAType.ATTRIBUTEMISS.getErrName(langType));
 			errFeature.setComment(comment);
 			errFeature.setErrPoint(errPt);
 			return errFeature;
@@ -260,79 +259,102 @@ public class OpenFeatureAttributeValidator {
 	}
 
 	// 고도값오류 (Z-Value Abmiguous)
-	public ErrorFeature validateZvalueAmbiguous(DTFeature feature, OptionFigure figure) {
+	public List<ErrorFeature> validateZvalueAmbiguous(DTFeature feature, OptionFigure figure) {
 
 		SimpleFeature sf = feature.getSimefeature();
-		boolean isTrue = false;
+		List<ErrorFeature> errList = new ArrayList<>();
 		List<AttributeFilter> filters = feature.getFilter();
-		if (filters != null) {
-			isTrue = FeatureFilter.filter(sf, filters);
-		} else {
-			isTrue = true;
-		}
-		boolean isError = false;
-		Geometry geometry = (Geometry) sf.getDefaultGeometry();
-		if (isTrue) {
-			List<AttributeFigure> attrFigures = figure.getFigure();
-			for (AttributeFigure attrFigure : attrFigures) {
-				String key = attrFigure.getKey();
-				Object attributeValue = sf.getAttribute(key);
-				if (attributeValue != null) {
-					Double number = attrFigure.getNumber();
-					String condition = attrFigure.getCondition();
-					Double interval = attrFigure.getInterval();
-					String valueStr = attributeValue.toString();
-					Double valueD = Double.valueOf(valueStr);
-					if (condition != null) {
-						if (condition.equals("equal")) {
-							if (!attributeValue.toString().equals(number.toString())
-									|| !(valueStr + ".0").equals(number.toString())) {
-								isError = true;
-							}
-						}
-						if (condition.equals("over")) {
-							if (valueD < number) {
-								isError = true;
-							}
-						}
-						if (condition.equals("under")) {
-							if (valueD > number) {
-								isError = true;
-							}
-						}
-					}
-					if (interval != null) {
-						Double result = valueD % interval;
-						if (!(result == 0.0)) {
-							isError = true;
-						}
-					}
+		List<AttributeFigure> attrFigures = figure.getFigure();
+
+		String layerID = feature.getLayerID();
+		ErrorFeature err = null;
+		for (AttributeFigure attrFigure : attrFigures) {
+			Long fidx = attrFigure.getFIdx();
+			String key = attrFigure.getKey();
+			if (fidx == null) {
+				err = isNumericalValues(sf, attrFigure);
+			} else {
+				if (FeatureFilter.filter(sf, filters.get(fidx.intValue()))) {
+					err = isNumericalValues(sf, attrFigure);
 				}
 			}
+			if (err != null) {
+				err.setLayerID(layerID);
+				err.setErrCode(OpenDMQAOptions.QAType.ZVALUEAMBIGUOUS.getErrCode());
+				err.setErrType(OpenDMQAOptions.QAType.ZVALUEAMBIGUOUS.getErrType(langType));
+				err.setErrName(OpenDMQAOptions.QAType.ZVALUEAMBIGUOUS.getErrName(langType));
+				String comment = "ERR_Z_VALUE" + "(" + key + ")";
+				err.setComment(comment);
+				errList.add(err);
+			}
+		}
+		if (errList.size() > 0) {
+			return errList;
+		} else {
+			return null;
+		}
+	}
+
+	private ErrorFeature isNumericalValues(SimpleFeature sf, AttributeFigure attrFigure) {
+
+		boolean isError = false;
+
+		String key = attrFigure.getKey();
+		String condition = attrFigure.getCondition();
+		double number = attrFigure.getNumber(); // 1.5
+		Object attributeObj = sf.getAttribute(key);
+		if (attributeObj != null) {
+			if (attributeObj.getClass().getSimpleName().equals("String")) {
+				return null;
+			}
+			String attributeStr = attributeObj.toString();
+			if (attributeStr.equals("")) {
+				isError = true;
+			}
+			double attributeDou = Double.parseDouble(attributeStr);
+			if (condition.equals("over")) { // 초과
+				if (attributeDou <= number) {
+					isError = true;
+				}
+			} else if (condition.equals("andover")) { // 이상
+				if (attributeDou < number) {
+					isError = true;
+				}
+			} else if (condition.equals("under")) { // 미만
+				if (attributeDou >= number) {
+					isError = true;
+				}
+			} else if (condition.equals("andunder")) { // 이하
+				if (attributeDou > number) {
+					isError = true;
+				}
+			} else if (condition.equals("equal")) { // 같
+				if (attributeDou != number) {
+					isError = true;
+				}
+			}
+		} else {
+			isError = true;
 		}
 		if (isError) {
+			Geometry geom = (Geometry) sf.getDefaultGeometry();
 			Geometry errPt = null;
 			try {
-				errPt = geometry.getInteriorPoint();
+				errPt = geom.getInteriorPoint();
 			} catch (TopologyException e) {
-				Coordinate[] coors = geometry.getCoordinates();
+				Coordinate[] coors = geom.getCoordinates();
 				errPt = new GeometryFactory().createPoint(coors[0]);
 			}
-			String layerID = feature.getLayerID();
-			ErrorFeature errFeature = new ErrorFeature();
-			errFeature.setLayerID(layerID);
-			errFeature.setErrCode(OpenQAOptions.QAType.ZVALUEAMBIGUOUS.getErrCode());
-			errFeature.setErrType(OpenQAOptions.QAType.ZVALUEAMBIGUOUS.getErrType(langType));
-			errFeature.setErrName(OpenQAOptions.QAType.ZVALUEAMBIGUOUS.getErrName(langType));
-			errFeature.setErrPoint(errPt);
-			return errFeature;
+			ErrorFeature err = new ErrorFeature();
+			err.setErrPoint(errPt);
+			return err;
 		} else {
 			return null;
 		}
 	}
 
 	public List<ErrorFeature> validateRefAttributeMiss(DTFeature feature, OptionFigure figure,
-			OptionTolerance tolerance, SimpleFeatureCollection sfc, DTLayer retargetLayer) {
+			OptionTolerance tolerance, SimpleFeatureCollection sfc, OpenDTLayer retargetLayer) {
 
 		SimpleFeature sf = feature.getSimefeature();
 
@@ -469,9 +491,9 @@ public class OpenFeatureAttributeValidator {
 					ErrorFeature errFeature = new ErrorFeature();
 					errFeature.setLayerID(layerID);
 					errFeature.setRefLayerId(refLayerID);
-					errFeature.setErrCode(OpenQAOptions.QAType.REFATTRIBUTEMISS.getErrCode());
-					errFeature.setErrType(OpenQAOptions.QAType.REFATTRIBUTEMISS.getErrType(langType));
-					errFeature.setErrName(OpenQAOptions.QAType.REFATTRIBUTEMISS.getErrName(langType));
+					errFeature.setErrCode(OpenDMQAOptions.QAType.REFATTRIBUTEMISS.getErrCode());
+					errFeature.setErrType(OpenDMQAOptions.QAType.REFATTRIBUTEMISS.getErrType(langType));
+					errFeature.setErrName(OpenDMQAOptions.QAType.REFATTRIBUTEMISS.getErrName(langType));
 					errFeature.setErrPoint(firPt);
 					errFeatures.add(errFeature);
 				}
@@ -479,9 +501,9 @@ public class OpenFeatureAttributeValidator {
 					ErrorFeature errFeature = new ErrorFeature();
 					errFeature.setLayerID(layerID);
 					errFeature.setRefLayerId(refLayerID);
-					errFeature.setErrCode(OpenQAOptions.QAType.REFATTRIBUTEMISS.getErrCode());
-					errFeature.setErrType(OpenQAOptions.QAType.REFATTRIBUTEMISS.getErrType(langType));
-					errFeature.setErrName(OpenQAOptions.QAType.REFATTRIBUTEMISS.getErrName(langType));
+					errFeature.setErrCode(OpenDMQAOptions.QAType.REFATTRIBUTEMISS.getErrCode());
+					errFeature.setErrType(OpenDMQAOptions.QAType.REFATTRIBUTEMISS.getErrType(langType));
+					errFeature.setErrName(OpenDMQAOptions.QAType.REFATTRIBUTEMISS.getErrName(langType));
 					errFeature.setErrPoint(lasPt);
 					errFeatures.add(errFeature);
 				}
@@ -493,6 +515,81 @@ public class OpenFeatureAttributeValidator {
 			}
 		}
 		return null;
+	}
+
+	public List<ErrorFeature> validateFixValues(DTFeature feature, OptionFigure figure) {
+
+		SimpleFeature sf = feature.getSimefeature();
+		List<ErrorFeature> errList = new ArrayList<>();
+		List<AttributeFilter> filters = feature.getFilter();
+		List<AttributeFigure> attrFigures = figure.getFigure();
+		ErrorFeature err = null;
+		String layerID = feature.getLayerID();
+		for (AttributeFigure attrFigure : attrFigures) {
+			Long fidx = attrFigure.getFIdx();
+			String key = attrFigure.getKey();
+			if (fidx == null) {
+				err = isFixValues(sf, attrFigure);
+			} else {
+				if (FeatureFilter.filter(sf, filters.get(fidx.intValue()))) {
+					err = isFixValues(sf, attrFigure);
+				}
+			}
+			if (err != null) {
+				err.setLayerID(layerID);
+				err.setErrCode(OpenDMQAOptions.QAType.FIXEDVALUE.getErrCode());
+				err.setErrType(OpenDMQAOptions.QAType.FIXEDVALUE.getErrType(langType));
+				err.setErrName(OpenDMQAOptions.QAType.FIXEDVALUE.getErrName(langType));
+				String comment = "ERR_FIXED_VALUE" + "(" + key + ")";
+				err.setComment(comment);
+				errList.add(err);
+			}
+		}
+		if (errList.size() > 0) {
+			return errList;
+		} else {
+			return null;
+		}
+	}
+
+	private ErrorFeature isFixValues(SimpleFeature sf, AttributeFigure attrFigure) {
+
+		boolean isError = true;
+
+		String key = attrFigure.getKey();
+		List<Object> values = attrFigure.getValues();
+		Object attributeObj = sf.getAttribute(key);
+		if (values != null) {
+			for (Object value : values) {
+				if (value.toString().equals(attributeObj)) {
+					isError = false;
+				}
+			}
+		} else {
+			if (attributeObj == null) {
+				isError = false;
+			} else {
+				if (attributeObj.toString().equals("")) {
+					isError = false;
+				}
+			}
+		}
+
+		if (isError) {
+			Geometry geom = (Geometry) sf.getDefaultGeometry();
+			Geometry errPt = null;
+			try {
+				errPt = geom.getInteriorPoint();
+			} catch (TopologyException e) {
+				Coordinate[] coors = geom.getCoordinates();
+				errPt = new GeometryFactory().createPoint(coors[0]);
+			}
+			ErrorFeature err = new ErrorFeature();
+			err.setErrPoint(errPt);
+			return err;
+		} else {
+			return null;
+		}
 	}
 
 }

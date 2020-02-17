@@ -221,7 +221,11 @@
 			<artifactId>gt-transform</artifactId>
 			<version>${geotools.version}</version>
 		</dependency>
-		
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-grid</artifactId>
+			<version>${geotools.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.geomesa.geoserver</groupId>
 			<artifactId>geomesa-gs-catalog-listener</artifactId>

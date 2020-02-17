@@ -1,4 +1,4 @@
-package com.git.gdsbuilder.validator.open.quad;
+package com.git.gdsbuilder.validator.quad;
 
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.index.quadtree.Key;

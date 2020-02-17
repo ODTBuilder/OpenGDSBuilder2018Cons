@@ -139,12 +139,37 @@ public class GeoserverDataConverterImpl implements GeoserverDataConverter {
 			String workspace = keys.next();
 			List<String> layerNames = layerMaps.get(workspace);
 			if (layerNames != null) {
-			
+
 			} else {
 				flag = 612;
 				System.err.println("레이어 리스트 NULL");
 			}
 		}
 		return 0;
+	}
+
+	@Override
+	public int basicExport() {
+		int flag = 500;
+		if (layerMaps != null) {
+			int mapSize = layerMaps.size();
+
+			if (mapSize > 1) {
+				flag = 700;
+			} else {
+				Iterator<String> keys = layerMaps.keySet().iterator();
+				while (keys.hasNext()) {
+					String workspace = keys.next();
+					List<String> layerNames = layerMaps.get(workspace);
+					if (layerNames != null) {
+						flag = new UndergroundExport(serverURL, workspace, layerNames, outputFolderPath, srs).export();
+					} else {
+						flag = 612;
+						System.err.println("레이어 리스트 NULL");
+					}
+				}
+			}
+		}
+		return flag;
 	}
 }

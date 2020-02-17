@@ -61,12 +61,13 @@ import com.git.gdsbuilder.type.dt.layer.DTLayer;
 import com.git.gdsbuilder.type.dt.layer.DTLayerList;
 import com.git.gdsbuilder.type.validate.error.ErrorFeature;
 import com.git.gdsbuilder.type.validate.option.AttributeFilter;
-import com.git.gdsbuilder.type.validate.option.DMQAOptions;
-import com.git.gdsbuilder.type.validate.option.FTMQAOptions;
-import com.git.gdsbuilder.type.validate.option.LayerFieldOptions;
 import com.git.gdsbuilder.type.validate.option.OptionFilter;
 import com.git.gdsbuilder.type.validate.option.OptionTolerance;
-import com.git.gdsbuilder.type.validate.option.UFMQAOptions;
+import com.git.gdsbuilder.type.validate.option.en.DMQAOptions;
+import com.git.gdsbuilder.type.validate.option.en.FTMQAOptions;
+import com.git.gdsbuilder.type.validate.option.en.LangType;
+import com.git.gdsbuilder.type.validate.option.en.LayerFieldOptions;
+import com.git.gdsbuilder.type.validate.option.en.UFMQAOptions;
 import com.vividsolutions.jts.algorithm.Angle;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -78,6 +79,12 @@ import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.TopologyException;
 
 public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
+
+	LangType langType;
+
+	public FeatureGraphicValidatorImpl(LangType langType) {
+		this.langType = langType;
+	}
 
 	@Override
 	public List<ErrorFeature> validateConBreak(DTFeature dtFeature, DTLayer neatLine, OptionTolerance optionTolerance) {
@@ -151,13 +158,15 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 							if (isError) {
 								String featureID = sf.getID();
 								ErrorFeature errFeatureSt = new ErrorFeature(featureID,
-										DMQAOptions.CONBREAK.getErrCode(), DMQAOptions.CONBREAK.getErrType(),
-										DMQAOptions.CONBREAK.getErrName(), dtFeature.getLayerID(),
+										DMQAOptions.QAType.CONBREAK.getErrCode(),
+										DMQAOptions.QAType.CONBREAK.getErrType(langType),
+										DMQAOptions.QAType.CONBREAK.getErrName(langType), dtFeature.getLayerID(),
 										geometryFactory.createPoint(start));
 								errFeatures.add(errFeatureSt);
 								ErrorFeature errFeatureEd = new ErrorFeature(featureID,
-										DMQAOptions.CONBREAK.getErrCode(), DMQAOptions.CONBREAK.getErrType(),
-										DMQAOptions.CONBREAK.getErrName(), dtFeature.getLayerID(),
+										DMQAOptions.QAType.CONBREAK.getErrCode(),
+										DMQAOptions.QAType.CONBREAK.getErrType(langType),
+										DMQAOptions.QAType.CONBREAK.getErrName(langType), dtFeature.getLayerID(),
 										geometryFactory.createPoint(end));
 								errFeatures.add(errFeatureEd);
 							}
@@ -219,9 +228,9 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 								if (flag == false) {
 									String featureID = sf.getID();
 									ErrorFeature errFeature = new ErrorFeature(featureID,
-											DMQAOptions.CONINTERSECTED.getErrCode(),
-											DMQAOptions.CONINTERSECTED.getErrType(),
-											DMQAOptions.CONINTERSECTED.getErrName(), "", errPoint);
+											DMQAOptions.QAType.CONINTERSECTED.getErrCode(),
+											DMQAOptions.QAType.CONINTERSECTED.getErrType(langType),
+											DMQAOptions.QAType.CONINTERSECTED.getErrName(langType), "", errPoint);
 									errFeatures.add(errFeature);
 								}
 							}
@@ -281,8 +290,9 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 					Geometry intersectPoint = geometryFactory.createPoint(coordinate);
 					String featureID = sfi.getID();
 					ErrorFeature errFeature = new ErrorFeature(featureID, reFeatureId,
-							DMQAOptions.CONINTERSECTED.getErrCode(), DMQAOptions.CONINTERSECTED.getErrType(),
-							DMQAOptions.CONINTERSECTED.getErrName(), "", intersectPoint);
+							DMQAOptions.QAType.CONINTERSECTED.getErrCode(),
+							DMQAOptions.QAType.CONINTERSECTED.getErrType(langType),
+							DMQAOptions.QAType.CONINTERSECTED.getErrName(langType), "", intersectPoint);
 
 					errFeatures.add(errFeature);
 				}
@@ -347,9 +357,10 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 						GeometryFactory geometryFactory = new GeometryFactory();
 						Point errPoint = geometryFactory.createPoint(b);
 						String featureID = sf.getID();
-						ErrorFeature errFeature = new ErrorFeature(featureID, DMQAOptions.CONOVERDEGREE.getErrCode(),
-								DMQAOptions.CONOVERDEGREE.getErrType(), DMQAOptions.CONOVERDEGREE.getErrName(), "",
-								errPoint);
+						ErrorFeature errFeature = new ErrorFeature(featureID,
+								DMQAOptions.QAType.CONOVERDEGREE.getErrCode(),
+								DMQAOptions.QAType.CONOVERDEGREE.getErrType(langType),
+								DMQAOptions.QAType.CONOVERDEGREE.getErrName(langType), "", errPoint);
 						errFeatures.add(errFeature);
 					}
 				}
@@ -415,9 +426,10 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 					if (isDistError && isAngError) {
 						GeometryFactory gFactory = new GeometryFactory();
 						Geometry returnGeom = gFactory.createPoint(b);
-						ErrorFeature errFeature = new ErrorFeature(featureID, DMQAOptions.USELESSPOINT.getErrCode(),
-								DMQAOptions.USELESSPOINT.getErrType(), DMQAOptions.USELESSPOINT.getErrName(), "",
-								returnGeom);
+						ErrorFeature errFeature = new ErrorFeature(featureID,
+								DMQAOptions.QAType.USELESSPOINT.getErrCode(),
+								DMQAOptions.QAType.USELESSPOINT.getErrType(langType),
+								DMQAOptions.QAType.USELESSPOINT.getErrName(langType), "", returnGeom);
 						errFeatures.add(errFeature);
 					}
 				}
@@ -512,8 +524,9 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 				Coordinate[] coors = geometry.getCoordinates();
 				errPt = new GeometryFactory().createPoint(coors[0]);
 			}
-			ErrorFeature errFeature = new ErrorFeature(featureID, DMQAOptions.SMALLAREA.getErrCode(),
-					DMQAOptions.SMALLAREA.getErrType(), DMQAOptions.SMALLAREA.getErrName(), "", errPt);
+			ErrorFeature errFeature = new ErrorFeature(featureID, DMQAOptions.QAType.SMALLAREA.getErrCode(),
+					DMQAOptions.QAType.SMALLAREA.getErrType(langType),
+					DMQAOptions.QAType.SMALLAREA.getErrName(langType), "", errPt);
 			return errFeature;
 		} else {
 			return null;
@@ -599,8 +612,9 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 				Coordinate[] coors = geometry.getCoordinates();
 				errPt = new GeometryFactory().createPoint(coors[0]);
 			}
-			ErrorFeature errFeature = new ErrorFeature(featureID, DMQAOptions.SMALLLENGTH.getErrCode(),
-					DMQAOptions.SMALLLENGTH.getErrType(), DMQAOptions.SMALLLENGTH.getErrName(), "", errPt);
+			ErrorFeature errFeature = new ErrorFeature(featureID, DMQAOptions.QAType.SMALLLENGTH.getErrCode(),
+					DMQAOptions.QAType.SMALLLENGTH.getErrType(langType),
+					DMQAOptions.QAType.SMALLLENGTH.getErrName(langType), "", errPt);
 			return errFeature;
 		} else {
 			return null;
@@ -652,8 +666,9 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 							if (!geomPt.within(toleGeom)) {
 								String featureID = sf.getID();
 								ErrorFeature errFeature = new ErrorFeature(featureID, reLayerId, reFeatureId,
-										DMQAOptions.OVERSHOOT.getErrCode(), DMQAOptions.OVERSHOOT.getErrType(),
-										DMQAOptions.OVERSHOOT.getErrName(), "", geomPt);
+										DMQAOptions.QAType.OVERSHOOT.getErrCode(),
+										DMQAOptions.QAType.OVERSHOOT.getErrType(langType),
+										DMQAOptions.QAType.OVERSHOOT.getErrName(langType), "", geomPt);
 								errFeatures.add(errFeature);
 							}
 						}
@@ -734,20 +749,24 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 						Coordinate[] coordinates = returnGeom.getCoordinates();
 						Point startPoint = geometryFactory.createPoint(coordinates[0]);
 						ErrorFeature errFeature = new ErrorFeature(featureID, reLayerId, reFeatureID,
-								DMQAOptions.SELFENTITY.getErrCode(), DMQAOptions.SELFENTITY.getErrType(),
-								DMQAOptions.SELFENTITY.getErrName(), "", startPoint);
+								DMQAOptions.QAType.SELFENTITY.getErrCode(),
+								DMQAOptions.QAType.SELFENTITY.getErrType(langType),
+								DMQAOptions.QAType.SELFENTITY.getErrName(langType), "", startPoint);
 						errFeatures.add(errFeature);
 					} else {
 						ErrorFeature errFeature = new ErrorFeature(featureID, reLayerId, reFeatureID,
-								DMQAOptions.SELFENTITY.getErrCode(), DMQAOptions.SELFENTITY.getErrType(),
-								DMQAOptions.SELFENTITY.getErrName(), "", returnGeom.getInteriorPoint());
+								DMQAOptions.QAType.SELFENTITY.getErrCode(),
+								DMQAOptions.QAType.SELFENTITY.getErrType(langType),
+								DMQAOptions.QAType.SELFENTITY.getErrName(langType), "", returnGeom.getInteriorPoint());
 						errFeatures.add(errFeature);
 					}
 				} else {
 					for (int i = 0; i < returnGeom.getNumGeometries(); i++) {
 						ErrorFeature errFeature = new ErrorFeature(featureID, reLayerId, reFeatureID,
-								DMQAOptions.SELFENTITY.getErrCode(), DMQAOptions.SELFENTITY.getErrType(),
-								DMQAOptions.SELFENTITY.getErrName(), "", returnGeom.getGeometryN(i).getInteriorPoint());
+								DMQAOptions.QAType.SELFENTITY.getErrCode(),
+								DMQAOptions.QAType.SELFENTITY.getErrType(langType),
+								DMQAOptions.QAType.SELFENTITY.getErrName(langType), "",
+								returnGeom.getGeometryN(i).getInteriorPoint());
 						errFeatures.add(errFeature);
 					}
 				}
@@ -1089,8 +1108,8 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 		if (!isErr) {
 			Geometry returnGome = geom.getCentroid();
 			ErrorFeature errFeature = new ErrorFeature(featureId, relationLayer.getLayerID(), reFeatureId,
-					DMQAOptions.OUTBOUNDARY.getErrCode(), DMQAOptions.OUTBOUNDARY.getErrType(),
-					DMQAOptions.OUTBOUNDARY.getErrName(), "", returnGome);
+					DMQAOptions.QAType.OUTBOUNDARY.getErrCode(), DMQAOptions.QAType.OUTBOUNDARY.getErrType(langType),
+					DMQAOptions.QAType.OUTBOUNDARY.getErrName(langType), "", returnGome);
 			return errFeature;
 		} else {
 			return null;
@@ -1122,7 +1141,7 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 			// geom 비교
 			if (geometryI.equals(geometryJ)) {
 				if (sfI.getAttributeCount() != 0 && sfJ.getAttributeCount() != 0) {
-					FeatureAttributeValidator attributeValidator = new FeatureAttributeValidatorImpl();
+					FeatureAttributeValidator attributeValidator = new FeatureAttributeValidatorImpl(langType);
 					return attributeValidator.validateEntityDuplicated(dtFeature, reFeature);
 				} else {
 					String featureID = geometryI.toString();
@@ -1135,8 +1154,9 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 						errPt = new GeometryFactory().createPoint(coors[0]);
 					}
 					ErrorFeature errFeature = new ErrorFeature(featureID, reFeatrueId,
-							DMQAOptions.ENTITYDUPLICATED.getErrCode(), DMQAOptions.ENTITYDUPLICATED.getErrType(),
-							DMQAOptions.ENTITYDUPLICATED.getErrName(), "", errPt);
+							DMQAOptions.QAType.ENTITYDUPLICATED.getErrCode(),
+							DMQAOptions.QAType.ENTITYDUPLICATED.getErrType(langType),
+							DMQAOptions.QAType.ENTITYDUPLICATED.getErrName(langType), "", errPt);
 					return errFeature;
 				}
 			} else {
@@ -1269,8 +1289,9 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 					Coordinate[] coors = geometry.getCoordinates();
 					errPt = new GeometryFactory().createPoint(coors[0]);
 				}
-				ErrorFeature errorFeature = new ErrorFeature(featureID, DMQAOptions.ENTITYOPENMISS.getErrCode(),
-						DMQAOptions.ENTITYOPENMISS.getErrType(), DMQAOptions.ENTITYOPENMISS.getErrName(), "", errPt);
+				ErrorFeature errorFeature = new ErrorFeature(featureID, DMQAOptions.QAType.ENTITYOPENMISS.getErrCode(),
+						DMQAOptions.QAType.ENTITYOPENMISS.getErrType(langType),
+						DMQAOptions.QAType.ENTITYOPENMISS.getErrName(langType), "", errPt);
 				return errorFeature;
 			} else {
 
@@ -1299,9 +1320,10 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 				Coordinate[] coors = geometry.getCoordinates();
 				errPt = new GeometryFactory().createPoint(coors[0]);
 			}
-			ErrorFeature errorFeature = new ErrorFeature(featureID, LayerFieldOptions.LAYERTYPEFIXMISS.getErrCode(),
-					LayerFieldOptions.LAYERTYPEFIXMISS.getErrType(), LayerFieldOptions.LAYERTYPEFIXMISS.getErrName(),
-					"", errPt);
+			ErrorFeature errorFeature = new ErrorFeature(featureID,
+					LayerFieldOptions.QAType.LAYERTYPEFIXMISS.getErrCode(),
+					LayerFieldOptions.QAType.LAYERTYPEFIXMISS.getErrType(langType),
+					LayerFieldOptions.QAType.LAYERTYPEFIXMISS.getErrName(langType), "", errPt);
 			return errorFeature;
 		} else {
 			return null;
@@ -1328,9 +1350,9 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 				Geometry errGeometry = f.createPoint(coordinates[0]);
 
 				String featureID = sf.getID();
-				ErrorFeature errorFeature = new ErrorFeature(featureID, DMQAOptions.TWISTEDPOLYGON.getErrCode(),
-						DMQAOptions.TWISTEDPOLYGON.getErrType(), DMQAOptions.TWISTEDPOLYGON.getErrName(), "",
-						errGeometry);
+				ErrorFeature errorFeature = new ErrorFeature(featureID, DMQAOptions.QAType.TWISTEDPOLYGON.getErrCode(),
+						DMQAOptions.QAType.TWISTEDPOLYGON.getErrType(langType),
+						DMQAOptions.QAType.TWISTEDPOLYGON.getErrName(langType), "", errGeometry);
 				return errorFeature;
 			} else {
 				return null;
@@ -1466,14 +1488,14 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 				String reLayerId = relationLayer.getLayerID();
 				if (!firTrue && firErr && firInter) {
 					ErrorFeature errorFeature = new ErrorFeature(featureID, reLayerId, reFeatureId,
-							DMQAOptions.NODEMISS.getErrCode(), DMQAOptions.NODEMISS.getErrType(),
-							DMQAOptions.NODEMISS.getErrName(), "", firPt);
+							DMQAOptions.QAType.NODEMISS.getErrCode(), DMQAOptions.QAType.NODEMISS.getErrType(langType),
+							DMQAOptions.QAType.NODEMISS.getErrName(langType), "", firPt);
 					errorFeatures.add(errorFeature);
 				}
 				if (!lasTrue && lasErr && lasInter) {
 					ErrorFeature errorFeature = new ErrorFeature(featureID, reLayerId, reFeatureId,
-							DMQAOptions.NODEMISS.getErrCode(), DMQAOptions.NODEMISS.getErrType(),
-							DMQAOptions.NODEMISS.getErrName(), "", lasPt);
+							DMQAOptions.QAType.NODEMISS.getErrCode(), DMQAOptions.QAType.NODEMISS.getErrType(langType),
+							DMQAOptions.QAType.NODEMISS.getErrName(langType), "", lasPt);
 					errorFeatures.add(errorFeature);
 				}
 				if (errorFeatures.size() > 0) {
@@ -1539,9 +1561,9 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 			Coordinate coor1 = coors[1];
 			if (coor0.equals3D(coor1)) {
 				Geometry errGeom = new GeometryFactory().createPoint(coor1);
-				ErrorFeature errorFeature = new ErrorFeature(featureId, DMQAOptions.POINTDUPLICATED.getErrCode(),
-						DMQAOptions.POINTDUPLICATED.getErrType(), DMQAOptions.POINTDUPLICATED.getErrName(), "",
-						errGeom);
+				ErrorFeature errorFeature = new ErrorFeature(featureId, DMQAOptions.QAType.POINTDUPLICATED.getErrCode(),
+						DMQAOptions.QAType.POINTDUPLICATED.getErrType(langType),
+						DMQAOptions.QAType.POINTDUPLICATED.getErrName(langType), "", errGeom);
 				errFeatures.add(errorFeature);
 			}
 		}
@@ -1551,9 +1573,10 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 				Coordinate coor1 = coors[c + 1];
 				if (coor0.equals3D(coor1)) {
 					Geometry errGeom = new GeometryFactory().createPoint(coor1);
-					ErrorFeature errorFeature = new ErrorFeature(featureId, DMQAOptions.POINTDUPLICATED.getErrCode(),
-							DMQAOptions.POINTDUPLICATED.getErrType(), DMQAOptions.POINTDUPLICATED.getErrName(), "",
-							errGeom);
+					ErrorFeature errorFeature = new ErrorFeature(featureId,
+							DMQAOptions.QAType.POINTDUPLICATED.getErrCode(),
+							DMQAOptions.QAType.POINTDUPLICATED.getErrType(langType),
+							DMQAOptions.QAType.POINTDUPLICATED.getErrName(langType), "", errGeom);
 					errFeatures.add(errorFeature);
 				}
 			}
@@ -1636,8 +1659,9 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 					Coordinate[] coors = geometry.getCoordinates();
 					errPt = new GeometryFactory().createPoint(coors[0]);
 				}
-				ErrorFeature errFeature = new ErrorFeature(featureID, DMQAOptions.ONEACRE.getErrCode(),
-						DMQAOptions.ONEACRE.getErrType(), DMQAOptions.ONEACRE.getErrName(), comment, errPt);
+				ErrorFeature errFeature = new ErrorFeature(featureID, DMQAOptions.QAType.ONEACRE.getErrCode(),
+						DMQAOptions.QAType.ONEACRE.getErrType(langType),
+						DMQAOptions.QAType.ONEACRE.getErrName(langType), comment, errPt);
 				return errFeature;
 			} else {
 				return null;
@@ -1692,8 +1716,9 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 					Coordinate[] coors = geom.getCoordinates();
 					errPt = new GeometryFactory().createPoint(coors[0]);
 				}
-				ErrorFeature errFeature = new ErrorFeature(featureID, DMQAOptions.ONESTAGE.getErrCode(),
-						DMQAOptions.ONESTAGE.getErrType(), DMQAOptions.ONESTAGE.getErrName(), "", errPt);
+				ErrorFeature errFeature = new ErrorFeature(featureID, DMQAOptions.QAType.ONESTAGE.getErrCode(),
+						DMQAOptions.QAType.ONESTAGE.getErrType(langType),
+						DMQAOptions.QAType.ONESTAGE.getErrName(langType), "", errPt);
 				errFeatures.add(errFeature);
 			}
 		}
@@ -1746,9 +1771,10 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 					Coordinate[] coors = targetGeom.getCoordinates();
 					errPt = new GeometryFactory().createPoint(coors[0]);
 				}
-				ErrorFeature errorFeature = new ErrorFeature(featureID, DMQAOptions.BUILDINGSITEMISS.getErrCode(),
-						DMQAOptions.BUILDINGSITEMISS.getErrType(), DMQAOptions.BUILDINGSITEMISS.getErrName(), "",
-						errPt);
+				ErrorFeature errorFeature = new ErrorFeature(featureID,
+						DMQAOptions.QAType.BUILDINGSITEMISS.getErrCode(),
+						DMQAOptions.QAType.BUILDINGSITEMISS.getErrType(langType),
+						DMQAOptions.QAType.BUILDINGSITEMISS.getErrName(langType), "", errPt);
 				return errorFeature;
 			} else {
 				return null;
@@ -1816,9 +1842,9 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 				Coordinate[] coors = geometry.getCoordinates();
 				errPt = new GeometryFactory().createPoint(coors[0]);
 			}
-			ErrorFeature errorFeature = new ErrorFeature(featureID, DMQAOptions.BOUNDARYMISS.getErrCode(),
-					DMQAOptions.BOUNDARYMISS.getErrType(), DMQAOptions.BOUNDARYMISS.getErrName(),
-					relationLayer.getLayerID() + " Miss", errPt);
+			ErrorFeature errorFeature = new ErrorFeature(featureID, DMQAOptions.QAType.BOUNDARYMISS.getErrCode(),
+					DMQAOptions.QAType.BOUNDARYMISS.getErrType(langType),
+					DMQAOptions.QAType.BOUNDARYMISS.getErrName(langType), relationLayer.getLayerID() + " Miss", errPt);
 			return errorFeature;
 		} else {
 			return null;
@@ -1880,9 +1906,10 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 				Coordinate[] coors = geometry.getCoordinates();
 				errPt = new GeometryFactory().createPoint(coors[0]);
 			}
-			ErrorFeature errorFeature = new ErrorFeature(featureID, DMQAOptions.CENTERLINEMISS.getErrCode(),
-					DMQAOptions.CENTERLINEMISS.getErrType(), DMQAOptions.CENTERLINEMISS.getErrName(),
-					relationLayer.getLayerID() + " Miss", errPt);
+			ErrorFeature errorFeature = new ErrorFeature(featureID, DMQAOptions.QAType.CENTERLINEMISS.getErrCode(),
+					DMQAOptions.QAType.CENTERLINEMISS.getErrType(langType),
+					DMQAOptions.QAType.CENTERLINEMISS.getErrName(langType), relationLayer.getLayerID() + " Miss",
+					errPt);
 			return errorFeature;
 		} else {
 			return null;
@@ -1920,9 +1947,10 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 						Coordinate[] coors = geometry.getCoordinates();
 						errPt = new GeometryFactory().createPoint(coors[0]);
 					}
-					ErrorFeature errorFeature = new ErrorFeature(featureID, DMQAOptions.HOLEMISPLACEMENT.getErrCode(),
-							DMQAOptions.HOLEMISPLACEMENT.getErrType(), DMQAOptions.HOLEMISPLACEMENT.getErrName(),
-							dtFeature.getLayerID(), errPt);
+					ErrorFeature errorFeature = new ErrorFeature(featureID,
+							DMQAOptions.QAType.HOLEMISPLACEMENT.getErrCode(),
+							DMQAOptions.QAType.HOLEMISPLACEMENT.getErrType(langType),
+							DMQAOptions.QAType.HOLEMISPLACEMENT.getErrName(langType), dtFeature.getLayerID(), errPt);
 					errorFeatures.add(errorFeature);
 				}
 			}
@@ -1995,9 +2023,9 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 											errPt = new GeometryFactory().createPoint(coors[0]);
 										}
 										ErrorFeature errorFeature = new ErrorFeature(featureId,
-												DMQAOptions.ENTITYINHOLE.getErrCode(),
-												DMQAOptions.ENTITYINHOLE.getErrType(),
-												DMQAOptions.ENTITYINHOLE.getErrName(), "", errPt);
+												DMQAOptions.QAType.ENTITYINHOLE.getErrCode(),
+												DMQAOptions.QAType.ENTITYINHOLE.getErrType(langType),
+												DMQAOptions.QAType.ENTITYINHOLE.getErrName(langType), "", errPt);
 										errorFeatures.add(errorFeature);
 									}
 								} else {
@@ -2011,9 +2039,9 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 											errPt = new GeometryFactory().createPoint(coors[0]);
 										}
 										ErrorFeature errorFeature = new ErrorFeature(featureId,
-												DMQAOptions.ENTITYINHOLE.getErrCode(),
-												DMQAOptions.ENTITYINHOLE.getErrType(),
-												DMQAOptions.ENTITYINHOLE.getErrName(), "", errPt);
+												DMQAOptions.QAType.ENTITYINHOLE.getErrCode(),
+												DMQAOptions.QAType.ENTITYINHOLE.getErrType(langType),
+												DMQAOptions.QAType.ENTITYINHOLE.getErrName(langType), "", errPt);
 										errorFeatures.add(errorFeature);
 									}
 								}
@@ -2084,16 +2112,16 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 						Geometry boundary = relationGeometry.buffer(value);
 						if (!boundary.intersects(firPt)) {
 							ErrorFeature errorFeature = new ErrorFeature(featureID, reLayerId, reFeatureId,
-									DMQAOptions.LINEARDISCONNECTION.getErrCode(),
-									DMQAOptions.LINEARDISCONNECTION.getErrType(),
-									DMQAOptions.LINEARDISCONNECTION.getErrName(), "", firPt);
+									DMQAOptions.QAType.LINEARDISCONNECTION.getErrCode(),
+									DMQAOptions.QAType.LINEARDISCONNECTION.getErrType(langType),
+									DMQAOptions.QAType.LINEARDISCONNECTION.getErrName(langType), "", firPt);
 							errorFeatures.add(errorFeature);
 						}
 						if (!boundary.intersects(lasPt)) {
 							ErrorFeature errorFeature = new ErrorFeature(featureID, reLayerId, reFeatureId,
-									DMQAOptions.LINEARDISCONNECTION.getErrCode(),
-									DMQAOptions.LINEARDISCONNECTION.getErrType(),
-									DMQAOptions.LINEARDISCONNECTION.getErrName(), "", lasPt);
+									DMQAOptions.QAType.LINEARDISCONNECTION.getErrCode(),
+									DMQAOptions.QAType.LINEARDISCONNECTION.getErrType(langType),
+									DMQAOptions.QAType.LINEARDISCONNECTION.getErrName(langType), "", lasPt);
 							errorFeatures.add(errorFeature);
 						}
 					}
@@ -2136,8 +2164,9 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 						Coordinate[] coors = interGeom.getCoordinates();
 						errPt = new GeometryFactory().createPoint(coors[0]);
 					}
-					ErrorFeature errorFeature = new ErrorFeature(featureID, DMQAOptions.MULTIPART.getErrCode(),
-							DMQAOptions.MULTIPART.getErrType(), DMQAOptions.MULTIPART.getErrName(), "", errPt);
+					ErrorFeature errorFeature = new ErrorFeature(featureID, DMQAOptions.QAType.MULTIPART.getErrCode(),
+							DMQAOptions.QAType.MULTIPART.getErrType(langType),
+							DMQAOptions.QAType.MULTIPART.getErrName(langType), "", errPt);
 					errFeatures.add(errorFeature);
 				}
 			}
@@ -2200,8 +2229,9 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 				Coordinate[] coors = geom.getCoordinates();
 				errPt = new GeometryFactory().createPoint(coors[0]);
 			}
-			ErrorFeature errorFeature = new ErrorFeature(featureID, UFMQAOptions.UNODEMISS.getErrCode(),
-					UFMQAOptions.UNODEMISS.getErrType(), UFMQAOptions.UNODEMISS.getErrName(), "", errPt);
+			ErrorFeature errorFeature = new ErrorFeature(featureID, UFMQAOptions.QAType.UNODEMISS.getErrCode(),
+					UFMQAOptions.QAType.UNODEMISS.getErrType(langType), UFMQAOptions.QAType.UNODEMISS.getErrName(langType), "",
+					errPt);
 			return errorFeature;
 		} else {
 			return null;
@@ -2256,9 +2286,9 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 				GeometryFactory factory = new GeometryFactory();
 				Coordinate[] coors = returnGeom.getCoordinates();
 				for (int i = 0; i < coors.length; i++) {
-					errFeatures.add(new ErrorFeature(featureID, UFMQAOptions.ULEADERLINE.getErrCode(),
-							UFMQAOptions.ULEADERLINE.getErrType(), UFMQAOptions.ULEADERLINE.getErrName(), "",
-							factory.createPoint(coors[i])));
+					errFeatures.add(new ErrorFeature(featureID, UFMQAOptions.QAType.ULEADERLINE.getErrCode(),
+							UFMQAOptions.QAType.ULEADERLINE.getErrType(langType),
+							UFMQAOptions.QAType.ULEADERLINE.getErrName(langType), "", factory.createPoint(coors[i])));
 				}
 			}
 		}
@@ -2335,8 +2365,9 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 				relationIterator.close();
 				if (isOut) {
 					String featureID = sf.getID();
-					ErrorFeature errorFeature = new ErrorFeature(featureID, UFMQAOptions.USYMBOLOUT.getErrCode(),
-							UFMQAOptions.USYMBOLOUT.getErrType(), UFMQAOptions.USYMBOLOUT.getErrName(), "", geom);
+					ErrorFeature errorFeature = new ErrorFeature(featureID, UFMQAOptions.QAType.USYMBOLOUT.getErrCode(),
+							UFMQAOptions.QAType.USYMBOLOUT.getErrType(langType), UFMQAOptions.QAType.USYMBOLOUT.getErrName(langType),
+							"", geom);
 					return errorFeature;
 				} else {
 					return null;
@@ -2411,8 +2442,9 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 					}
 					relationIterator.close();
 					if (isOut) {
-						errFeatures.add(new ErrorFeature(featureID, UFMQAOptions.SYMBOLINLINE.getErrCode(),
-								UFMQAOptions.SYMBOLINLINE.getErrType(), UFMQAOptions.SYMBOLINLINE.getErrName(), "",
+						errFeatures.add(new ErrorFeature(featureID, UFMQAOptions.QAType.SYMBOLINLINE.getErrCode(),
+								UFMQAOptions.QAType.SYMBOLINLINE.getErrType(langType),
+								UFMQAOptions.QAType.SYMBOLINLINE.getErrName(langType), "",
 								factory.createPoint(new Coordinate(coordinates[i].x, coordinates[i].y))));
 					}
 				}
@@ -2469,9 +2501,9 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 							Coordinate[] coors = line.getCoordinates();
 							errPt = new GeometryFactory().createPoint(coors[0]);
 						}
-						errFeatures.add(new ErrorFeature(featureID, UFMQAOptions.SYMBOLSDISTANCE.getErrCode(),
-								UFMQAOptions.SYMBOLSDISTANCE.getErrType(), UFMQAOptions.SYMBOLSDISTANCE.getErrName(),
-								"", errPt));
+						errFeatures.add(new ErrorFeature(featureID, UFMQAOptions.QAType.SYMBOLSDISTANCE.getErrCode(),
+								UFMQAOptions.QAType.SYMBOLSDISTANCE.getErrType(langType),
+								UFMQAOptions.QAType.SYMBOLSDISTANCE.getErrName(langType), "", errPt));
 					}
 				}
 			}
@@ -2549,9 +2581,10 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 									}
 									if (!isCross) {
 										point = factory.createPoint(crossCoords[i]);
-										errFeatures.add(new ErrorFeature(featureID, UFMQAOptions.LINECROSS.getErrCode(),
-												UFMQAOptions.LINECROSS.getErrType(),
-												UFMQAOptions.LINECROSS.getErrName(), dtFeature.getLayerID(), point));
+										errFeatures.add(new ErrorFeature(featureID, UFMQAOptions.QAType.LINECROSS.getErrCode(),
+												UFMQAOptions.QAType.LINECROSS.getErrType(langType),
+												UFMQAOptions.QAType.LINECROSS.getErrName(langType), dtFeature.getLayerID(),
+												point));
 									}
 								}
 							}
@@ -2662,8 +2695,9 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 		}
 		if (isError) {
 			String featureID = sf.getID();
-			return new ErrorFeature(featureID, UFMQAOptions.UAVRGDPH10.getErrCode(),
-					UFMQAOptions.UAVRGDPH10.getErrType(), UFMQAOptions.UAVRGDPH10.getErrName(), "", geom);
+			return new ErrorFeature(featureID, UFMQAOptions.QAType.UAVRGDPH10.getErrCode(),
+					UFMQAOptions.QAType.UAVRGDPH10.getErrType(langType), UFMQAOptions.QAType.UAVRGDPH10.getErrName(langType), "",
+					geom);
 		} else {
 			return null;
 		}
@@ -2767,8 +2801,9 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 								errPt = new GeometryFactory().createPoint(coors[0]);
 							}
 							ErrorFeature errorFeature = new ErrorFeature(featureId,
-									FTMQAOptions.FENTITYINHOLE.getErrCode(), FTMQAOptions.FENTITYINHOLE.getErrType(),
-									FTMQAOptions.FENTITYINHOLE.getErrName(), "", errPt);
+									FTMQAOptions.QAType.FENTITYINHOLE.getErrCode(),
+									FTMQAOptions.QAType.FENTITYINHOLE.getErrType(langType),
+									FTMQAOptions.QAType.FENTITYINHOLE.getErrName(langType), "", errPt);
 							errorFeatures.add(errorFeature);
 						}
 
@@ -2844,8 +2879,9 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 		}
 		if (isOut) {
 			String featureID = sf.getID();
-			ErrorFeature errorFeature = new ErrorFeature(featureID, DMQAOptions.SYMBOLOUT.getErrCode(),
-					DMQAOptions.SYMBOLOUT.getErrType(), DMQAOptions.SYMBOLOUT.getErrName(), "", geom);
+			ErrorFeature errorFeature = new ErrorFeature(featureID, DMQAOptions.QAType.SYMBOLOUT.getErrCode(),
+					DMQAOptions.QAType.SYMBOLOUT.getErrType(langType),
+					DMQAOptions.QAType.SYMBOLOUT.getErrName(langType), "", geom);
 			return errorFeature;
 		} else {
 			return null;

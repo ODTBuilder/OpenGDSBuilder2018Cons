@@ -1,4 +1,4 @@
-package com.git.gdsbuilder.validator.open.quad;
+package com.git.gdsbuilder.validator.quad;
 
 import java.io.Serializable;
 import java.util.ArrayList;

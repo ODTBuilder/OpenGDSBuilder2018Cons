@@ -30,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -46,6 +47,7 @@ import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.geotools.feature.SchemaException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -65,7 +67,9 @@ import com.git.gdsbuilder.type.dt.collection.DTLayerCollection;
 import com.git.gdsbuilder.type.dt.collection.DTLayerCollectionList;
 import com.git.gdsbuilder.type.validate.error.ErrorLayer;
 import com.git.gdsbuilder.type.validate.layer.QALayerTypeList;
+import com.git.gdsbuilder.type.validate.option.en.LangType;
 import com.git.gdsbuilder.validator.collection.CollectionValidator;
+import com.git.gdsbuilder.validator.collection.OpenCollectionValidator;
 import com.gitrnd.qaconsumer.filestatus.domain.FileStatus;
 import com.gitrnd.qaconsumer.filestatus.service.FileStatusService;
 import com.gitrnd.qaconsumer.preset.domain.Preset;
@@ -133,6 +137,9 @@ public class QAServiceImpl implements QAService {
 		int fidx = fileIdx.intValue();
 
 		String epsg = (String) param.get("crs");
+
+		String langTypeStr = (String) param.get("langtype");
+		LangType langType = LangType.getLang(langTypeStr);
 
 		QAProgress progress = qapgService.retrieveQAProgressById(pidx);
 
@@ -249,41 +256,25 @@ public class QAServiceImpl implements QAService {
 				geoDataConverter.undergroundExport();
 			} else if (cidx == 5) {
 				geoDataConverter.forestExport(neatLineCode);
+			} else if (cidx == 8) {
+				geoDataConverter.basicExport();
 			}
 
-			// files
-			File geolayerPathFile = new File(geolayerPath);
-			QAFileParser parser = new QAFileParser(epsg, cidx, geolayerPathFile, fname, neatLineCode);
-			boolean parseTrue = parser.isTrue();
-			if (!parseTrue) {
-				comment += parser.getStatus();
-				if (!comment.equals("")) {
-					progress.setComment(comment);
+			JSONArray attrFilterArry = null;
+			JSONArray stateFilterArry = null;
+			Object filterObj = option.get("filter");
+			if (filterObj != null) {
+				JSONObject filterJson = (JSONObject) filterObj;
+				Object attrObj = filterJson.get("attribute");
+				if (attrObj != null) {
+					attrFilterArry = (JSONArray) attrObj;
 				}
-				progress.setQaState(VALIDATEFAIL);
-				qapgService.updateQAState(progress);
-				deleteDirectory(baseDirFile);
-				return isSuccess;
+				Object stateObj = filterJson.get("state");
+				if (stateObj != null) {
+					stateFilterArry = (JSONArray) stateObj;
+				}
 			}
-			DTLayerCollectionList collectionList = parser.getCollectionList();
-			if (collectionList == null) {
-				// 파일 다 에러
-				comment += parser.getStatus();
-				if (!comment.equals("")) {
-					progress.setComment(comment);
-				}
-				progress.setQaState(VALIDATEFAIL);
-				qapgService.updateQAState(progress);
-				deleteDirectory(baseDirFile);
-				return isSuccess;
-			} else {
-				// 몇개만 에러
-				comment += parser.getStatus();
-				if (!comment.equals("")) {
-					progress.setComment(comment);
-				}
-				qapgService.updateQAState(progress);
-			}
+
 			JSONArray typeValidate = (JSONArray) option.get("definition");
 			for (int j = 0; j < layerDef.size(); j++) {
 				JSONObject lyrItem = (JSONObject) layerDef.get(j);
@@ -327,7 +318,45 @@ public class QAServiceImpl implements QAService {
 			createFileDirectory(ERR_FILE_DIR);
 
 			// excute validation
-			isSuccess = executorValidate(collectionList, validateLayerTypeList, epsg, ERR_OUTPUT_NAME, pidx);
+			if (cidx == 7) { // open - 대용량
+				isSuccess = executorValidate(geolayerPath, validateLayerTypeList, epsg, attrFilterArry, stateFilterArry,
+						langType);
+			} else {
+				File geolayerPathFile = new File(geolayerPath);
+				QAFileParser parser = new QAFileParser(epsg, cidx, geolayerPathFile, fname, neatLineCode);
+				boolean parseTrue = parser.isTrue();
+				if (!parseTrue) {
+					comment += parser.getStatus();
+					if (!comment.equals("")) {
+						progress.setComment(comment);
+					}
+					progress.setQaState(VALIDATEFAIL);
+					qapgService.updateQAState(progress);
+					deleteDirectory(baseDirFile);
+					return isSuccess;
+				}
+				DTLayerCollectionList collectionList = parser.getCollectionList();
+				if (collectionList == null) {
+					// 파일 다 에러
+					comment += parser.getStatus();
+					if (!comment.equals("")) {
+						progress.setComment(comment);
+					}
+					progress.setQaState(VALIDATEFAIL);
+					qapgService.updateQAState(progress);
+					deleteDirectory(baseDirFile);
+					return isSuccess;
+				} else {
+					// 몇개만 에러
+					comment += parser.getStatus();
+					if (!comment.equals("")) {
+						progress.setComment(comment);
+					}
+					qapgService.updateQAState(progress);
+				}
+				isSuccess = executorValidate(collectionList, validateLayerTypeList, epsg, ERR_OUTPUT_NAME, pidx,
+						langType);
+			}
 			// isSuccess = true;
 			if (isSuccess) {
 				// insert validate state9
@@ -383,8 +412,33 @@ public class QAServiceImpl implements QAService {
 		}
 	}
 
+	private boolean executorValidate(String fileDir, QALayerTypeList validateLayerTypeList, String epsg,
+			JSONArray attrFilter, JSONArray stateFilter, LangType langType) throws SchemaException {
+
+		boolean isSuccess = false;
+		try {
+			OpenCollectionValidator validator = new OpenCollectionValidator(fileDir, validateLayerTypeList, epsg,
+					attrFilter, stateFilter, langType);
+
+			long time = System.currentTimeMillis();
+			SimpleDateFormat dayTime = new SimpleDateFormat("yyMMdd_HHmmss");
+			String cTimeStr = dayTime.format(new Date(time));
+			String fileName = ERR_FILE_DIR + "\\" + cTimeStr;
+
+			// layerFixMiss
+			isSuccess = writeErrShp(epsg, validator.collectionAttributeValidate(), fileName + "_attribute_err.shp",
+					"Attribute");
+			// other
+			isSuccess = writeErrShp(epsg, validator.collectionGraphicValidate(), fileName + "_graphic_err.shp",
+					"Graphic");
+		} catch (IOException e) {
+			System.out.println("검수 요청이 실패했습니다.");
+		}
+		return isSuccess;
+	}
+
 	private boolean executorValidate(DTLayerCollectionList collectionList, QALayerTypeList validateLayerTypeList,
-			String epsg, String errLayerName, int pIdx) {
+			String epsg, String errLayerName, int pIdx, LangType langType) {
 
 		// 도엽별 검수 쓰레드 생성
 		List<Future> futures = new ArrayList<>();
@@ -397,7 +451,8 @@ public class QAServiceImpl implements QAService {
 					try {
 						DTLayerCollectionList closeCollections = collectionList
 								.getCloseLayerCollections(collection.getMapRule());
-						validator = new CollectionValidator(collection, closeCollections, validateLayerTypeList);
+						validator = new CollectionValidator(collection, closeCollections, validateLayerTypeList,
+								langType);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -490,6 +545,27 @@ public class QAServiceImpl implements QAService {
 			}
 		}
 		return fileList;
+	}
+
+	private boolean writeErrShp(String epsg, ErrorLayer errLayer, String fileName, String qaType) {
+		try {
+			// 오류레이어 발행
+			if (errLayer != null) {
+				int errSize = errLayer.getErrFeatureList().size();
+				if (errSize > 0) {
+					SHPFileWriter.writeSHP(epsg, errLayer, fileName);
+				} else {
+					System.out.println(qaType + " 오류 객체가 없습니다.");
+				}
+			} else {
+				System.out.println(qaType + " 오류 객체가 없습니다.");
+			}
+			System.out.println(qaType + " 검수 요청이 성공적으로 완료되었습니다.");
+			return true;
+		} catch (Exception e) {
+			System.out.println(qaType + " 검수 요청이 실패했습니다.");
+			return false;
+		}
 	}
 
 	private void writeErrShp(String epsg, ErrorLayer errLayer) {
